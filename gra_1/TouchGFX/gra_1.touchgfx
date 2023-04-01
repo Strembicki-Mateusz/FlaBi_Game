@@ -2,29 +2,28 @@
   "Application": {
     "Screens": [
       {
+        "Name": "Screen1",
         "Components": [
           {
             "Type": "ScalableImage",
-            "Filename": "pwrasf.png",
-            "Alpha": 255,
-            "ScalingAlgorithm": "Nearest-neighbor",
             "Name": "scalableImage1",
-            "X": 0,
-            "Y": 0,
             "Width": 800,
             "Height": 480,
-            "Visible": true,
-            "LockPosition": false,
-            "Draggable": false,
-            "Clickable": false,
-            "Fadeable": false,
-            "Moveable": false
+            "Filename": "pwrasf.png",
+            "ScalingAlgorithm": "Nearest-neighbor"
+          },
+          {
+            "Type": "ScalableImage",
+            "Name": "scalableImage2",
+            "X": 699,
+            "Y": 383,
+            "Width": 80,
+            "Height": 80,
+            "Filename": "PWrr.png",
+            "ScalingAlgorithm": "Nearest-neighbor"
           }
         ],
-        "Interactions": [],
-        "Name": "Screen1",
-        "OverrideDefaultBufferSize": false,
-        "CanvasBufferSize": 0
+        "Interactions": []
       }
     ],
     "CustomContainerDefinitions": [],
@@ -36,7 +35,6 @@
     "SelectedColorDepth": 16,
     "StartupScreenName": "Screen1",
     "SelectedStartupLanguage": "GB",
-    "Skin": "Blue",
     "TouchGfxPath": "../Middlewares/ST/touchgfx",
     "UIPath": ".",
     "AvailableColorDepths": [
@@ -77,6 +75,6 @@
     "DisplayOrientation": "Landscape",
     "Family": "STM32F4"
   },
-  "Version": "4.16.0",
+  "Version": "4.21.3",
   "CreatedBy": "4.16.0"
 }

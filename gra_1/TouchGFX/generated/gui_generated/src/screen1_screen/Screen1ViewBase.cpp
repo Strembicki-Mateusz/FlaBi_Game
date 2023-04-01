@@ -3,20 +3,28 @@
 /*********************************************************************************/
 #include <gui_generated/screen1_screen/Screen1ViewBase.hpp>
 #include <touchgfx/Color.hpp>
-#include "BitmapDatabase.hpp"
+#include <images/BitmapDatabase.hpp>
 
 Screen1ViewBase::Screen1ViewBase()
 {
-
     __background.setPosition(0, 0, 800, 480);
-    __background.setColor(touchgfx::Color::getColorFrom24BitRGB(0, 0, 0));
+    __background.setColor(touchgfx::Color::getColorFromRGB(0, 0, 0));
+    add(__background);
 
     scalableImage1.setBitmap(touchgfx::Bitmap(BITMAP_PWRASF_ID));
     scalableImage1.setPosition(0, 0, 800, 480);
     scalableImage1.setScalingAlgorithm(touchgfx::ScalableImage::NEAREST_NEIGHBOR);
-
-    add(__background);
     add(scalableImage1);
+
+    scalableImage2.setBitmap(touchgfx::Bitmap(BITMAP_PWRR_ID));
+    scalableImage2.setPosition(699, 383, 80, 80);
+    scalableImage2.setScalingAlgorithm(touchgfx::ScalableImage::NEAREST_NEIGHBOR);
+    add(scalableImage2);
+}
+
+Screen1ViewBase::~Screen1ViewBase()
+{
+
 }
 
 void Screen1ViewBase::setupScreen()

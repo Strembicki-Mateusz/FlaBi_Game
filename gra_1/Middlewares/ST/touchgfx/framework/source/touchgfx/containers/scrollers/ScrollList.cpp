@@ -1,18 +1,16 @@
-/**
-  ******************************************************************************
-  * This file is part of the TouchGFX 4.16.0 distribution.
-  *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
-  *
-  ******************************************************************************
-  */
+/******************************************************************************
+* Copyright (c) 2018(-2023) STMicroelectronics.
+* All rights reserved.
+*
+* This file is part of the TouchGFX 4.21.3 distribution.
+*
+* This software is licensed under terms that can be found in the LICENSE file in
+* the root directory of this software component.
+* If no LICENSE file comes with this software, it is provided AS-IS.
+*
+*******************************************************************************/
 
+#include <touchgfx/Utils.hpp>
 #include <touchgfx/containers/scrollers/ScrollList.hpp>
 
 namespace touchgfx
@@ -25,6 +23,30 @@ ScrollList::ScrollList()
 {
 }
 
+void ScrollList::setWidth(int16_t width)
+{
+    ScrollBase::setWidth(width);
+    if (getHorizontal())
+    {
+        setWindowSize(windowSize);
+    }
+}
+
+void ScrollList::setHeight(int16_t height)
+{
+    ScrollBase::setHeight(height);
+    if (!getHorizontal())
+    {
+        setWindowSize(windowSize);
+    }
+}
+
+void ScrollList::setDrawableSize(int16_t drawableSize, int16_t drawableMargin)
+{
+    ScrollBase::setDrawableSize(drawableSize, drawableMargin);
+    setWindowSize(windowSize);
+}
+
 void ScrollList::setDrawables(DrawableListItemsInterface& drawableListItems, GenericCallback<DrawableListItemsInterface*, int16_t, int16_t>& updateDrawableCallback)
 {
     stopAnimation();
@@ -35,7 +57,14 @@ void ScrollList::setDrawables(DrawableListItemsInterface& drawableListItems, Gen
 
 void ScrollList::setWindowSize(int16_t items)
 {
-    windowSize = MAX(1, items);
+    if (itemSize > 0)
+    {
+        const int16_t widgetSize = getHorizontal() ? getWidth() : getHeight();
+        const int16_t activeWidgetSize = widgetSize - (distanceBeforeAlignedItem + paddingAfterLastItem);
+        const int16_t numberOfVisibleItems = (activeWidgetSize + itemSize / 2) / itemSize; // Round up
+        items = MIN(items, numberOfVisibleItems);                                          // No more than numberOfVisibleItems
+    }
+    windowSize = MAX(1, items); // No less than 1
     animateToPosition(keepOffsetInsideLimits(getOffset(), 0));
 }
 
@@ -81,8 +110,8 @@ int32_t ScrollList::getPositionForItem(int16_t itemIndex)
     }
     int32_t itemOffset = -itemIndex * itemSize;
     // Get the visible size
-    int16_t widgetSize = getHorizontal() ? getWidth() : getHeight();
-    int16_t activeWidgetSize = widgetSize - (distanceBeforeAlignedItem + paddingAfterLastItem);
+    const int16_t widgetSize = getHorizontal() ? getWidth() : getHeight();
+    const int16_t activeWidgetSize = widgetSize - (distanceBeforeAlignedItem + paddingAfterLastItem);
     if (list.getCircular())
     {
         int32_t offset = currentOffset;
@@ -117,40 +146,38 @@ int32_t ScrollList::getPositionForItem(int16_t itemIndex)
         }
         return currentOffset + leftScrollDistance;
     }
-    else
+
+    if (itemOffset > currentOffset) // First item on screen is higher than the itemIndex. Scroll itemIndex to top position
     {
-        if (itemOffset > currentOffset) // First item on screen is higher than the itemIndex. Scroll itemIndex to top position
+        return itemOffset;
+    }
+    const int16_t numberOfVisibleItems = activeWidgetSize / itemSize;
+    int32_t itemOffsetAtEnd = itemOffset;
+    if (numberOfVisibleItems > 0)
+    {
+        if (snapping)
         {
-            return itemOffset;
+            itemOffsetAtEnd = itemOffset + (numberOfVisibleItems - 1) * itemSize;
         }
-        int16_t numberOfVisibleItems = activeWidgetSize / itemSize;
-        int32_t itemOffsetAtEnd = itemOffset;
-        if (numberOfVisibleItems > 0)
+        else
         {
-            if (snapping)
-            {
-                itemOffsetAtEnd = itemOffset + (numberOfVisibleItems - 1) * itemSize;
-            }
-            else
-            {
-                itemOffsetAtEnd = itemOffset + activeWidgetSize - itemSize;
-            }
+            itemOffsetAtEnd = itemOffset + activeWidgetSize - itemSize;
         }
-        if (itemOffsetAtEnd < currentOffset)
-        {
-            return itemOffsetAtEnd;
-        }
+    }
+    if (itemOffsetAtEnd < currentOffset)
+    {
+        return itemOffsetAtEnd;
     }
     return currentOffset;
 }
 
-void ScrollList::handleClickEvent(const ClickEvent& evt)
+void ScrollList::handleClickEvent(const ClickEvent& event)
 {
-    ScrollBase::handleClickEvent(evt);
-    if (evt.getType() == ClickEvent::PRESSED)
+    ScrollBase::handleClickEvent(event);
+    if (event.getType() == ClickEvent::PRESSED)
     {
-        xClick = evt.getX();
-        yClick = evt.getY();
+        xClick = event.getX();
+        yClick = event.getY();
         initialSwipeOffset = getOffset();
 
         setOffset(getNearestAlignedOffset(initialSwipeOffset));
@@ -171,7 +198,7 @@ void ScrollList::handleClickEvent(const ClickEvent& evt)
             }
         }
     }
-    else if (evt.getType() == ClickEvent::RELEASED)
+    else if (event.getType() == ClickEvent::RELEASED)
     {
         if (currentAnimationState == NO_ANIMATION)
         {
