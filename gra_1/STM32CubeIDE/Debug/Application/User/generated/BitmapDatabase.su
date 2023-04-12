@@ -1,2 +1,2 @@
-Z:/touch_dest/Projects/gra3_animacja/TouchGFX/generated/images/src/BitmapDatabase.cpp:16:37:const touchgfx::Bitmap::BitmapData* BitmapDatabase::getInstance()	0	static
-Z:/touch_dest/Projects/gra3_animacja/TouchGFX/generated/images/src/BitmapDatabase.cpp:21:10:uint16_t BitmapDatabase::getInstanceSize()	0	static
+Z:/touch_dest/Projects/gra3_animacja/TouchGFX/generated/images/src/BitmapDatabase.cpp:22:37:const touchgfx::Bitmap::BitmapData* BitmapDatabase::getInstance()	0	static
+Z:/touch_dest/Projects/gra3_animacja/TouchGFX/generated/images/src/BitmapDatabase.cpp:27:10:uint16_t BitmapDatabase::getInstanceSize()	0	static

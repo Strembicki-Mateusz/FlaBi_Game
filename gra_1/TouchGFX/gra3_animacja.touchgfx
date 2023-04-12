@@ -8,7 +8,7 @@
             "Filename": "dluuuugi_obraz.png",
             "Alpha": 255,
             "ScalingAlgorithm": "Nearest-neighbor",
-            "Name": "scalableImage1",
+            "Name": "tlo_animacja",
             "X": 0,
             "Y": 0,
             "Width": 4592,
@@ -19,51 +19,128 @@
             "Clickable": false,
             "Fadeable": false,
             "Moveable": false
-          },
+          }
+        ],
+        "Interactions": [
           {
-            "Type": "FlexButton",
-            "Alpha": 255,
-            "ButtonTrigger": {
-              "Type": "ClickButtonTrigger"
+            "InteractionName": "interakcja_przesuwania",
+            "HasCompletedTrigger": false,
+            "Trigger": {
+              "Type": "TriggerScreenTransitionBegins"
             },
-            "ButtonStyles": [
-              {
-                "Type": "BoxWithBorderButtonStyle",
-                "X": 0,
-                "Y": 0,
-                "Width": 99,
-                "Height": 53,
-                "LockToFlexButtonSize": true,
-                "BorderSize": 5,
-                "ColorReleased": {
-                  "Red": 0,
-                  "Green": 102,
-                  "Blue": 153
-                },
-                "ColorPressed": {
-                  "Red": 0,
-                  "Green": 153,
-                  "Blue": 204
-                },
-                "ColorBorderReleased": {
-                  "Red": 0,
-                  "Green": 51,
-                  "Blue": 102
-                },
-                "ColorBorderPressed": {
-                  "Red": 51,
-                  "Green": 102,
-                  "Blue": 153
-                }
-              }
-            ],
-            "Name": "flexButton1",
+            "Action": {
+              "Type": "ActionMove",
+              "X": -4000,
+              "Y": 0,
+              "Easing": "Linear",
+              "EasingOption": "In",
+              "Duration": 15000,
+              "ActionComponent": "tlo_animacja"
+            }
+          }
+        ],
+        "Name": "Screen2",
+        "OverrideDefaultBufferSize": false,
+        "CanvasBufferSize": 0
+      },
+      {
+        "Components": [
+          {
+            "Type": "ScalableImage",
+            "Filename": "Tlo_2.png",
+            "Alpha": 255,
+            "ScalingAlgorithm": "Nearest-neighbor",
+            "Name": "tlo_menu",
             "X": 0,
             "Y": 0,
-            "Width": 99,
-            "Height": 53,
+            "Width": 809,
+            "Height": 490,
             "Visible": true,
             "LockPosition": false,
+            "Draggable": false,
+            "Clickable": false,
+            "Fadeable": false,
+            "Moveable": false
+          },
+          {
+            "Type": "ButtonWithLabel",
+            "Pressed": "__designer\\Blue_Buttons_Round_small_pressed.png",
+            "Released": "__designer\\Blue_Buttons_Round_small.png",
+            "Alpha": 255,
+            "TextId": "SingleUseId2",
+            "ReleasedColor": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "PressedColor": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "TextRotation": "0",
+            "Style": "Style8",
+            "Name": "button_wyjdz",
+            "X": 315,
+            "Y": 245,
+            "Width": 170,
+            "Height": 60,
+            "Visible": true,
+            "LockPosition": true,
+            "Draggable": false,
+            "Clickable": false,
+            "Fadeable": false,
+            "Moveable": false
+          },
+          {
+            "Type": "ButtonWithLabel",
+            "Pressed": "__designer\\Blue_Buttons_Round_small_pressed.png",
+            "Released": "__designer\\Blue_Buttons_Round_small.png",
+            "Alpha": 255,
+            "TextId": "SingleUseId1",
+            "ReleasedColor": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "PressedColor": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "TextRotation": "0",
+            "Style": "Style8",
+            "Name": "button_nowa_gra",
+            "X": 315,
+            "Y": 180,
+            "Width": 170,
+            "Height": 60,
+            "Visible": true,
+            "LockPosition": true,
+            "Draggable": false,
+            "Clickable": false,
+            "Fadeable": false,
+            "Moveable": false
+          },
+          {
+            "Type": "TextArea",
+            "TextId": "SingleUseId3",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 166,
+              "Green": 47,
+              "Blue": 168
+            },
+            "Alpha": 255,
+            "AutoSize": true,
+            "LineSpacing": 0,
+            "Name": "nazwa_gry",
+            "X": 307,
+            "Y": 38,
+            "Width": 195,
+            "Height": 116,
+            "Visible": true,
+            "LockPosition": true,
             "Draggable": false,
             "Clickable": false,
             "Fadeable": false,
@@ -76,16 +153,13 @@
             "HasCompletedTrigger": false,
             "Trigger": {
               "Type": "TriggerClicked",
-              "TriggerComponent": "flexButton1"
+              "TriggerComponent": "button_nowa_gra"
             },
             "Action": {
-              "Type": "ActionMove",
-              "X": -4000,
-              "Y": 0,
-              "Easing": "Linear",
-              "EasingOption": "In",
-              "Duration": 15000,
-              "ActionComponent": "scalableImage1"
+              "Type": "ActionGotoScreen",
+              "ScreenTransitionType": "ScreenTransitionWipe",
+              "ScreenTransitionDirection": "North",
+              "ActionComponent": "Screen2"
             }
           }
         ],
@@ -95,6 +169,20 @@
       }
     ],
     "CustomContainerDefinitions": [],
+    "TextEntries": [
+      {
+        "TextEntryId": "SingleUseId2",
+        "IsResource": false
+      },
+      {
+        "TextEntryId": "SingleUseId1",
+        "IsResource": false
+      },
+      {
+        "TextEntryId": "SingleUseId3",
+        "IsResource": false
+      }
+    ],
     "Name": "STM32F469I-DISCO",
     "Resolution": {
       "Width": 800,

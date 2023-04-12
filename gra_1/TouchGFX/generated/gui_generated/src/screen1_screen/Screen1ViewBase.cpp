@@ -4,27 +4,42 @@
 #include <gui_generated/screen1_screen/Screen1ViewBase.hpp>
 #include <touchgfx/Color.hpp>
 #include "BitmapDatabase.hpp"
+#include <texts/TextKeysAndLanguages.hpp>
 
 Screen1ViewBase::Screen1ViewBase() :
-    flexButtonCallback(this, &Screen1ViewBase::flexButtonCallbackHandler)
+    buttonCallback(this, &Screen1ViewBase::buttonCallbackHandler)
 {
 
     __background.setPosition(0, 0, 800, 480);
     __background.setColor(touchgfx::Color::getColorFrom24BitRGB(0, 0, 0));
 
-    scalableImage1.setBitmap(touchgfx::Bitmap(BITMAP_DLUUUUGI_OBRAZ_ID));
-    scalableImage1.setPosition(0, 0, 4592, 480);
-    scalableImage1.setScalingAlgorithm(touchgfx::ScalableImage::NEAREST_NEIGHBOR);
+    tlo_menu.setBitmap(touchgfx::Bitmap(BITMAP_TLO_2_ID));
+    tlo_menu.setPosition(0, 0, 809, 490);
+    tlo_menu.setScalingAlgorithm(touchgfx::ScalableImage::NEAREST_NEIGHBOR);
 
-    flexButton1.setBoxWithBorderPosition(0, 0, 99, 53);
-    flexButton1.setBorderSize(5);
-    flexButton1.setBoxWithBorderColors(touchgfx::Color::getColorFrom24BitRGB(0, 102, 153), touchgfx::Color::getColorFrom24BitRGB(0, 153, 204), touchgfx::Color::getColorFrom24BitRGB(0, 51, 102), touchgfx::Color::getColorFrom24BitRGB(51, 102, 153));
-    flexButton1.setPosition(0, 0, 99, 53);
-    flexButton1.setAction(flexButtonCallback);
+    button_wyjdz.setXY(315, 245);
+    button_wyjdz.setBitmaps(touchgfx::Bitmap(BITMAP_BLUE_BUTTONS_ROUND_SMALL_ID), touchgfx::Bitmap(BITMAP_BLUE_BUTTONS_ROUND_SMALL_PRESSED_ID));
+    button_wyjdz.setLabelText(touchgfx::TypedText(T_SINGLEUSEID2));
+    button_wyjdz.setLabelColor(touchgfx::Color::getColorFrom24BitRGB(255, 255, 255));
+    button_wyjdz.setLabelColorPressed(touchgfx::Color::getColorFrom24BitRGB(255, 255, 255));
+
+    button_nowa_gra.setXY(315, 180);
+    button_nowa_gra.setBitmaps(touchgfx::Bitmap(BITMAP_BLUE_BUTTONS_ROUND_SMALL_ID), touchgfx::Bitmap(BITMAP_BLUE_BUTTONS_ROUND_SMALL_PRESSED_ID));
+    button_nowa_gra.setLabelText(touchgfx::TypedText(T_SINGLEUSEID1));
+    button_nowa_gra.setLabelColor(touchgfx::Color::getColorFrom24BitRGB(255, 255, 255));
+    button_nowa_gra.setLabelColorPressed(touchgfx::Color::getColorFrom24BitRGB(255, 255, 255));
+    button_nowa_gra.setAction(buttonCallback);
+
+    nazwa_gry.setXY(307, 38);
+    nazwa_gry.setColor(touchgfx::Color::getColorFrom24BitRGB(166, 47, 168));
+    nazwa_gry.setLinespacing(0);
+    nazwa_gry.setTypedText(touchgfx::TypedText(T_SINGLEUSEID3));
 
     add(__background);
-    add(scalableImage1);
-    add(flexButton1);
+    add(tlo_menu);
+    add(button_wyjdz);
+    add(button_nowa_gra);
+    add(nazwa_gry);
 }
 
 void Screen1ViewBase::setupScreen()
@@ -32,14 +47,13 @@ void Screen1ViewBase::setupScreen()
 
 }
 
-void Screen1ViewBase::flexButtonCallbackHandler(const touchgfx::AbstractButtonContainer& src)
+void Screen1ViewBase::buttonCallbackHandler(const touchgfx::AbstractButton& src)
 {
-    if (&src == &flexButton1)
+    if (&src == &button_nowa_gra)
     {
         //Interaction1
-        //When flexButton1 clicked move scalableImage1
-        //Move scalableImage1 to x:-4000, y:0 with LinearIn easing in 15000 ms (900 Ticks)
-        scalableImage1.clearMoveAnimationEndedAction();
-        scalableImage1.startMoveAnimation(-4000, 0, 900, touchgfx::EasingEquations::linearEaseIn, touchgfx::EasingEquations::linearEaseIn);
+        //When button_nowa_gra clicked change screen to Screen2
+        //Go to Screen2 with screen transition towards North
+        application().gotoScreen2ScreenWipeTransitionNorth();
     }
 }
