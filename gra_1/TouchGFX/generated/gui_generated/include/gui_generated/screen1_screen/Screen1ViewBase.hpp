@@ -9,9 +9,7 @@
 #include <gui/screen1_screen/Screen1Presenter.hpp>
 #include <touchgfx/widgets/Box.hpp>
 #include <touchgfx/widgets/ScalableImage.hpp>
-#include <touchgfx/containers/buttons/Buttons.hpp>
-#include <touchgfx/EasingEquations.hpp>
-#include <touchgfx/mixins/MoveAnimator.hpp>
+#include <touchgfx/widgets/ButtonWithLabel.hpp>
 
 class Screen1ViewBase : public touchgfx::View<Screen1Presenter>
 {
@@ -29,20 +27,21 @@ protected:
      * Member Declarations
      */
     touchgfx::Box __background;
-    touchgfx::MoveAnimator< touchgfx::ScalableImage > scalableImage1;
-    touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger > flexButton1;
+    touchgfx::ScalableImage tlo_menu;
+    touchgfx::ButtonWithLabel button_wyjdz;
+    touchgfx::ButtonWithLabel button_nowa_gra;
 
 private:
 
     /*
      * Callback Declarations
      */
-    touchgfx::Callback<Screen1ViewBase, const touchgfx::AbstractButtonContainer&> flexButtonCallback;
+    touchgfx::Callback<Screen1ViewBase, const touchgfx::AbstractButton&> buttonCallback;
 
     /*
      * Callback Handler Declarations
      */
-    void flexButtonCallbackHandler(const touchgfx::AbstractButtonContainer& src);
+    void buttonCallbackHandler(const touchgfx::AbstractButton& src);
 
 };
 

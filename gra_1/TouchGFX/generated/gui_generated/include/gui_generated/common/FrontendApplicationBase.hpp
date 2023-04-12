@@ -15,6 +15,9 @@ public:
     FrontendApplicationBase(Model& m, FrontendHeap& heap);
     virtual ~FrontendApplicationBase() { }
 
+    // Screen2
+    void gotoScreen2ScreenWipeTransitionNorth();
+
     // Screen1
     void gotoScreen1ScreenNoTransition();
 
@@ -22,6 +25,9 @@ protected:
     touchgfx::Callback<FrontendApplicationBase> transitionCallback;
     FrontendHeap& frontendHeap;
     Model& model;
+
+    // Screen2
+    void gotoScreen2ScreenWipeTransitionNorthImpl();
 
     // Screen1
     void gotoScreen1ScreenNoTransitionImpl();

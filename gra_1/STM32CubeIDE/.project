@@ -355,6 +355,16 @@
 			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/TouchGFX/gui/src/screen1_screen/Screen1View.cpp</locationURI>
 		</link>
 		<link>
+			<name>Application/User/gui/Screen2Presenter.cpp</name>
+			<type>1</type>
+			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/TouchGFX/gui/src/screen2_screen/Screen2Presenter.cpp</locationURI>
+		</link>
+		<link>
+			<name>Application/User/gui/Screen2View.cpp</name>
+			<type>1</type>
+			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/TouchGFX/gui/src/screen2_screen/Screen2View.cpp</locationURI>
+		</link>
+		<link>
 			<name>Application/User/generated/ApplicationFontProvider.cpp</name>
 			<type>1</type>
 			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/TouchGFX/generated/fonts/src/ApplicationFontProvider.cpp</locationURI>
@@ -435,6 +445,11 @@
 			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/TouchGFX/generated/gui_generated/src/screen1_screen/Screen1ViewBase.cpp</locationURI>
 		</link>
 		<link>
+			<name>Application/User/generated/Screen2ViewBase.cpp</name>
+			<type>1</type>
+			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/TouchGFX/generated/gui_generated/src/screen2_screen/Screen2ViewBase.cpp</locationURI>
+		</link>
+		<link>
 			<name>Application/User/generated/BitmapDatabase.cpp</name>
 			<type>1</type>
 			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/TouchGFX/generated/images/src/BitmapDatabase.cpp</locationURI>
@@ -443,6 +458,26 @@
 			<name>Application/User/generated/image_dluuuugi_obraz.cpp</name>
 			<type>1</type>
 			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/TouchGFX/generated/images/src/image_dluuuugi_obraz.cpp</locationURI>
+		</link>
+		<link>
+			<name>Application/User/generated/image_Tlo_2.cpp</name>
+			<type>1</type>
+			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/TouchGFX/generated/images/src/image_Tlo_2.cpp</locationURI>
+		</link>
+		<link>
+			<name>Application/User/generated/image_Blue_Buttons_Round_small.cpp</name>
+			<type>1</type>
+			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/TouchGFX/generated/images/src/__designer/image_Blue_Buttons_Round_small.cpp</locationURI>
+		</link>
+		<link>
+			<name>Application/User/generated/image_Blue_Buttons_Round_small_pressed.cpp</name>
+			<type>1</type>
+			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/TouchGFX/generated/images/src/__designer/image_Blue_Buttons_Round_small_pressed.cpp</locationURI>
+		</link>
+		<link>
+			<name>Application/User/generated/LanguageGb.cpp</name>
+			<type>1</type>
+			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/TouchGFX/generated/texts/src/LanguageGb.cpp</locationURI>
 		</link>
 		<link>
 			<name>Application/User/generated/Texts.cpp</name>
