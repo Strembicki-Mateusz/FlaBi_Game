@@ -1,26 +1,29 @@
-/******************************************************************************
-* Copyright (c) 2018(-2023) STMicroelectronics.
-* All rights reserved.
-*
-* This file is part of the TouchGFX 4.21.3 distribution.
-*
-* This software is licensed under terms that can be found in the LICENSE file in
-* the root directory of this software component.
-* If no LICENSE file comes with this software, it is provided AS-IS.
-*
-*******************************************************************************/
+/**
+  ******************************************************************************
+  * This file is part of the TouchGFX 4.16.0 distribution.
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
+  *
+  ******************************************************************************
+  */
 
 /**
  * @file touchgfx/TypedText.hpp
  *
  * Declares the touchgfx::TypedText class.
  */
-#ifndef TOUCHGFX_TYPEDTEXT_HPP
-#define TOUCHGFX_TYPEDTEXT_HPP
+#ifndef TYPEDTEXT_HPP
+#define TYPEDTEXT_HPP
 
+#include <cassert>
 #include <touchgfx/Font.hpp>
 #include <touchgfx/Texts.hpp>
-#include <touchgfx/Unicode.hpp>
 #include <touchgfx/hal/Types.hpp>
 
 namespace touchgfx
@@ -56,7 +59,7 @@ public:
      *
      * @param  id (Optional) The identifier.
      */
-    TypedText(const TypedTextId id = TYPED_TEXT_INVALID)
+    explicit TypedText(const TypedTextId id = TYPED_TEXT_INVALID)
         : typedTextId(id)
     {
     }
@@ -83,7 +86,7 @@ public:
      */
     FORCE_INLINE_FUNCTION bool hasValidId() const
     {
-        return typedTextId < numberOfTypedTexts;
+        return typedTextId != TYPED_TEXT_INVALID;
     }
 
     /**
@@ -93,8 +96,7 @@ public:
      */
     FORCE_INLINE_FUNCTION const Unicode::UnicodeChar* getText() const
     {
-        assert(typedTexts != 0 && "TypedText database has not been initialized.");
-        assert(hasValidId() && "typedTextId larger than numberOfTypedTexts.");
+        assertValid();
         return texts->getText(typedTextId);
     }
 
@@ -105,8 +107,7 @@ public:
      */
     FORCE_INLINE_FUNCTION const Font* getFont() const
     {
-        assert(typedTexts != 0 && "TypedText database has not been initialized.");
-        assert(hasValidId() && "typedTextId larger than numberOfTypedTexts.");
+        assertValid();
         return fonts[typedTexts[typedTextId].fontIdx];
     }
 
@@ -117,8 +118,7 @@ public:
      */
     FORCE_INLINE_FUNCTION FontId getFontId() const
     {
-        assert(typedTexts != 0 && "TypedText database has not been initialized.");
-        assert(hasValidId() && "typedTextId larger than numberOfTypedTexts.");
+        assertValid();
         return typedTexts[typedTextId].fontIdx;
     }
 
@@ -129,8 +129,7 @@ public:
      */
     FORCE_INLINE_FUNCTION Alignment getAlignment() const
     {
-        assert(typedTexts != 0 && "TypedText database has not been initialized.");
-        assert(hasValidId() && "typedTextId larger than numberOfTypedTexts.");
+        assertValid();
         return typedTexts[typedTextId].alignment;
     }
 
@@ -141,8 +140,7 @@ public:
      */
     FORCE_INLINE_FUNCTION TextDirection getTextDirection() const
     {
-        assert(typedTexts != 0 && "TypedText database has not been initialized.");
-        assert(hasValidId() && "typedTextId larger than numberOfTypedTexts.");
+        assertValid();
         return typedTexts[typedTextId].direction;
     }
 
@@ -174,6 +172,12 @@ public:
     }
 
 private:
+    FORCE_INLINE_FUNCTION void assertValid() const
+    {
+        assert(typedTexts != 0 && "TypedText database has not been initialized.");
+        assert(typedTextId < numberOfTypedTexts && "typedTextId larger than numberOfTypedTexts.");
+    }
+
     TypedTextId typedTextId;
 
     static const TypedTextData* typedTexts;
@@ -184,4 +188,4 @@ private:
 
 } // namespace touchgfx
 
-#endif // TOUCHGFX_TYPEDTEXT_HPP
+#endif // TYPEDTEXT_HPP

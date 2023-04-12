@@ -1,24 +1,26 @@
-/******************************************************************************
-* Copyright (c) 2018(-2023) STMicroelectronics.
-* All rights reserved.
-*
-* This file is part of the TouchGFX 4.21.3 distribution.
-*
-* This software is licensed under terms that can be found in the LICENSE file in
-* the root directory of this software component.
-* If no LICENSE file comes with this software, it is provided AS-IS.
-*
-*******************************************************************************/
+/**
+  ******************************************************************************
+  * This file is part of the TouchGFX 4.16.0 distribution.
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
+  *
+  ******************************************************************************
+  */
 
 /**
  * @file touchgfx/transitions/SlideTransition.hpp
  *
  * Declares the touchgfx::SlideTransition class.
  */
-#ifndef TOUCHGFX_SLIDETRANSITION_HPP
-#define TOUCHGFX_SLIDETRANSITION_HPP
+#ifndef SLIDETRANSITION_HPP
+#define SLIDETRANSITION_HPP
 
-#include <touchgfx/Drawable.hpp>
 #include <touchgfx/EasingEquations.hpp>
 #include <touchgfx/containers/Container.hpp>
 #include <touchgfx/hal/HAL.hpp>
@@ -47,34 +49,36 @@ public:
     SlideTransition(const uint8_t transitionSteps = 20)
         : Transition(),
           snapshot(),
+          snapshotPtr(&snapshot),
+          handleTickCallback(this, &SlideTransition::tickMoveDrawable),
           animationSteps(transitionSteps),
           animationCounter(0),
-          relativeValue(0)
+          calculatedValue(0)
     {
-        if (!HAL::USE_ANIMATION_STORAGE)
+        if (HAL::USE_ANIMATION_STORAGE)
         {
-            // No animation storage, don't slide
-            done = true;
-            return;
-        }
+            snapshot.setPosition(0, 0, HAL::DISPLAY_WIDTH, HAL::DISPLAY_HEIGHT);
+            snapshot.makeSnapshot();
 
-        snapshot.setPosition(0, 0, HAL::DISPLAY_WIDTH, HAL::DISPLAY_HEIGHT);
-        snapshot.makeSnapshot();
-
-        switch (templateDirection)
-        {
-        case EAST:
-            targetValue = -HAL::DISPLAY_WIDTH;
-            break;
-        case WEST:
-            targetValue = HAL::DISPLAY_WIDTH;
-            break;
-        case NORTH:
-            targetValue = HAL::DISPLAY_HEIGHT;
-            break;
-        case SOUTH:
-            targetValue = -HAL::DISPLAY_HEIGHT;
-            break;
+            switch (templateDirection)
+            {
+            case EAST:
+                targetValue = -HAL::DISPLAY_WIDTH;
+                break;
+            case WEST:
+                targetValue = HAL::DISPLAY_WIDTH;
+                break;
+            case NORTH:
+                targetValue = HAL::DISPLAY_HEIGHT;
+                break;
+            case SOUTH:
+                targetValue = -HAL::DISPLAY_HEIGHT;
+                break;
+            default:
+                done = true;
+                // Nothing to do here
+                break;
+            }
         }
     }
 
@@ -86,11 +90,29 @@ public:
      */
     virtual void handleTickEvent()
     {
+        if (!HAL::USE_ANIMATION_STORAGE)
+        {
+            done = true;
+            return;
+        }
+
         Transition::handleTickEvent();
 
         // Calculate new position or stop animation
         animationCounter++;
-        if (animationCounter > animationSteps)
+        if (animationCounter <= animationSteps)
+        {
+            // Calculate value in [0;targetValue]
+            calculatedValue = EasingEquations::cubicEaseOut(animationCounter, 0, targetValue, animationSteps);
+
+            // Note: Result of "calculatedValue & 1" is compiler dependent for negative values of calculatedValue
+            if (calculatedValue % 2)
+            {
+                // Optimization: calculatedValue is odd, add 1/-1 to move drawables modulo 32 bits in framebuffer
+                calculatedValue += (calculatedValue > 0 ? 1 : -1);
+            }
+        }
+        else
         {
             // Final step: stop the animation
             done = true;
@@ -98,49 +120,29 @@ public:
             return;
         }
 
-        // Calculate value in [0;targetValue]
-        int16_t calculatedValue = EasingEquations::cubicEaseOut(animationCounter, 0, targetValue, animationSteps);
-
-        // Note: Result of "calculatedValue & 1" is compiler dependent for negative values of calculatedValue
-        if ((calculatedValue % 2) != 0)
-        {
-            // Optimization: calculatedValue is odd, add 1/-1 to move drawables modulo 32 bits in framebuffer
-            calculatedValue += (calculatedValue > 0 ? 1 : -1);
-        }
-
         // Move snapshot
         switch (templateDirection)
         {
         case EAST:
         case WEST:
-            relativeValue = calculatedValue - snapshot.getX();
+            // Convert to delta value relative to current X
+            calculatedValue -= snapshot.getX();
+            snapshot.moveRelative(calculatedValue, 0);
             break;
         case NORTH:
         case SOUTH:
-            relativeValue = calculatedValue - snapshot.getY();
+            // Convert to delta value relative to current Y
+            calculatedValue -= snapshot.getY();
+            snapshot.moveRelative(0, calculatedValue);
+            break;
+        default:
+            done = true;
+            // Nothing to do here
             break;
         }
 
-        // Move snapshot and its children with delta value for X or Y
-        Drawable* d = screenContainer->getFirstChild();
-        while (d)
-        {
-            switch (templateDirection)
-            {
-            case EAST:
-            case WEST:
-                d->setX(d->getX() + relativeValue);
-                break;
-            case NORTH:
-            case SOUTH:
-                d->setY(d->getY() + relativeValue);
-                break;
-            }
-            d = d->getNextSibling();
-        }
-
-        // Entire screen has changed, redraw
-        screenContainer->invalidate();
+        // Move children with delta value for X or Y
+        screenContainer->forEachChild(&handleTickCallback);
     }
 
     virtual void tearDown()
@@ -153,45 +155,86 @@ public:
 
     virtual void init()
     {
-        Transition::init();
+        if (HAL::USE_ANIMATION_STORAGE)
+        {
+            Transition::init();
 
-        if (done)
+            Callback<SlideTransition, Drawable&> initCallback(this, &SlideTransition::initMoveDrawable);
+            screenContainer->forEachChild(&initCallback);
+
+            screenContainer->add(snapshot);
+        }
+    }
+
+protected:
+    /**
+     * Moves the Drawable to its initial position, just outside the actual display.
+     *
+     * @param [in] d The Drawable to move.
+     */
+    virtual void initMoveDrawable(Drawable& d)
+    {
+        switch (templateDirection)
+        {
+        case EAST:
+            d.moveRelative(HAL::DISPLAY_WIDTH, 0);
+            break;
+        case WEST:
+            d.moveRelative(-HAL::DISPLAY_WIDTH, 0);
+            break;
+        case NORTH:
+            d.moveRelative(0, -HAL::DISPLAY_HEIGHT);
+            break;
+        case SOUTH:
+            d.moveRelative(0, HAL::DISPLAY_HEIGHT);
+            break;
+        default:
+            // Nothing to do here
+            break;
+        }
+    }
+
+    /**
+     * Moves the Drawable.
+     *
+     * @param [in] d The Drawable to move.
+     */
+    virtual void tickMoveDrawable(Drawable& d)
+    {
+        if (&d == snapshotPtr)
         {
             return;
         }
 
-        // Move snapshot and its children with delta value for X or Y
-        Drawable* d = screenContainer->getFirstChild();
-        while (d)
+        switch (templateDirection)
         {
-            switch (templateDirection)
-            {
-            case EAST:
-            case WEST:
-                d->setX(d->getX() - targetValue);
-                break;
-            case NORTH:
-            case SOUTH:
-                d->setY(d->getY() - targetValue);
-                break;
-            }
-
-            d = d->getNextSibling();
+        case EAST:
+        case WEST:
+            d.moveRelative(calculatedValue, 0);
+            break;
+        case NORTH:
+        case SOUTH:
+            d.moveRelative(0, calculatedValue);
+            break;
+        default:
+            // Special case, do not move. Class NoTransition can be used instead.
+            done = true;
+            break;
         }
-
-        screenContainer->add(snapshot);
     }
 
-protected:
-    SnapshotWidget snapshot; ///< The SnapshotWidget that is moved when transitioning.
+    SnapshotWidget snapshot;     ///< The SnapshotWidget that is moved when transitioning.
+    SnapshotWidget* snapshotPtr; ///< Pointer pointing to the snapshot used in this transition.The snapshot pointer
 
 private:
+    Callback<SlideTransition, Drawable&> handleTickCallback; ///< Callback used for tickMoveDrawable().
+
     const uint8_t animationSteps; ///< Number of steps the transition should move per complete animation.
     uint8_t animationCounter;     ///< Current step in the transition animation.
     int16_t targetValue;          ///< The target value for the transition animation.
-    int16_t relativeValue;        ///< The relative X or Y value for the snapshot and the children.
+    int16_t calculatedValue;      ///< The calculated X or Y value for the snapshot and the children.
 };
 
 } // namespace touchgfx
 
-#endif // TOUCHGFX_SLIDETRANSITION_HPP
+#endif // SLIDETRANSITION_HPP

@@ -1,42 +1,64 @@
-/******************************************************************************
-* Copyright (c) 2018(-2023) STMicroelectronics.
-* All rights reserved.
-*
-* This file is part of the TouchGFX 4.21.3 distribution.
-*
-* This software is licensed under terms that can be found in the LICENSE file in
-* the root directory of this software component.
-* If no LICENSE file comes with this software, it is provided AS-IS.
-*
-*******************************************************************************/
+/**
+  ******************************************************************************
+  * This file is part of the TouchGFX 4.16.0 distribution.
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
+  *
+  ******************************************************************************
+  */
 
 /**
  * @file touchgfx/transitions/WipeTransition.hpp
  *
  * Declares the touchgfx::WipeTransition class.
  */
-#ifndef TOUCHGFX_WIPETRANSITION_HPP
-#define TOUCHGFX_WIPETRANSITION_HPP
+#ifndef WIPETRANSITION_HPP
+#define WIPETRANSITION_HPP
 
 #include <touchgfx/EasingEquations.hpp>
 #include <touchgfx/containers/Container.hpp>
 #include <touchgfx/hal/HAL.hpp>
 #include <touchgfx/hal/Types.hpp>
-#include <touchgfx/lcd/LCD.hpp>
 #include <touchgfx/transitions/Transition.hpp>
+#include <touchgfx/widgets/Widget.hpp>
 
 namespace touchgfx
 {
+class Container;
+class Widget;
+
 /**
  * A Transition that expands the new screen over the previous from
  * the given direction.  This transition only draws the pixels in the
  * framebuffer once, and never moves any pixels. It is therefore very
- * useful on MCUs with limited performance.
+ * usefull on MCUs with limited performance.
  */
 template <Direction templateDirection>
 class WipeTransition : public Transition
 {
 public:
+    /**
+     * A Widget that reports solid and but does not draw anything.
+     */
+    class FullSolidRect : public Widget
+    {
+    public:
+        virtual Rect getSolidRect() const
+        {
+            return Rect(0U, 0U, rect.width, rect.height);
+        }
+
+        virtual void draw(const Rect& area) const
+        {
+        }
+    };
+
     /**
      * Initializes a new instance of the WipeTransition class.
      *
@@ -59,9 +81,13 @@ public:
         case SOUTH:
             targetValue = HAL::DISPLAY_HEIGHT;
             break;
+        default:
+            done = true;
+            // Nothing to do here
+            break;
         }
 
-        // Ensure that the solid area covers the entire screen
+        //Ensure that the solid area covers the entire screen
         solid.setPosition(0, 0, HAL::DISPLAY_WIDTH, HAL::DISPLAY_HEIGHT);
     }
 
@@ -75,7 +101,19 @@ public:
         animationCounter++;
 
         // Calculate new position or stop animation
-        if (animationCounter > animationSteps)
+        if (animationCounter <= (animationSteps))
+        {
+            // Calculate value in [0;targetValue]
+            calculatedValue = EasingEquations::cubicEaseOut(animationCounter, 0, targetValue, animationSteps);
+
+            // Note: Result of "calculatedValue & 1" is compiler dependent for negative values of calculatedValue
+            if (calculatedValue % 2)
+            {
+                // Optimization: calculatedValue is odd, add 1/-1 to move drawables modulo 32 bits in framebuffer
+                calculatedValue += (calculatedValue > 0 ? 1 : -1);
+            }
+        }
+        else
         {
             // Final step: stop the animation
             done = true;
@@ -83,27 +121,17 @@ public:
             return;
         }
 
-        // Calculate value in [0;targetValue]
-        calculatedValue = EasingEquations::cubicEaseOut(animationCounter, 0, targetValue, animationSteps);
-
-        // Note: Result of "calculatedValue & 1" is compiler dependent for negative values of calculatedValue
-        if ((calculatedValue % 2) != 0)
-        {
-            // Optimization: calculatedValue is odd, add 1/-1 to move drawables modulo 32 bits in framebuffer
-            calculatedValue += (calculatedValue > 0 ? 1 : -1);
-        }
-
-        // calculatedValue is the width/height of the visible area
+        //calculatedValue is the width/height of the visible area
 
         switch (templateDirection)
         {
         case EAST:
             {
-                // Cover must have width of remaining part
+                //cover must have width of remaining part
                 const uint16_t prevSolidWidth = solid.getWidth();
                 solid.setWidth(HAL::DISPLAY_WIDTH - calculatedValue);
 
-                // Invalidate the uncovered part
+                //invalidate the uncovered part
                 const uint16_t delta = prevSolidWidth - solid.getWidth();
                 Rect r(solid.getWidth(), 0, delta, HAL::DISPLAY_HEIGHT);
                 screenContainer->invalidateRect(r);
@@ -111,12 +139,12 @@ public:
             }
         case WEST:
             {
-                // Cover must have width of remaining part and start after uncovered
+                //cover must have width of remaining part and start after uncovered
                 const uint16_t prevSolidPos = solid.getX();
                 solid.setWidth(HAL::DISPLAY_WIDTH - calculatedValue);
                 solid.setX(calculatedValue);
 
-                // Invalidate the uncovered part
+                //invalidate the uncovered part
                 const uint16_t delta = calculatedValue - prevSolidPos;
                 Rect r(prevSolidPos, 0, delta, HAL::DISPLAY_HEIGHT);
                 screenContainer->invalidateRect(r);
@@ -124,12 +152,12 @@ public:
             }
         case NORTH:
             {
-                // Cover must have height of remaining part and start after uncovered
+                //cover must have height of remaining part and start after uncovered
                 const uint16_t prevSolidPos = solid.getY();
                 solid.setHeight(HAL::DISPLAY_HEIGHT - calculatedValue);
                 solid.setY(calculatedValue);
 
-                // Invalidate the uncovered part
+                //invalidate the uncovered part
                 const uint16_t delta = calculatedValue - prevSolidPos;
                 Rect r(0, prevSolidPos, HAL::DISPLAY_WIDTH, delta);
                 screenContainer->invalidateRect(r);
@@ -137,25 +165,46 @@ public:
             }
         case SOUTH:
             {
-                // Cover must have height of remaining part
+                //cover must have height of remaining part
                 const uint16_t prevSolidHeight = solid.getHeight();
                 solid.setHeight(HAL::DISPLAY_HEIGHT - calculatedValue);
 
-                // Invalidate the uncovered part
+                //invalidate the uncovered part
                 const uint16_t delta = prevSolidHeight - solid.getHeight();
                 Rect r(0, solid.getHeight(), HAL::DISPLAY_WIDTH, delta);
                 screenContainer->invalidateRect(r);
                 break;
             }
+        default:
+            // Special case, do not move. Class NoTransition can be used instead.
+            done = true;
+            break;
         }
 
         // The WipeTransition only draws to parts of the non-TFT
         // framebuffer. To avoid glitches in Double buffering mode
         // both framebuffers must be made identical.
+        //
+        // In the first tick WipeTransition cover "calculatedValue"
+        // pixels vertically or horizontally depending on the speed of
+        // the transition, so there's no need to transfer that. The
+        // solid Widget covers the rest, so we copy those pixels.
+        //
         if (animationCounter == 1 && HAL::USE_DOUBLE_BUFFERING)
         {
-            // Synchronize framebuffers
-            Application::getInstance()->copyInvalidatedAreasFromTFTToClientBuffer();
+            Rect rect = solid.getRect(); //part to copy between buffers
+
+            // Get the currently displayed framebuffer
+            uint16_t* tftFb = HAL::getInstance()->getTFTFrameBuffer();
+
+            Rect source;
+            source.x = 0;
+            source.y = 0;
+            source.width = HAL::DISPLAY_WIDTH;
+            source.height = HAL::DISPLAY_HEIGHT;
+
+            //Copy rect from tft to client framebuffer
+            HAL::getInstance()->lcd().blitCopy((const uint16_t*)tftFb, source, rect, 255, false);
         }
     }
 
@@ -167,7 +216,7 @@ public:
     virtual void init()
     {
         Transition::init();
-        // Add the solid (and not-drawing-anything) widget on top to cover the other widgets
+        //add the solid (and not-drawing-anything) widget on top to cover the other widgets
         screenContainer->add(solid);
     }
 
@@ -177,6 +226,7 @@ public:
      */
     virtual void invalidate()
     {
+        //nop
     }
 
 private:
@@ -189,4 +239,4 @@ private:
 
 } // namespace touchgfx
 
-#endif // TOUCHGFX_WIPETRANSITION_HPP
+#endif // WIPETRANSITION_HPP

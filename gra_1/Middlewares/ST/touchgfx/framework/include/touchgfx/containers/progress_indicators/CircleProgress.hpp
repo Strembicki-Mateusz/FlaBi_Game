@@ -1,26 +1,28 @@
-/******************************************************************************
-* Copyright (c) 2018(-2023) STMicroelectronics.
-* All rights reserved.
-*
-* This file is part of the TouchGFX 4.21.3 distribution.
-*
-* This software is licensed under terms that can be found in the LICENSE file in
-* the root directory of this software component.
-* If no LICENSE file comes with this software, it is provided AS-IS.
-*
-*******************************************************************************/
+/**
+  ******************************************************************************
+  * This file is part of the TouchGFX 4.16.0 distribution.
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
+  *
+  ******************************************************************************
+  */
 
 /**
  * @file touchgfx/containers/progress_indicators/CircleProgress.hpp
  *
  * Declares the touchgfx::CircleProgress class.
  */
-#ifndef TOUCHGFX_CIRCLEPROGRESS_HPP
-#define TOUCHGFX_CIRCLEPROGRESS_HPP
+#ifndef CIRCLEPROGRESS_HPP
+#define CIRCLEPROGRESS_HPP
 
 #include <touchgfx/containers/progress_indicators/AbstractProgressIndicator.hpp>
-#include <touchgfx/hal/Types.hpp>
-#include <touchgfx/widgets/canvas/AbstractPainter.hpp>
+#include <touchgfx/widgets/canvas/AbstractPainterRGB565.hpp>
 #include <touchgfx/widgets/canvas/Circle.hpp>
 
 namespace touchgfx
@@ -123,36 +125,30 @@ public:
     }
 
     /**
-     * Sets start angle and end angle in degrees. By swapping end and start angles, circles can
-     * progress backwards.
+     * Sets start and end angle. By swapping end and start angles, circles can progress
+     * backwards.
      *
-     * @param   startAngle  The start angle.
-     * @param   endAngle    The end angle.
-     *
-     * @note    Angles are given in degrees, so a full circle is 360.
+     * @param  startAngle The start angle.
+     * @param  endAngle   The end angle.
      */
     virtual void setStartEndAngle(int startAngle, int endAngle);
 
     /**
-     * Gets start angle in degrees.
+     * Gets start angle.
      *
-     * @return  The start angle.
+     * @return The start angle.
      *
      * @see setStartEndAngle, getEndAngle
-     *
-     * @note    Angles are given in degrees, so a full circle is 360.
      */
     virtual int getStartAngle() const;
 
     /**
-     * Gets end angle in degrees. Beware that the value returned is not related to the current
-     * progress of the circle but rather the end point of the circle when it is at 100%.
+     * Gets end angle. Beware that the value returned is not related to the current progress
+     * of the circle but rather the end point of the circle when it is at 100%.
      *
-     * @return  The end angle.
+     * @return The end angle.
      *
      * @see setStartEndAngle
-     *
-     * @note    Angles are given in degrees, so a full circle is 360.
      */
     virtual int getEndAngle() const;
 
@@ -165,6 +161,9 @@ public:
      */
     virtual void setAlpha(uint8_t newAlpha);
 
+    /** @copydoc Image::getAlpha() */
+    virtual uint8_t getAlpha() const;
+
     virtual void setValue(int value);
 
 protected:
@@ -174,4 +173,4 @@ protected:
 
 } // namespace touchgfx
 
-#endif // TOUCHGFX_CIRCLEPROGRESS_HPP
+#endif // CIRCLEPROGRESS_HPP

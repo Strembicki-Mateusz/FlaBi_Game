@@ -1,19 +1,20 @@
-/******************************************************************************
-* Copyright (c) 2018(-2023) STMicroelectronics.
-* All rights reserved.
-*
-* This file is part of the TouchGFX 4.21.3 distribution.
-*
-* This software is licensed under terms that can be found in the LICENSE file in
-* the root directory of this software component.
-* If no LICENSE file comes with this software, it is provided AS-IS.
-*
-*******************************************************************************/
+/**
+  ******************************************************************************
+  * This file is part of the TouchGFX 4.16.0 distribution.
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
+  *
+  ******************************************************************************
+  */
 
-#include <touchgfx/Drawable.hpp>
-#include <touchgfx/hal/HAL.hpp>
-#include <touchgfx/lcd/LCD.hpp>
 #include <touchgfx/widgets/RadioButton.hpp>
+#include <touchgfx/hal/HAL.hpp>
 
 namespace touchgfx
 {
@@ -23,7 +24,7 @@ void RadioButton::draw(const Rect& invalidatedArea) const
     if (bitmap.getId() != BITMAP_INVALID)
     {
         Rect meAbs;
-        translateRectToAbsolute(meAbs); // To find our x and y coords in absolute.
+        translateRectToAbsolute(meAbs); //To find our x and y coords in absolute.
 
         // Calculate intersection between bitmap rect and invalidated area.
         Rect dirtyBitmapArea = bitmap.getRect() & invalidatedArea;
@@ -70,7 +71,7 @@ Rect RadioButton::getSolidRect() const
 {
     if (alpha < 255)
     {
-        return Rect();
+        return Rect(0, 0, 0, 0);
     }
 
     return getCurrentlyDisplayedBitmap().getSolidRect();

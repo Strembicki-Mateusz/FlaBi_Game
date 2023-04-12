@@ -1,20 +1,19 @@
-/******************************************************************************
-* Copyright (c) 2018(-2023) STMicroelectronics.
-* All rights reserved.
-*
-* This file is part of the TouchGFX 4.21.3 distribution.
-*
-* This software is licensed under terms that can be found in the LICENSE file in
-* the root directory of this software component.
-* If no LICENSE file comes with this software, it is provided AS-IS.
-*
-*******************************************************************************/
+/**
+  ******************************************************************************
+  * This file is part of the TouchGFX 4.16.0 distribution.
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
+  *
+  ******************************************************************************
+  */
 
-#include <touchgfx/Application.hpp>
-#include <touchgfx/Bitmap.hpp>
-#include <touchgfx/Drawable.hpp>
 #include <touchgfx/EasingEquations.hpp>
-#include <touchgfx/containers/Container.hpp>
 #include <touchgfx/containers/SwipeContainer.hpp>
 
 namespace touchgfx
@@ -22,11 +21,13 @@ namespace touchgfx
 SwipeContainer::SwipeContainer()
     : Container(),
       currentState(NO_ANIMATION),
+      numberOfPages(0),
       animationCounter(0),
       swipeCutoff(80),
       dragX(0),
       animateDistance(0),
       startX(0),
+      currentPage(0),
       endElasticWidth(30),
       pages(EAST),
       pageIndicator()
@@ -47,9 +48,9 @@ SwipeContainer::~SwipeContainer()
 void SwipeContainer::add(Drawable& page)
 {
     pages.add(page);
+    numberOfPages++;
 
-    pageIndicator.setNumberOfPages(getNumberOfPages() + 1);
-    setSelectedPage(getSelectedPage());
+    pageIndicator.setNumberOfPages(numberOfPages);
 
     setWidthHeight(page);
 }
@@ -58,7 +59,7 @@ void SwipeContainer::remove(Drawable& page)
 {
     Drawable* tmp = pages.getFirstChild();
 
-    if (pageIndicator.getNumberOfPages() == 0)
+    if (!numberOfPages)
     {
         return;
     }
@@ -70,19 +71,15 @@ void SwipeContainer::remove(Drawable& page)
         if (tmp == &page)
         {
             pages.remove(page);
-            pageIndicator.setNumberOfPages(getNumberOfPages() - 1);
+            numberOfPages--;
 
-            const uint8_t numPages = getNumberOfPages();
-            if (numPages == 0)
+            if (!numberOfPages)
             {
                 setWidthHeight(0, 0);
             }
             else
             {
-                pageIndicator.invalidateContent();
-                const uint8_t curPage = getSelectedPage();
-                setSelectedPage(MIN(curPage, numPages - 1));
-                pageIndicator.invalidateContent();
+                pageIndicator.setNumberOfPages(numberOfPages);
             }
             return;
         }
@@ -115,32 +112,19 @@ void SwipeContainer::setPageIndicatorXY(int16_t x, int16_t y)
 
 void SwipeContainer::setPageIndicatorXYWithCenteredX(int16_t x, int16_t y)
 {
-    setPageIndicatorCenteredX(x);
-    pageIndicator.setY(y);
-}
-
-void SwipeContainer::setPageIndicatorCenteredX()
-{
-    setPageIndicatorCenteredX(getWidth() / 2);
-}
-
-void SwipeContainer::setPageIndicatorCenteredX(int16_t x)
-{
-    pageIndicator.setX(x - pageIndicator.getWidth() / 2);
+    pageIndicator.setXY(x - pageIndicator.getWidth() / 2, y);
 }
 
 void SwipeContainer::setSelectedPage(uint8_t pageIndex)
 {
-    if (pageIndex < getNumberOfPages())
-    {
-        pageIndicator.setCurrentPage(pageIndex);
-        adjustPages();
-    }
+    currentPage = pageIndex;
+    pageIndicator.setHighlightPosition(currentPage);
+    adjustPages();
 }
 
 uint8_t SwipeContainer::getSelectedPage() const
 {
-    return pageIndicator.getCurrentPage();
+    return currentPage;
 }
 
 void SwipeContainer::handleTickEvent()
@@ -163,7 +147,7 @@ void SwipeContainer::handleTickEvent()
     }
 }
 
-void SwipeContainer::handleClickEvent(const ClickEvent& event)
+void SwipeContainer::handleClickEvent(const ClickEvent& evt)
 {
     // If an animation is already in progress do not
     // react to clicks
@@ -172,15 +156,15 @@ void SwipeContainer::handleClickEvent(const ClickEvent& event)
         return;
     }
 
-    if (event.getType() == ClickEvent::RELEASED)
+    if (evt.getType() == ClickEvent::RELEASED)
     {
         // Save current position for use during animation
         animateDistance = dragX;
         startX = pages.getX();
-        const uint8_t curPage = getSelectedPage();
+
         if (dragX < 0)
         {
-            if (curPage == getNumberOfPages() - 1 || dragX > -swipeCutoff)
+            if (currentPage == getNumberOfPages() - 1 || dragX > -swipeCutoff)
             {
                 currentState = ANIMATE_SWIPE_CANCELLED_LEFT;
             }
@@ -191,7 +175,7 @@ void SwipeContainer::handleClickEvent(const ClickEvent& event)
         }
         else if (dragX > 0)
         {
-            if (curPage == 0 || dragX < swipeCutoff)
+            if (currentPage == 0 || dragX < swipeCutoff)
             {
                 currentState = ANIMATE_SWIPE_CANCELLED_RIGHT;
             }
@@ -203,7 +187,7 @@ void SwipeContainer::handleClickEvent(const ClickEvent& event)
     }
 }
 
-void SwipeContainer::handleDragEvent(const DragEvent& event)
+void SwipeContainer::handleDragEvent(const DragEvent& evt)
 {
     // If an animation is already in progress do not
     // react to drags
@@ -212,15 +196,14 @@ void SwipeContainer::handleDragEvent(const DragEvent& event)
         return;
     }
 
-    dragX += event.getDeltaX();
+    dragX += evt.getDeltaX();
 
     // Do not show too much background next to end pages
-    const uint8_t curPage = getSelectedPage();
-    if (curPage == 0 && dragX > endElasticWidth)
+    if (currentPage == 0 && dragX > endElasticWidth)
     {
         dragX = static_cast<int16_t>(endElasticWidth);
     }
-    else if (curPage == getNumberOfPages() - 1 && dragX < -endElasticWidth)
+    else if (currentPage == getNumberOfPages() - 1 && dragX < -endElasticWidth)
     {
         dragX = -static_cast<int16_t>(endElasticWidth);
     }
@@ -228,7 +211,7 @@ void SwipeContainer::handleDragEvent(const DragEvent& event)
     adjustPages();
 }
 
-void SwipeContainer::handleGestureEvent(const GestureEvent& event)
+void SwipeContainer::handleGestureEvent(const GestureEvent& evt)
 {
     // Do not accept gestures while animating
     if (currentState != NO_ANIMATION)
@@ -236,18 +219,17 @@ void SwipeContainer::handleGestureEvent(const GestureEvent& event)
         return;
     }
 
-    if (event.getType() == GestureEvent::SWIPE_HORIZONTAL)
+    if (evt.getType() == GestureEvent::SWIPE_HORIZONTAL)
     {
         // Save current position for use during animation
         animateDistance = dragX;
         startX = pages.getX();
 
-        const uint8_t curPage = getSelectedPage();
-        if (event.getVelocity() < 0 && curPage < getNumberOfPages() - 1)
+        if (evt.getVelocity() < 0 && currentPage < getNumberOfPages() - 1)
         {
             currentState = ANIMATE_LEFT;
         }
-        else if (event.getVelocity() > 0 && curPage > 0)
+        else if (evt.getVelocity() > 0 && currentPage > 0)
         {
             currentState = ANIMATE_RIGHT;
         }
@@ -256,7 +238,7 @@ void SwipeContainer::handleGestureEvent(const GestureEvent& event)
 
 void SwipeContainer::adjustPages()
 {
-    pages.moveTo(-static_cast<int16_t>(getSelectedPage() * getWidth()) + dragX, 0);
+    pages.moveTo(-static_cast<int16_t>(currentPage * getWidth()) + dragX, 0);
 }
 
 void SwipeContainer::animateSwipeCancelledLeft()
@@ -311,16 +293,19 @@ void SwipeContainer::animateLeft()
     {
         int16_t delta = EasingEquations::cubicEaseOut(animationCounter, 0, getWidth() + animateDistance, duration);
         dragX = animateDistance - delta;
+
+        adjustPages();
     }
     else
     {
         // Final step: stop the animation
         currentState = NO_ANIMATION;
         animationCounter = 0;
+        currentPage++;
         dragX = 0;
+        adjustPages();
         pageIndicator.goRight();
     }
-    adjustPages();
     animationCounter++;
 }
 
@@ -332,23 +317,24 @@ void SwipeContainer::animateRight()
     {
         int16_t delta = EasingEquations::cubicEaseOut(animationCounter, 0, getWidth() - animateDistance, duration);
         dragX = animateDistance + delta;
+
+        adjustPages();
     }
     else
     {
         // Final step: stop the animation
         currentState = NO_ANIMATION;
         animationCounter = 0;
+        currentPage--;
         dragX = 0;
+        adjustPages();
         pageIndicator.goLeft();
     }
-    adjustPages();
     animationCounter++;
 }
 
 SwipeContainer::PageIndicator::PageIndicator()
     : Container(),
-      unselectedPages(),
-      selectedPage(),
       numberOfPages(0),
       currentPage(0)
 {
@@ -365,6 +351,8 @@ void SwipeContainer::PageIndicator::setNumberOfPages(uint8_t size)
 
     assert(numberOfPages > 0 && "At least one dot is needed");
 
+    numberOfPages = size;
+
     if (unselectedPages.getBitmapId() != BITMAP_INVALID)
     {
         int dotWidth = Bitmap(unselectedPages.getBitmap()).getWidth();
@@ -372,9 +360,9 @@ void SwipeContainer::PageIndicator::setNumberOfPages(uint8_t size)
 
         // adjust size of container according to the actual bitmaps
         setWidthHeight(unselectedPages);
-        setCurrentPage(MIN(size, currentPage));
+        setHighlightPosition(currentPage = 0);
 
-        invalidateContent();
+        invalidate();
     }
 }
 
@@ -390,31 +378,23 @@ void SwipeContainer::PageIndicator::setBitmaps(const Bitmap& normalPage, const B
 
 void SwipeContainer::PageIndicator::goRight()
 {
-    setCurrentPage((currentPage + 1) % numberOfPages);
+    setHighlightPosition(currentPage = (currentPage + 1) % numberOfPages);
 }
 
 void SwipeContainer::PageIndicator::goLeft()
 {
-    setCurrentPage((currentPage + numberOfPages - 1) % numberOfPages);
+    setHighlightPosition(currentPage = (currentPage + numberOfPages - 1) % numberOfPages);
 }
 
-void SwipeContainer::PageIndicator::setCurrentPage(uint8_t page)
+void SwipeContainer::PageIndicator::setHighlightPosition(uint8_t index)
 {
-    if (page < numberOfPages && page != currentPage)
+    currentPage = index;
+    // note that index is unsigned
+    if (index < numberOfPages)
     {
-        currentPage = page;
         int dotWidth = Bitmap(unselectedPages.getBitmap()).getWidth();
-        selectedPage.moveTo(page * dotWidth, selectedPage.getY());
+        selectedPage.setX(index * dotWidth);
     }
-}
-
-uint8_t SwipeContainer::PageIndicator::getNumberOfPages() const
-{
-    return numberOfPages;
-}
-
-uint8_t SwipeContainer::PageIndicator::getCurrentPage() const
-{
-    return currentPage;
+    invalidate();
 }
 } // namespace touchgfx

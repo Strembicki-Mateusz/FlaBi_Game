@@ -1,27 +1,30 @@
-/******************************************************************************
-* Copyright (c) 2018(-2023) STMicroelectronics.
-* All rights reserved.
-*
-* This file is part of the TouchGFX 4.21.3 distribution.
-*
-* This software is licensed under terms that can be found in the LICENSE file in
-* the root directory of this software component.
-* If no LICENSE file comes with this software, it is provided AS-IS.
-*
-*******************************************************************************/
+/**
+  ******************************************************************************
+  * This file is part of the TouchGFX 4.16.0 distribution.
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
+  *
+  ******************************************************************************
+  */
 
 /**
  * @file touchgfx/widgets/canvas/PainterABGR2222Bitmap.hpp
  *
  * Declares the touchgfx::PainterABGR2222Bitmap class.
  */
-#ifndef TOUCHGFX_PAINTERABGR2222BITMAP_HPP
-#define TOUCHGFX_PAINTERABGR2222BITMAP_HPP
+#ifndef PAINTERABGR2222BITMAP_HPP
+#define PAINTERABGR2222BITMAP_HPP
 
+#include <stdint.h>
 #include <touchgfx/Bitmap.hpp>
-#include <touchgfx/hal/Types.hpp>
+#include <touchgfx/transforms/DisplayTransformation.hpp>
 #include <touchgfx/widgets/canvas/AbstractPainterABGR2222.hpp>
-#include <touchgfx/widgets/canvas/AbstractPainterBitmap.hpp>
 
 namespace touchgfx
 {
@@ -33,34 +36,42 @@ namespace touchgfx
  *
  * @see AbstractPainter
  */
-class PainterABGR2222Bitmap : public AbstractPainterABGR2222, public AbstractPainterBitmap
+class PainterABGR2222Bitmap : public AbstractPainterABGR2222
 {
 public:
     /**
-     * Constructor.
+     * Initializes a new instance of the PainterABGR2222Bitmap class.
      *
-     * @param  bmp (Optional) The bitmap to use in the painter.
+     * @param  bmp   (Optional) the bitmap, default is #BITMAP_INVALID.
+     * @param  alpha (Optional) the alpha, default is 255 i.e. solid.
      */
-    PainterABGR2222Bitmap(const Bitmap& bmp = Bitmap(BITMAP_INVALID))
-        : AbstractPainterABGR2222(), AbstractPainterBitmap(bmp)
+    PainterABGR2222Bitmap(const Bitmap& bmp = Bitmap(BITMAP_INVALID), uint8_t alpha = 255)
+        : AbstractPainterABGR2222(), bitmapABGR2222Pointer(0)
     {
+        setBitmap(bmp);
+        setAlpha(alpha);
     }
 
-    virtual void setBitmap(const Bitmap& bmp);
+    /**
+     * Sets a bitmap to be used when drawing the CanvasWidget.
+     *
+     * @param  bmp The bitmap.
+     */
+    void setBitmap(const Bitmap& bmp);
 
-    virtual bool setup(const Rect& widgetRect) const
-    {
-        if (!AbstractPainterABGR2222::setup(widgetRect))
-        {
-            return false;
-        }
-        updateBitmapOffsets(widgetWidth);
-        return bitmap.getId() != BITMAP_INVALID;
-    }
+    virtual void render(uint8_t* ptr, int x, int xAdjust, int y, unsigned count, const uint8_t* covers);
 
-    virtual void paint(uint8_t* destination, int16_t offset, int16_t widgetX, int16_t widgetY, int16_t count, uint8_t alpha) const;
+protected:
+    virtual bool renderInit();
+
+    virtual bool renderNext(uint8_t& red, uint8_t& green, uint8_t& blue, uint8_t& alpha);
+
+    const uint8_t* bitmapABGR2222Pointer; ///< Pointer to the bitmap (ABGR2222)
+
+    Bitmap bitmap;                ///< The bitmap to be used when painting
+    Rect bitmapRectToFrameBuffer; ///< Bitmap rectangle translated to framebuffer coordinates
 };
 
 } // namespace touchgfx
 
-#endif // TOUCHGFX_PAINTERABGR2222BITMAP_HPP
+#endif // PAINTERABGR2222BITMAP_HPP

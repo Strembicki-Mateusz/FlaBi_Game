@@ -1,25 +1,30 @@
-/******************************************************************************
-* Copyright (c) 2018(-2023) STMicroelectronics.
-* All rights reserved.
-*
-* This file is part of the TouchGFX 4.21.3 distribution.
-*
-* This software is licensed under terms that can be found in the LICENSE file in
-* the root directory of this software component.
-* If no LICENSE file comes with this software, it is provided AS-IS.
-*
-*******************************************************************************/
+/**
+  ******************************************************************************
+  * This file is part of the TouchGFX 4.16.0 distribution.
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
+  *
+  ******************************************************************************
+  */
 
 /**
  * @file touchgfx/widgets/canvas/Line.hpp
  *
  * Declares the touchgfx::Line class.
  */
-#ifndef TOUCHGFX_LINE_HPP
-#define TOUCHGFX_LINE_HPP
+#ifndef LINE_HPP
+#define LINE_HPP
 
 #include <touchgfx/hal/Types.hpp>
-#include <touchgfx/widgets/canvas/CWRUtil.hpp>
+#include <touchgfx/widgets/Widget.hpp>
+
+#include <touchgfx/widgets/canvas/Canvas.hpp>
 #include <touchgfx/widgets/canvas/CanvasWidget.hpp>
 
 namespace touchgfx
@@ -44,7 +49,7 @@ namespace touchgfx
  *            Line line;
  *            line.setStart(1.1f, 1.1f); // Will use (35/32, 35/32) = (1.09375f, 1.09375f)
  *            int x, y;
- *            line.getStart(&x, &y); // Will return (1, 1)
+ *            line.getStart(&amp;x, &amp;y); // Will return (1, 1)
  *       @endcode.
  */
 class Line : public CanvasWidget
@@ -152,8 +157,8 @@ public:
     template <typename T>
     void getStart(T& x, T& y) const
     {
-        x = startXQ5.to<T>();
-        y = startYQ5.to<T>();
+        x = startX.to<T>();
+        y = startY.to<T>();
     }
 
     /**
@@ -230,8 +235,8 @@ public:
     template <typename T>
     void getEnd(T& x, T& y) const
     {
-        x = endXQ5.to<T>();
-        y = endYQ5.to<T>();
+        x = endX.to<T>();
+        y = endY.to<T>();
     }
 
     /**
@@ -261,12 +266,12 @@ public:
      */
     void setLineWidth(CWRUtil::Q5 widthQ5)
     {
-        if (lineWidthQ5 == widthQ5)
+        if (lineWidth == widthQ5)
         {
             return;
         }
 
-        lineWidthQ5 = widthQ5;
+        lineWidth = widthQ5;
 
         updateCachedShape();
     }
@@ -302,20 +307,20 @@ public:
      */
     void updateLineWidth(CWRUtil::Q5 widthQ5)
     {
-        if (lineWidthQ5 == widthQ5)
+        if (lineWidth == widthQ5)
         {
             return;
         }
 
         Rect rectBefore = getMinimalRect();
-        invalidateRect(rectBefore);
 
-        lineWidthQ5 = widthQ5;
+        lineWidth = widthQ5;
 
         updateCachedShape();
 
         Rect rectAfter = getMinimalRect();
-        invalidateRect(rectAfter);
+        rectBefore.expandToFit(rectAfter);
+        invalidateRect(rectBefore);
     }
 
     /**
@@ -329,7 +334,7 @@ public:
     template <typename T>
     void getLineWidth(T& width) const
     {
-        width = lineWidthQ5.to<T>();
+        width = lineWidth.to<T>();
     }
 
     /**
@@ -344,7 +349,7 @@ public:
     template <typename T>
     T getLineWidth() const
     {
-        return lineWidthQ5.to<T>();
+        return lineWidth.to<T>();
     }
 
     /**
@@ -385,40 +390,35 @@ public:
     virtual Rect getMinimalRect() const;
 
     /**
-     * Update the end point for this Line given the new length and angle in degrees. The rectangle
-     * that surrounds the line before and after will be invalidated. The starting coordinates will
-     * be fixed but the ending point will be updated. This is simply a different way to update the
-     * ending point.
+     * Update the end point for this Line given the new length and angle. The rectangle that
+     * surrounds the line before and after will be invalidated. The starting coordinates
+     * will be fixed but the ending point will be updated. This is simply a different way to
+     * update the ending point.
      *
-     * @param   length  The new length of the line in Q5 format.
-     * @param   angle   The new angle of the line in Q5 format.
+     * @param  length The new length of the line in Q5 format.
+     * @param  angle  The new angle of the line in Q5 format.
      *
      * @see updateEnd
      *
-     * @note    The area containing the Line is invalidated before and after the change.
-     * @note    Angles are given in degrees, so a full circle is 360.
+     * @note The area containing the Line is invalidated before and after the change.
      */
     void updateLengthAndAngle(CWRUtil::Q5 length, CWRUtil::Q5 angle);
 
-    virtual void invalidateContent() const;
-
 private:
-    CWRUtil::Q5 startXQ5;
-    CWRUtil::Q5 startYQ5;
-    CWRUtil::Q5 endXQ5;
-    CWRUtil::Q5 endYQ5;
-    CWRUtil::Q5 lineWidthQ5;
+    CWRUtil::Q5 startX;
+    CWRUtil::Q5 startY;
+    CWRUtil::Q5 endX;
+    CWRUtil::Q5 endY;
+    CWRUtil::Q5 lineWidth;
     LINE_ENDING_STYLE lineEnding;
-    CWRUtil::Q5 cornerXQ5[4];
-    CWRUtil::Q5 cornerYQ5[4];
+    CWRUtil::Q5 xCorner[4];
+    CWRUtil::Q5 yCorner[4];
     Rect minimalRect;
     int lineCapArcIncrement;
 
     void updateCachedShape();
-
-    Rect rectContainingPoints(const Rect& fullRect, CWRUtil::Q5 x0, CWRUtil::Q5 y0, CWRUtil::Q5 x1, CWRUtil::Q5 y1, CWRUtil::Q5 x2, CWRUtil::Q5 y2) const;
 };
 
 } // namespace touchgfx
 
-#endif // TOUCHGFX_LINE_HPP
+#endif // LINE_HPP

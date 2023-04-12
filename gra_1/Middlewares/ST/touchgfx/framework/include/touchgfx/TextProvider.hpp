@@ -1,26 +1,29 @@
-/******************************************************************************
-* Copyright (c) 2018(-2023) STMicroelectronics.
-* All rights reserved.
-*
-* This file is part of the TouchGFX 4.21.3 distribution.
-*
-* This software is licensed under terms that can be found in the LICENSE file in
-* the root directory of this software component.
-* If no LICENSE file comes with this software, it is provided AS-IS.
-*
-*******************************************************************************/
+/**
+  ******************************************************************************
+  * This file is part of the TouchGFX 4.16.0 distribution.
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
+  *
+  ******************************************************************************
+  */
 
 /**
  * @file touchgfx/TextProvider.hpp
  *
  * Declares the touchgfx::TextProvider class.
  */
-#ifndef TOUCHGFX_TEXTPROVIDER_HPP
-#define TOUCHGFX_TEXTPROVIDER_HPP
+#ifndef TEXTPROVIDER_HPP
+#define TEXTPROVIDER_HPP
 
+#include <stdarg.h>
 #include <touchgfx/Font.hpp>
 #include <touchgfx/Unicode.hpp>
-#include <touchgfx/hal/Types.hpp>
 
 namespace touchgfx
 {
@@ -52,9 +55,8 @@ public:
      * @param  stringFormat The string to format.
      * @param  pArg         Format arguments in the form of a va_list.
      * @param  gsubTable    (Optional) Pointer to GSUB table with Unicode substitution rules.
-     * @param  formsTable   (Optional) Pointer to contextual forms table with Unicode substitution rules (for arabic).
      */
-    void initialize(const Unicode::UnicodeChar* stringFormat, va_list pArg, const uint16_t* gsubTable = 0, const FontContextualFormsTable* formsTable = 0);
+    void initialize(const Unicode::UnicodeChar* stringFormat, va_list pArg, const uint16_t* gsubTable = 0);
 
     /**
      * Initializes the TextProvider. Each '\2' character in the format is replaced by one
@@ -62,10 +64,9 @@ public:
      *
      * @param  stringFormat The string to format.
      * @param  gsubTable    (Optional) Pointer to GSUB table with Unicode substitution rules.
-     * @param  formsTable   (Optional) Pointer to contextual forms table with Unicode substitution rules (for arabic).
      * @param  ...          Variable arguments providing additional information.
      */
-    void initialize(const Unicode::UnicodeChar* stringFormat, const uint16_t* gsubTable = 0, const FontContextualFormsTable* formsTable = 0, ...);
+    void initialize(const Unicode::UnicodeChar* stringFormat, const uint16_t* gsubTable = 0, ...);
 
     /**
      * Gets the next character. For Arabic and Thai, it is important to use the
@@ -163,11 +164,9 @@ private:
     Unicode::UnicodeChar getNextCharInternal();
     const Unicode::UnicodeChar* original_format_string;
     const Unicode::UnicodeChar* format;
-    const Unicode::UnicodeChar* subString[2];
-    uint8_t nextSubString;
+    va_list formatArgs;
     const Unicode::UnicodeChar* substringPointer;
     bool isWritingWildcard;
-
     template <unsigned int size>
     class circularBuffer
     {
@@ -176,35 +175,29 @@ private:
             : pos(0), used(0)
         {
         }
-
         FORCE_INLINE_FUNCTION void flush()
         {
             used = 0;
         }
-
         FORCE_INLINE_FUNCTION bool isEmpty() const
         {
             return used == 0;
         }
-
         FORCE_INLINE_FUNCTION bool isFull() const
         {
             return used == size;
         }
-
         FORCE_INLINE_FUNCTION Unicode::UnicodeChar peekChar()
         {
             assert(used > 0);
             return buffer[pos];
         }
-
         FORCE_INLINE_FUNCTION Unicode::UnicodeChar peekChar(uint16_t offset)
         {
             assert(offset < used);
             const uint16_t index = pos + offset;
             return buffer[index < size ? index : index - size];
         }
-
         FORCE_INLINE_FUNCTION void dropFront(uint16_t num = 1)
         {
             assert(used >= num);
@@ -215,7 +208,6 @@ private:
                 pos -= size;
             }
         }
-
         Unicode::UnicodeChar popFront()
         {
             assert(used > 0);
@@ -228,13 +220,11 @@ private:
             }
             return ch;
         }
-
         Unicode::UnicodeChar popBack()
         {
             assert(used > 0);
             return peekChar(used-- - 1);
         }
-
         void allocateFront(uint16_t num)
         {
             assert(used + num <= size);
@@ -245,7 +235,6 @@ private:
             }
             pos -= num;
         }
-
         void pushFrontForce(Unicode::UnicodeChar newChar)
         {
             // "use" one more entry, if already full overwrite back entry ("used" is unchanged)
@@ -261,31 +250,26 @@ private:
             pos--;
             replaceAt0(newChar);
         }
-
         void pushFront(Unicode::UnicodeChar newChar)
         {
             allocateFront(1);
             replaceAt0(newChar);
         }
-
         FORCE_INLINE_FUNCTION void pushBack(Unicode::UnicodeChar newChar)
         {
             assert(used < size);
             replaceAt(++used - 1, newChar);
         }
-
         FORCE_INLINE_FUNCTION void replaceAt0(Unicode::UnicodeChar newChar)
         {
             buffer[pos] = newChar;
         }
-
         FORCE_INLINE_FUNCTION void replaceAt1(Unicode::UnicodeChar newChar)
         {
             assert(used > 1);
             const uint16_t index = pos + 1;
             buffer[index < size ? index : 0] = newChar;
         }
-
         FORCE_INLINE_FUNCTION void replaceAt(uint16_t offset, Unicode::UnicodeChar newChar)
         {
             assert(used > offset);
@@ -298,7 +282,6 @@ private:
         uint16_t pos;
         uint16_t used;
     };
-
     static const int NUM_PREV_CHARS = 2;
     static const int NUM_NEXT_CHARS = 10; // input + lookahead + delta(substitution)
     static const int NUM_XTRA_CHARS = 2;
@@ -308,7 +291,6 @@ private:
     void replaceInputCharacters(uint16_t existingNumChars, uint16_t newNumChars, const Unicode::UnicodeChar* newChars);
     void fillInputBuffer();
     const uint16_t* fontGsubTable;
-    const FontContextualFormsTable* contextualFormsTable;
     void substituteGlyphs();
     uint16_t gsubTableBinarySearch(const uint16_t numEntries, const uint16_t* unicodeLookupTable, const Unicode::UnicodeChar key) const;
     bool applyGsubRules(const uint16_t* nextTableEntry, const Unicode::UnicodeChar key);
@@ -318,7 +300,7 @@ private:
     void unicodeConverterInit();
     Unicode::UnicodeChar unicodeConverter(const TextDirection direction);
 
-    FORCE_INLINE_FUNCTION const Unicode::UnicodeChar* binarySearch(uint16_t key, const Unicode::UnicodeChar contextualFormTable[][5], int maxIndex) const;
+    const Unicode::UnicodeChar* binarySearch(uint16_t key, const Unicode::UnicodeChar contextualFormTable[][5], int maxIndex) const;
     FORCE_INLINE_FUNCTION const Unicode::UnicodeChar* contextualFormForChar(const Unicode::UnicodeChar currChar) const;
 
     FORCE_INLINE_FUNCTION void adjustGlyph(Unicode::UnicodeChar originalCharacter, Unicode::UnicodeChar currentCharacter, const GlyphNode*& glyph, const Font* font);
@@ -333,8 +315,14 @@ private:
 
     bool isContextualBeginning;
     bool lastGlyphIsAccent;
+    static const Unicode::UnicodeChar contextualForms4Long[][5];
+    static const Unicode::UnicodeChar contextualForms3Long[][5];
+    static const Unicode::UnicodeChar contextualForms2Long[][5];
+    static const Unicode::UnicodeChar contextualForms0621_063a[][4];
+    static const Unicode::UnicodeChar contextualForms0641_064a[][4];
+    static const Unicode::UnicodeChar contextualForms06XX[][5];
 };
 
 } // namespace touchgfx
 
-#endif // TOUCHGFX_TEXTPROVIDER_HPP
+#endif // TEXTPROVIDER_HPP

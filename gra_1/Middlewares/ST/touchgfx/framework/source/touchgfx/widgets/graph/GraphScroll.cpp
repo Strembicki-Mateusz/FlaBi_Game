@@ -1,36 +1,43 @@
-/******************************************************************************
-* Copyright (c) 2018(-2023) STMicroelectronics.
-* All rights reserved.
-*
-* This file is part of the TouchGFX 4.21.3 distribution.
-*
-* This software is licensed under terms that can be found in the LICENSE file in
-* the root directory of this software component.
-* If no LICENSE file comes with this software, it is provided AS-IS.
-*
-*******************************************************************************/
+/**
+  ******************************************************************************
+  * This file is part of the TouchGFX 4.16.0 distribution.
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
+  *
+  ******************************************************************************
+  */
 
 #include <touchgfx/widgets/graph/GraphScroll.hpp>
 
 namespace touchgfx
 {
-
-void GraphScrollData::clear()
+DataGraphScroll::DataGraphScroll(int16_t capacity, int* values)
+    : AbstractDataGraphWithY(capacity, values), current(0)
 {
-    DynamicDataGraph::clear();
+}
+
+void DataGraphScroll::clear()
+{
+    AbstractDataGraphWithY::clear();
     current = 0;
 }
 
-int32_t GraphScrollData::indexToGlobalIndex(int16_t index) const
+int32_t DataGraphScroll::indexToGlobalIndex(int16_t index) const
 {
     if (usedCapacity < maxCapacity)
     {
-        return dataIndex(index);
+        return realIndex(index);
     }
     return (dataCounter - maxCapacity) + index;
 }
 
-void GraphScrollData::beforeAddValue()
+void DataGraphScroll::beforeAddValue()
 {
     if (usedCapacity == maxCapacity)
     {
@@ -38,7 +45,7 @@ void GraphScrollData::beforeAddValue()
     }
 }
 
-int16_t GraphScrollData::addValue(int value)
+int16_t DataGraphScroll::addValue(int value)
 {
     const bool graphFull = usedCapacity == maxCapacity;
     const int16_t index = current++;
@@ -58,6 +65,16 @@ int16_t GraphScrollData::addValue(int value)
         invalidateGraphPointAt(index);
     }
     return index;
+}
+
+int16_t DataGraphScroll::realIndex(int16_t index) const
+{
+    return usedCapacity < maxCapacity ? index : (index + current) % maxCapacity;
+}
+
+CWRUtil::Q5 DataGraphScroll::indexToXQ5(int16_t index) const
+{
+    return CWRUtil::toQ5(index);
 }
 
 } // namespace touchgfx

@@ -1,22 +1,25 @@
-/******************************************************************************
-* Copyright (c) 2018(-2023) STMicroelectronics.
-* All rights reserved.
-*
-* This file is part of the TouchGFX 4.21.3 distribution.
-*
-* This software is licensed under terms that can be found in the LICENSE file in
-* the root directory of this software component.
-* If no LICENSE file comes with this software, it is provided AS-IS.
-*
-*******************************************************************************/
+/**
+  ******************************************************************************
+  * This file is part of the TouchGFX 4.16.0 distribution.
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
+  *
+  ******************************************************************************
+  */
 
 /**
  * @file touchgfx/TextureMapTypes.hpp
  *
  * Declares the Gradients and Edge structs. Also declares functions for handling touchgfx::float28_4 types.
  */
-#ifndef TOUCHGFX_TEXTUREMAPTYPES_HPP
-#define TOUCHGFX_TEXTUREMAPTYPES_HPP
+#ifndef TEXTUREMAPTYPES_HPP
+#define TEXTUREMAPTYPES_HPP
 
 #include <touchgfx/hal/Types.hpp>
 
@@ -136,9 +139,9 @@ struct Edge
  *
  * @return The value as float.
  */
-FORCE_INLINE_FUNCTION float fixed28_4ToFloat(fixed28_4 value)
+inline float fixed28_4ToFloat(fixed28_4 value)
 {
-    return (float)value / 16.0f;
+    return value / 16.0f;
 }
 
 /**
@@ -148,7 +151,7 @@ FORCE_INLINE_FUNCTION float fixed28_4ToFloat(fixed28_4 value)
  *
  * @return The value as fixed28_4.
  */
-FORCE_INLINE_FUNCTION fixed28_4 floatToFixed28_4(float value)
+inline fixed28_4 floatToFixed28_4(float value)
 {
     return (fixed28_4)(value * 16);
 }
@@ -160,7 +163,7 @@ FORCE_INLINE_FUNCTION fixed28_4 floatToFixed28_4(float value)
  *
  * @return The value as fixed16_16.
  */
-FORCE_INLINE_FUNCTION fixed16_16 floatToFixed16_16(float value)
+inline fixed16_16 floatToFixed16_16(float value)
 {
     return (fixed16_16)(value * 65536);
 }
@@ -173,7 +176,7 @@ FORCE_INLINE_FUNCTION fixed16_16 floatToFixed16_16(float value)
  *
  * @return the result.
  */
-FORCE_INLINE_FUNCTION fixed28_4 fixed28_4Mul(fixed28_4 a, fixed28_4 b)
+inline fixed28_4 fixed28_4Mul(fixed28_4 a, fixed28_4 b)
 {
     if (a == 0 || b == 0)
     {
@@ -217,7 +220,7 @@ FORCE_INLINE_FUNCTION fixed28_4 fixed28_4Mul(fixed28_4 a, fixed28_4 b)
  *
  * @return The ceil result.
  */
-FORCE_INLINE_FUNCTION int32_t ceil28_4(fixed28_4 value)
+inline int32_t ceil28_4(fixed28_4 value)
 {
     int32_t returnValue;
     int32_t numerator = value - 1 + 16;
@@ -227,7 +230,7 @@ FORCE_INLINE_FUNCTION int32_t ceil28_4(fixed28_4 value)
     }
     else
     {
-        // Deal with negative numerators correctly
+        // deal with negative numerators correctly
         returnValue = -((-numerator) / 16);
         returnValue -= ((-numerator) % 16) ? 1 : 0;
     }
@@ -242,12 +245,12 @@ FORCE_INLINE_FUNCTION int32_t ceil28_4(fixed28_4 value)
  * @param [out] floor       numerator/denominator.
  * @param [out] mod         numerator\%denominator.
  */
-FORCE_INLINE_FUNCTION void floorDivMod(int32_t numerator, int32_t denominator, int32_t& floor, int32_t& mod)
+inline void floorDivMod(int32_t numerator, int32_t denominator, int32_t& floor, int32_t& mod)
 {
-    assert(denominator > 0); // We assume it's positive
+    assert(denominator > 0); // we assume it's positive
     if (numerator >= 0)
     {
-        // Positive case, C is okay
+        // positive case, C is okay
         floor = numerator / denominator;
         mod = numerator % denominator;
     }
@@ -258,12 +261,12 @@ FORCE_INLINE_FUNCTION void floorDivMod(int32_t numerator, int32_t denominator, i
         mod = (-numerator) % denominator;
         if (mod)
         {
-            // There is a remainder
+            // there is a remainder
             floor--;
             mod = denominator - mod;
         }
     }
 }
-} // namespace touchgfx
+} //namespace touchgfx
 
-#endif // TOUCHGFX_TEXTUREMAPTYPES_HPP
+#endif // TEXTUREMAPTYPES_HPP

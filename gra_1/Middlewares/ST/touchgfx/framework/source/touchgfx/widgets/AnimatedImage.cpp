@@ -1,73 +1,74 @@
-/******************************************************************************
-* Copyright (c) 2018(-2023) STMicroelectronics.
-* All rights reserved.
-*
-* This file is part of the TouchGFX 4.21.3 distribution.
-*
-* This software is licensed under terms that can be found in the LICENSE file in
-* the root directory of this software component.
-* If no LICENSE file comes with this software, it is provided AS-IS.
-*
-*******************************************************************************/
+/**
+  ******************************************************************************
+  * This file is part of the TouchGFX 4.16.0 distribution.
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
+  *
+  ******************************************************************************
+  */
 
-#include <touchgfx/Application.hpp>
 #include <touchgfx/widgets/AnimatedImage.hpp>
 
 namespace touchgfx
 {
 void AnimatedImage::handleTickEvent()
 {
-    if (!running)
+    if (running)
     {
-        return;
-    }
-    ++ticksSinceUpdate;
-    if (ticksSinceUpdate != updateTicksInterval)
-    {
-        return;
-    }
-
-    ticksSinceUpdate = 0;
-    BitmapId currentId = getBitmap();
-
-    if (((currentId == endId) && !reverse) || ((currentId == startId) && reverse))
-    {
-        if (!loopAnimation)
+        ++ticksSinceUpdate;
+        if (ticksSinceUpdate != updateTicksInterval)
         {
-            Application::getInstance()->unregisterTimerWidget(this);
-            running = false;
+            return;
         }
 
-        if (animationDoneAction && animationDoneAction->isValid())
-        {
-            animationDoneAction->execute(*this);
-        }
+        ticksSinceUpdate = 0;
+        BitmapId currentId = getBitmap();
 
-        if (running && loopAnimation)
+        if (((currentId == endId) && !reverse) || ((currentId == startId) && reverse))
         {
-            if (reverse)
+            if (!loopAnimation)
             {
-                Image::setBitmap(Bitmap(endId));
+                Application::getInstance()->unregisterTimerWidget(this);
+                running = false;
             }
-            else
+
+            if (animationDoneAction && animationDoneAction->isValid())
             {
-                Image::setBitmap(Bitmap(startId));
+                animationDoneAction->execute(*this);
             }
-            invalidate();
-        }
-    }
-    else
-    {
-        if (reverse)
-        {
-            --currentId;
+
+            if (running && loopAnimation)
+            {
+                if (reverse)
+                {
+                    Image::setBitmap(Bitmap(endId));
+                }
+                else
+                {
+                    Image::setBitmap(Bitmap(startId));
+                }
+                invalidate();
+            }
         }
         else
         {
-            ++currentId;
+            if (reverse)
+            {
+                --currentId;
+            }
+            else
+            {
+                ++currentId;
+            }
+            Image::setBitmap(Bitmap(currentId));
+            invalidate();
         }
-        Image::setBitmap(Bitmap(currentId));
-        invalidate();
     }
 }
 
@@ -124,15 +125,15 @@ void AnimatedImage::pauseAnimation()
     }
 }
 
-void AnimatedImage::setBitmap(const Bitmap& bmp)
+void AnimatedImage::setBitmap(const Bitmap& bitmap)
 {
-    startId = bmp.getId();
-    Image::setBitmap(bmp);
+    startId = bitmap.getId();
+    Image::setBitmap(bitmap);
 }
 
-void AnimatedImage::setBitmapEnd(const Bitmap& bmp)
+void AnimatedImage::setBitmapEnd(const Bitmap& bitmap)
 {
-    endId = bmp.getId();
+    endId = bitmap.getId();
 }
 
 void AnimatedImage::setBitmaps(BitmapId start, BitmapId end)

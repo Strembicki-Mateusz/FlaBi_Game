@@ -1,16 +1,18 @@
-/******************************************************************************
-* Copyright (c) 2018(-2023) STMicroelectronics.
-* All rights reserved.
-*
-* This file is part of the TouchGFX 4.21.3 distribution.
-*
-* This software is licensed under terms that can be found in the LICENSE file in
-* the root directory of this software component.
-* If no LICENSE file comes with this software, it is provided AS-IS.
-*
-*******************************************************************************/
+/**
+  ******************************************************************************
+  * This file is part of the TouchGFX 4.16.0 distribution.
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
+  *
+  ******************************************************************************
+  */
 
-#include <touchgfx/Drawable.hpp>
 #include <touchgfx/containers/Slider.hpp>
 
 namespace touchgfx
@@ -21,10 +23,6 @@ Slider::Slider()
       currentValue(0),
       valueRangeMin(0),
       valueRangeMax(1),
-      background(),
-      backgroundSelected(),
-      indicator(),
-      backgroundSelectedViewPort(),
       indicatorMinPosition(0),
       indicatorMaxPosition(1),
       startValueCallback(0),
@@ -121,42 +119,42 @@ void Slider::setValue(int value)
     updateIndicatorPosition(valueToPosition(value));
 }
 
-void Slider::handleClickEvent(const ClickEvent& event)
+void Slider::handleClickEvent(const ClickEvent& evt)
 {
-    if ((event.getType() == ClickEvent::PRESSED) || (event.getType() == ClickEvent::RELEASED))
+    if ((evt.getType() == ClickEvent::PRESSED) || (evt.getType() == ClickEvent::RELEASED))
     {
         // Communicate the start value if a listener is registered
-        if ((event.getType() == ClickEvent::PRESSED) && (startValueCallback != 0) && startValueCallback->isValid())
+        if ((evt.getType() == ClickEvent::PRESSED) && (startValueCallback != 0) && startValueCallback->isValid())
         {
             startValueCallback->execute(*this, currentValue);
         }
 
         if (sliderOrientation == HORIZONTAL)
         {
-            updateIndicatorPosition(event.getX() - getIndicatorRadius());
+            updateIndicatorPosition(evt.getX() - getIndicatorRadius());
         }
         else
         {
-            updateIndicatorPosition(event.getY() - getIndicatorRadius());
+            updateIndicatorPosition(evt.getY() - getIndicatorRadius());
         }
 
         // Communicate the stop value if a listener is registered
-        if ((event.getType() == ClickEvent::RELEASED) && (stopValueCallback != 0) && stopValueCallback->isValid())
+        if ((evt.getType() == ClickEvent::RELEASED) && (stopValueCallback != 0) && stopValueCallback->isValid())
         {
             stopValueCallback->execute(*this, currentValue);
         }
     }
 }
 
-void Slider::handleDragEvent(const DragEvent& event)
+void Slider::handleDragEvent(const DragEvent& evt)
 {
     if (sliderOrientation == HORIZONTAL)
     {
-        updateIndicatorPosition(event.getNewX() - getIndicatorRadius());
+        updateIndicatorPosition(evt.getNewX() - getIndicatorRadius());
     }
     else
     {
-        updateIndicatorPosition(event.getNewY() - getIndicatorRadius());
+        updateIndicatorPosition(evt.getNewY() - getIndicatorRadius());
     }
 }
 

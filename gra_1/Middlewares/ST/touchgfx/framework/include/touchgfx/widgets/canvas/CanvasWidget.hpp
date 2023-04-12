@@ -1,26 +1,33 @@
-/******************************************************************************
-* Copyright (c) 2018(-2023) STMicroelectronics.
-* All rights reserved.
-*
-* This file is part of the TouchGFX 4.21.3 distribution.
-*
-* This software is licensed under terms that can be found in the LICENSE file in
-* the root directory of this software component.
-* If no LICENSE file comes with this software, it is provided AS-IS.
-*
-*******************************************************************************/
+/**
+  ******************************************************************************
+  * This file is part of the TouchGFX 4.16.0 distribution.
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
+  *
+  ******************************************************************************
+  */
 
 /**
  * @file touchgfx/widgets/canvas/CanvasWidget.hpp
  *
  * Declares the touchgfx::CanvasWidget class.
  */
-#ifndef TOUCHGFX_CANVASWIDGET_HPP
-#define TOUCHGFX_CANVASWIDGET_HPP
+#ifndef CANVASWIDGET_HPP
+#define CANVASWIDGET_HPP
 
-#include <touchgfx/hal/Types.hpp>
+#include <touchgfx/Bitmap.hpp>
+#include <touchgfx/canvas_widget_renderer/Rasterizer.hpp>
+#include <touchgfx/hal/HAL.hpp>
+#include <touchgfx/transforms/DisplayTransformation.hpp>
 #include <touchgfx/widgets/Widget.hpp>
 #include <touchgfx/widgets/canvas/AbstractPainter.hpp>
+#include <touchgfx/widgets/canvas/CWRUtil.hpp>
 
 namespace touchgfx
 {
@@ -45,10 +52,7 @@ public:
      * @note If setPainter() is used to change the painter to a different painter, the area
      *       containing the CanvasWidget is not automatically invalidated.
      */
-    void setPainter(const AbstractPainter& painter)
-    {
-        canvasPainter = &painter;
-    }
+    virtual void setPainter(AbstractPainter& painter);
 
     /**
      * Gets the current painter for the CanvasWidget.
@@ -57,10 +61,7 @@ public:
      *
      * @see setPainter
      */
-    const AbstractPainter* getPainter() const
-    {
-        return canvasPainter;
-    }
+    virtual AbstractPainter& getPainter() const;
 
     /** @copydoc Image::setAlpha */
     virtual void setAlpha(uint8_t newAlpha)
@@ -115,10 +116,7 @@ public:
      *
      * @return The minimal rectangle containing the shape drawn.
      */
-    virtual Rect getMinimalRect() const
-    {
-        return Rect(0, 0, getWidth(), getHeight());
-    }
+    virtual Rect getMinimalRect() const;
 
     /**
      * Gets the largest solid (non-transparent) rectangle. Since canvas widgets typically do
@@ -131,10 +129,17 @@ public:
      * @note Function draw() might fail for some horizontal lines due to memory constraints. These
      *       lines will not be drawn and may cause strange display artifacts.
      */
-    virtual Rect getSolidRect() const
-    {
-        return Rect();
-    }
+    virtual Rect getSolidRect() const;
+
+    /**
+     * Resets the maximum render lines. The maximum render lines is decreates if the
+     * rendering buffer is found to be too small to render a complex outline. This is done
+     * to speed up subsequent draws by not having to draw the outline in vain (as was done
+     * previously) to force the outline to be drawn in smaller blocks. The
+     * resetMaxRenderLines() will try to render the entire outline in one go on the next
+     * call to draw().
+     */
+    void resetMaxRenderLines();
 
     /**
      * Draw canvas widget for the given invalidated area. Similar to draw(), but might be
@@ -149,13 +154,12 @@ public:
      */
     virtual bool drawCanvasWidget(const Rect& invalidatedArea) const = 0;
 
-protected:
-    uint8_t alpha; ///< The Alpha for this CanvasWidget.
-
 private:
-    const AbstractPainter* canvasPainter;
+    AbstractPainter* canvasPainter;
+    mutable int16_t maxRenderLines;
+    uint8_t alpha;
 };
 
 } // namespace touchgfx
 
-#endif // TOUCHGFX_CANVASWIDGET_HPP
+#endif // CANVASWIDGET_HPP

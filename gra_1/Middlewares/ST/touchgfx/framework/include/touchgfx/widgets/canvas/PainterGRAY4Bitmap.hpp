@@ -1,26 +1,29 @@
-/******************************************************************************
-* Copyright (c) 2018(-2023) STMicroelectronics.
-* All rights reserved.
-*
-* This file is part of the TouchGFX 4.21.3 distribution.
-*
-* This software is licensed under terms that can be found in the LICENSE file in
-* the root directory of this software component.
-* If no LICENSE file comes with this software, it is provided AS-IS.
-*
-*******************************************************************************/
+/**
+  ******************************************************************************
+  * This file is part of the TouchGFX 4.16.0 distribution.
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
+  *
+  ******************************************************************************
+  */
 
 /**
  * @file touchgfx/widgets/canvas/PainterGRAY4Bitmap.hpp
  *
  * Declares the touchgfx::PainterGRAY4Bitmap class.
  */
-#ifndef TOUCHGFX_PAINTERGRAY4BITMAP_HPP
-#define TOUCHGFX_PAINTERGRAY4BITMAP_HPP
+#ifndef PAINTERGRAY4BITMAP_HPP
+#define PAINTERGRAY4BITMAP_HPP
 
+#include <stdint.h>
 #include <touchgfx/Bitmap.hpp>
-#include <touchgfx/hal/Types.hpp>
-#include <touchgfx/widgets/canvas/AbstractPainterBitmap.hpp>
+#include <touchgfx/transforms/DisplayTransformation.hpp>
 #include <touchgfx/widgets/canvas/AbstractPainterGRAY4.hpp>
 
 namespace touchgfx
@@ -33,37 +36,43 @@ namespace touchgfx
  *
  * @see AbstractPainter
  */
-class PainterGRAY4Bitmap : public AbstractPainterGRAY4, public AbstractPainterBitmap
+class PainterGRAY4Bitmap : public AbstractPainterGRAY4
 {
 public:
     /**
-     * Constructor.
+     * Initializes a new instance of the PainterGRAY4Bitmap class.
      *
-     * @param  bmp (Optional) The bitmap to use in the painter.
+     * @param  bmp   (Optional) The bitmap, default is #BITMAP_INVALID.
+     * @param  alpha (Optional) the alpha, default is 255 i.e. solid.
      */
-    PainterGRAY4Bitmap(const Bitmap& bmp = Bitmap(BITMAP_INVALID))
-        : AbstractPainterGRAY4(), AbstractPainterBitmap(bmp)
+    PainterGRAY4Bitmap(const Bitmap& bmp = Bitmap(BITMAP_INVALID), uint8_t alpha = 255)
+        : AbstractPainterGRAY4(), bitmapGRAY4Pointer(0), bitmapAlphaPointer(0)
     {
+        setBitmap(bmp);
+        setAlpha(alpha);
     }
 
-    virtual void setBitmap(const Bitmap& bmp);
+    /**
+     * Sets a bitmap to be used when drawing the CanvasWidget.
+     *
+     * @param  bmp The bitmap.
+     */
+    void setBitmap(const Bitmap& bmp);
 
-    virtual bool setup(const Rect& widgetRect) const
-    {
-        if (!AbstractPainterGRAY4::setup(widgetRect))
-        {
-            return false;
-        }
-        updateBitmapOffsets(widgetWidth);
-        return bitmap.getId() != BITMAP_INVALID;
-    }
-
-    virtual void paint(uint8_t* destination, int16_t offset, int16_t widgetX, int16_t widgetY, int16_t count, uint8_t alpha) const;
+    virtual void render(uint8_t* ptr, int x, int xAdjust, int y, unsigned count, const uint8_t* covers);
 
 protected:
-    const uint8_t* bitmapExtraData; ///< Pointer to the bitmap extra data
+    virtual bool renderInit();
+
+    virtual bool renderNext(uint8_t& gray, uint8_t& alpha);
+
+    const uint8_t* bitmapGRAY4Pointer; ///< Pointer to the bitmap (GRAY4)
+    const uint8_t* bitmapAlphaPointer; ///< Pointer to the bitmap alpha data for GRAY4
+
+    Bitmap bitmap;                ///< The bitmap to be used when painting
+    Rect bitmapRectToFrameBuffer; ///< Bitmap rectangle translated to framebuffer coordinates
 };
 
 } // namespace touchgfx
 
-#endif // TOUCHGFX_PAINTERGRAY4BITMAP_HPP
+#endif // PAINTERGRAY4BITMAP_HPP

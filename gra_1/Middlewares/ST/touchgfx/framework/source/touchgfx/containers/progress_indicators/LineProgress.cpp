@@ -1,21 +1,24 @@
-/******************************************************************************
-* Copyright (c) 2018(-2023) STMicroelectronics.
-* All rights reserved.
-*
-* This file is part of the TouchGFX 4.21.3 distribution.
-*
-* This software is licensed under terms that can be found in the LICENSE file in
-* the root directory of this software component.
-* If no LICENSE file comes with this software, it is provided AS-IS.
-*
-*******************************************************************************/
+/**
+  ******************************************************************************
+  * This file is part of the TouchGFX 4.16.0 distribution.
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
+  *
+  ******************************************************************************
+  */
 
 #include <touchgfx/containers/progress_indicators/LineProgress.hpp>
 
 namespace touchgfx
 {
 LineProgress::LineProgress()
-    : AbstractProgressIndicator(), line(), startX(0), startY(0), endX(0), endY(0)
+    : AbstractProgressIndicator(), line(), endX(0), endY(0)
 {
     progressIndicatorContainer.add(line);
     line.setPosition(0, 0, getWidth(), getHeight());
@@ -82,8 +85,12 @@ Line::LINE_ENDING_STYLE LineProgress::getLineEndingStyle() const
 
 void LineProgress::setAlpha(uint8_t newAlpha)
 {
-    AbstractProgressIndicator::setAlpha(newAlpha);
     line.setAlpha(newAlpha);
+}
+
+uint8_t LineProgress::getAlpha() const
+{
+    return line.getAlpha();
 }
 
 void LineProgress::setValue(int value)
@@ -94,8 +101,8 @@ void LineProgress::setValue(int value)
         int progress = (int)AbstractProgressIndicator::getProgress(rangeSteps);
         CWRUtil::Q5 r(rangeSteps);
         CWRUtil::Q5 p(progress);
-        CWRUtil::Q5 x = startX + ((endX - startX) / r) * p;
-        CWRUtil::Q5 y = startY + ((endY - startY) / r) * p;
+        CWRUtil::Q5 x = startX + (endX - startX) / r * p;
+        CWRUtil::Q5 y = startY + (endY - startY) / r * p;
         line.updateEnd(x, y);
     }
 }

@@ -1,30 +1,29 @@
-/******************************************************************************
-* Copyright (c) 2018(-2023) STMicroelectronics.
-* All rights reserved.
-*
-* This file is part of the TouchGFX 4.21.3 distribution.
-*
-* This software is licensed under terms that can be found in the LICENSE file in
-* the root directory of this software component.
-* If no LICENSE file comes with this software, it is provided AS-IS.
-*
-*******************************************************************************/
+/**
+  ******************************************************************************
+  * This file is part of the TouchGFX 4.16.0 distribution.
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
+  *
+  ******************************************************************************
+  */
 
 /**
  * @file touchgfx/containers/SlideMenu.hpp
  *
  * Declares the touchgfx::SlideMenu class.
  */
-#ifndef TOUCHGFX_SLIDEMENU_HPP
-#define TOUCHGFX_SLIDEMENU_HPP
+#ifndef SLIDEMENU_HPP
+#define SLIDEMENU_HPP
 
-#include <touchgfx/Bitmap.hpp>
-#include <touchgfx/Callback.hpp>
 #include <touchgfx/EasingEquations.hpp>
 #include <touchgfx/containers/Container.hpp>
-#include <touchgfx/hal/Types.hpp>
 #include <touchgfx/mixins/MoveAnimator.hpp>
-#include <touchgfx/widgets/AbstractButton.hpp>
 #include <touchgfx/widgets/Button.hpp>
 #include <touchgfx/widgets/Image.hpp>
 
@@ -81,7 +80,7 @@ public:
      * @param  stateChangeButtonBMP        The state change button bitmap.
      * @param  stateChangeButtonPressedBMP The state change button pressed bitmap.
      */
-    virtual void setup(ExpandDirection newExpandDirection, const Bitmap& backgroundBMP, const Bitmap& stateChangeButtonBMP, const Bitmap& stateChangeButtonPressedBMP);
+    virtual void setup(SlideMenu::ExpandDirection newExpandDirection, const Bitmap& backgroundBMP, const Bitmap& stateChangeButtonBMP, const Bitmap& stateChangeButtonPressedBMP);
 
     /**
      * Setup method for the SlideMenu. Positioning of the background is done by stating
@@ -95,7 +94,7 @@ public:
      * @param  backgroundX                 The background x coordinate.
      * @param  backgroundY                 The background y coordinate.
      */
-    virtual void setup(ExpandDirection newExpandDirection, const Bitmap& backgroundBMP, int16_t backgroundX, int16_t backgroundY);
+    virtual void setup(SlideMenu::ExpandDirection newExpandDirection, const Bitmap& backgroundBMP, int16_t backgroundX, int16_t backgroundY);
 
     /**
      * Setup method for the SlideMenu. Positioning of the background image and the
@@ -114,21 +113,21 @@ public:
      * @param  stateChangeButtonX          The state change button x coordinate.
      * @param  stateChangeButtonY          The state change button y coordinate.
      */
-    virtual void setup(ExpandDirection newExpandDirection, const Bitmap& backgroundBMP, const Bitmap& stateChangeButtonBMP, const Bitmap& stateChangeButtonPressedBMP, int16_t backgroundX, int16_t backgroundY, int16_t stateChangeButtonX, int16_t stateChangeButtonY);
+    virtual void setup(SlideMenu::ExpandDirection newExpandDirection, const Bitmap& backgroundBMP, const Bitmap& stateChangeButtonBMP, const Bitmap& stateChangeButtonPressedBMP, int16_t backgroundX, int16_t backgroundY, int16_t stateChangeButtonX, int16_t stateChangeButtonY);
 
     /**
      * Sets the expand direction.
      *
      * @param  newExpandDirection The new expand direction.
      */
-    virtual void setExpandDirection(ExpandDirection newExpandDirection);
+    virtual void setExpandDirection(SlideMenu::ExpandDirection newExpandDirection);
 
     /**
      * Gets the expand direction.
      *
      * @return The expand direction.
      */
-    virtual ExpandDirection getExpandDirection() const;
+    virtual SlideMenu::ExpandDirection getExpandDirection() const;
 
     /**
      * Sets the amount of visible pixels when collapsed.
@@ -209,7 +208,7 @@ public:
      *
      * @see animateToState, getState
      */
-    virtual void setState(State newState);
+    virtual void setState(SlideMenu::State newState);
 
     /**
      * Animate to the given expanded or collapsed state.
@@ -218,7 +217,7 @@ public:
      *
      * @see setState, getState
      */
-    virtual void animateToState(State newState);
+    virtual void animateToState(SlideMenu::State newState);
 
     /**
      * Gets the current expanded or collapsed state.
@@ -227,7 +226,7 @@ public:
      *
      * @see setState, animateToState
      */
-    virtual State getState();
+    virtual SlideMenu::State getState();
 
     /**
      * Resets the expanded state timer. The SlideMenu will automatically animate to the
@@ -319,8 +318,8 @@ protected:
     GenericCallback<const SlideMenu&>* stateChangedCallback;               ///< The public state changed button clicked callback
     GenericCallback<const SlideMenu&>* stateChangedAnimationEndedCallback; ///< The public state changed animation ended callback
 
-    State currentState;              ///< The current state of the SlideMenu
-    ExpandDirection expandDirection; ///< The expand direction of the SlideMenu
+    SlideMenu::State currentState;              ///< The current state of the SlideMenu
+    SlideMenu::ExpandDirection expandDirection; ///< The expand direction of the SlideMenu
 
     EasingEquation animationEquation; ///< The easing equation used for the state change animation
 
@@ -377,4 +376,4 @@ protected:
 
 } // namespace touchgfx
 
-#endif // TOUCHGFX_SLIDEMENU_HPP
+#endif // SLIDEMENU_HPP

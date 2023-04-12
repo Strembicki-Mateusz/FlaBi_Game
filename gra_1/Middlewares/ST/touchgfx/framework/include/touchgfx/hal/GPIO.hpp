@@ -1,22 +1,25 @@
-/******************************************************************************
-* Copyright (c) 2018(-2023) STMicroelectronics.
-* All rights reserved.
-*
-* This file is part of the TouchGFX 4.21.3 distribution.
-*
-* This software is licensed under terms that can be found in the LICENSE file in
-* the root directory of this software component.
-* If no LICENSE file comes with this software, it is provided AS-IS.
-*
-*******************************************************************************/
+/**
+  ******************************************************************************
+  * This file is part of the TouchGFX 4.16.0 distribution.
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
+  *
+  ******************************************************************************
+  */
 
 /**
  * @file touchgfx/hal/GPIO.hpp
  *
  * Declares the touchgfx::GPIO class.
  */
-#ifndef TOUCHGFX_GPIO_HPP
-#define TOUCHGFX_GPIO_HPP
+#ifndef GPIO_HPP
+#define GPIO_HPP
 
 namespace touchgfx
 {
@@ -28,13 +31,13 @@ class GPIO
 {
 public:
     /** Enum for the GPIOs used. */
-    enum GPIO_ID
+    typedef enum
     {
         VSYNC_FREQ,  /// Pin is toggled at each VSYNC
         RENDER_TIME, /// Pin is high when frame rendering begins, low when finished
         FRAME_RATE,  /// Pin is toggled when the framebuffers are swapped.
         MCU_ACTIVE   /// Pin is high when the MCU is doing work (i.e. not in idle task).
-    };
+    } GPIO_ID;
 
     /** Perform configuration of IO pins. */
     static void init();
@@ -72,4 +75,4 @@ public:
 
 } // namespace touchgfx
 
-#endif // TOUCHGFX_GPIO_HPP
+#endif // GPIO_HPP

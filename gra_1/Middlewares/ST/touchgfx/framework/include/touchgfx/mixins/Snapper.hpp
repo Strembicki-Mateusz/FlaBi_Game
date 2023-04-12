@@ -1,26 +1,28 @@
-/******************************************************************************
-* Copyright (c) 2018(-2023) STMicroelectronics.
-* All rights reserved.
-*
-* This file is part of the TouchGFX 4.21.3 distribution.
-*
-* This software is licensed under terms that can be found in the LICENSE file in
-* the root directory of this software component.
-* If no LICENSE file comes with this software, it is provided AS-IS.
-*
-*******************************************************************************/
+/**
+  ******************************************************************************
+  * This file is part of the TouchGFX 4.16.0 distribution.
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
+  *
+  ******************************************************************************
+  */
 
 /**
  * @file touchgfx/mixins/Snapper.hpp
  *
  * Declares the touchgfx::Snapper class.
  */
-#ifndef TOUCHGFX_SNAPPER_HPP
-#define TOUCHGFX_SNAPPER_HPP
+#ifndef SNAPPER_HPP
+#define SNAPPER_HPP
 
 #include <touchgfx/Callback.hpp>
-#include <touchgfx/events/ClickEvent.hpp>
-#include <touchgfx/events/DragEvent.hpp>
+#include <touchgfx/Drawable.hpp>
 #include <touchgfx/hal/Types.hpp>
 #include <touchgfx/mixins/Draggable.hpp>
 
@@ -44,13 +46,13 @@ public:
     {
     }
 
-    virtual void handleDragEvent(const DragEvent& event)
+    virtual void handleDragEvent(const DragEvent& evt)
     {
-        Draggable<T>::handleDragEvent(event);
+        Draggable<T>::handleDragEvent(evt);
 
         if (dragAction && dragAction->isValid())
         {
-            dragAction->execute(event);
+            dragAction->execute(evt);
         }
     }
 
@@ -62,13 +64,13 @@ public:
      * The snapper will then move to the snap position when the click is released. This
      * happens when the drag operation ends.
      *
-     * @param  event The click event.
+     * @param  evt The click event.
      */
-    virtual void handleClickEvent(const ClickEvent& event)
+    virtual void handleClickEvent(const ClickEvent& evt)
     {
-        T::handleClickEvent(event);
+        T::handleClickEvent(evt);
 
-        if (event.getType() == ClickEvent::RELEASED)
+        if (evt.getType() == ClickEvent::RELEASED)
         {
             if (snappedAction && snappedAction->isValid())
             {
@@ -77,7 +79,7 @@ public:
 
             T::moveTo(snapPositionX, snapPositionY);
         }
-        else if (event.getType() == ClickEvent::PRESSED)
+        else if (evt.getType() == ClickEvent::PRESSED)
         {
             snapPositionX = T::getX();
             snapPositionY = T::getY();
@@ -127,7 +129,6 @@ private:
     GenericCallback<const DragEvent&>* dragAction;
     GenericCallback<>* snappedAction;
 };
+} //namespace touchgfx
 
-} // namespace touchgfx
-
-#endif // TOUCHGFX_SNAPPER_HPP
+#endif // SNAPPER_HPP

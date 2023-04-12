@@ -1,47 +1,46 @@
-/******************************************************************************
-* Copyright (c) 2018(-2023) STMicroelectronics.
-* All rights reserved.
-*
-* This file is part of the TouchGFX 4.21.3 distribution.
-*
-* This software is licensed under terms that can be found in the LICENSE file in
-* the root directory of this software component.
-* If no LICENSE file comes with this software, it is provided AS-IS.
-*
-*******************************************************************************/
+/**
+  ******************************************************************************
+  * This file is part of the TouchGFX 4.16.0 distribution.
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
+  *
+  ******************************************************************************
+  */
 
 /**
  * @file touchgfx/widgets/graph/GraphScroll.hpp
  *
- * Declares the touchgfx::GraphScrollData and touchgfx::GraphScroll classes.
+ * Declares the touchgfx::DataGraphScroll and touchgfx::GraphScroll classes.
  */
-#ifndef TOUCHGFX_GRAPHSCROLL_HPP
-#define TOUCHGFX_GRAPHSCROLL_HPP
+#ifndef GRAPHSCROLL_HPP
+#define GRAPHSCROLL_HPP
 
-#include <touchgfx/hal/Types.hpp>
 #include <touchgfx/widgets/graph/AbstractDataGraph.hpp>
 
 namespace touchgfx
 {
 /**
- * GraphScrollData is used to display a graph that continuously scrolls to the left every time a
- * new value is added to the graph. Because the graph is scrolled every time a new value is
- * added, the graph has to be re-drawn which can be quite demanding for the hardware depending
- * on the graph elements used in the graph.
+ * DataGraphScroll is used to display a graph that continuously scrolls to the left every
+ * time a new value is added to the graph. Because the graph is scrolled every time a new value
+ * is added, the graph has to be re-drawn which can be quite demanding for the hardware
+ * depending on the graph elements used in the graph.
  */
-class GraphScrollData : public DynamicDataGraph
+class DataGraphScroll : public AbstractDataGraphWithY
 {
 public:
     /**
-     * Initializes a new instance of the GraphScrollData class.
+     * Initializes a new instance of the DataGraphScroll class.
      *
-     * @param      capacity The capacity.
+     * @param          capacity The capacity.
      * @param [in] values   Pointer to memory with room for capacity elements of type T.
      */
-    GraphScrollData(int16_t capacity, int* values)
-        : DynamicDataGraph(capacity, values), current(0)
-    {
-    }
+    DataGraphScroll(int16_t capacity, int* values);
 
     virtual void clear();
 
@@ -54,37 +53,28 @@ protected:
 
     virtual int16_t addValue(int value);
 
-    virtual int16_t dataIndex(int16_t screenIndex) const
-    {
-        return usedCapacity < maxCapacity ? screenIndex : (screenIndex + current) % maxCapacity;
-    }
+    virtual int16_t realIndex(int16_t index) const;
 
 private:
-    virtual CWRUtil::Q5 indexToXQ5(int16_t index) const
-    {
-        return CWRUtil::toQ5(index);
-    }
+    virtual CWRUtil::Q5 indexToXQ5(int16_t index) const;
 };
 
 /**
  * A Widget capable of drawing a graph with various visual styles and different appearances for
  * the new values added to the graph.
- *
- * @tparam CAPACITY The maximum number of data points on the graph.
  */
 template <int16_t CAPACITY>
-class GraphScroll : public GraphScrollData
+class GraphScroll : public DataGraphScroll
 {
 public:
     GraphScroll()
-        : GraphScrollData(CAPACITY, y)
+        : DataGraphScroll(CAPACITY, yValues)
     {
     }
 
 private:
-    int y[CAPACITY];
+    int yValues[CAPACITY];
 };
-
 } // namespace touchgfx
 
-#endif // TOUCHGFX_GRAPHSCROLL_HPP
+#endif // GRAPHSCROLL_HPP

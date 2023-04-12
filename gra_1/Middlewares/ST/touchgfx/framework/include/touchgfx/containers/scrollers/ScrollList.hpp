@@ -1,28 +1,27 @@
-/******************************************************************************
-* Copyright (c) 2018(-2023) STMicroelectronics.
-* All rights reserved.
-*
-* This file is part of the TouchGFX 4.21.3 distribution.
-*
-* This software is licensed under terms that can be found in the LICENSE file in
-* the root directory of this software component.
-* If no LICENSE file comes with this software, it is provided AS-IS.
-*
-*******************************************************************************/
+/**
+  ******************************************************************************
+  * This file is part of the TouchGFX 4.16.0 distribution.
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
+  *
+  ******************************************************************************
+  */
 
 /**
  * @file touchgfx/containers/scrollers/ScrollList.hpp
  *
  * Declares the touchgfx::ScrollList class.
  */
-#ifndef TOUCHGFX_SCROLLLIST_HPP
-#define TOUCHGFX_SCROLLLIST_HPP
+#ifndef SCROLLLIST_HPP
+#define SCROLLLIST_HPP
 
-#include <touchgfx/Callback.hpp>
-#include <touchgfx/containers/scrollers/DrawableList.hpp>
 #include <touchgfx/containers/scrollers/ScrollBase.hpp>
-#include <touchgfx/events/ClickEvent.hpp>
-#include <touchgfx/hal/Types.hpp>
 
 namespace touchgfx
 {
@@ -36,12 +35,6 @@ class ScrollList : public ScrollBase
 {
 public:
     ScrollList();
-
-    virtual void setWidth(int16_t width);
-
-    virtual void setHeight(int16_t height);
-
-    virtual void setDrawableSize(int16_t drawableSize, int16_t drawableMargin);
 
     /**
      * Setup a list of drawables and provide a function to call to update a given Drawable
@@ -132,7 +125,7 @@ public:
         return list.getItemIndex(drawableIndex);
     }
 
-    virtual void handleClickEvent(const ClickEvent& event);
+    virtual void handleClickEvent(const ClickEvent& evt);
 
 protected:
     virtual int32_t getPositionForItem(int16_t itemIndex);
@@ -148,4 +141,4 @@ protected:
 
 } // namespace touchgfx
 
-#endif // TOUCHGFX_SCROLLLIST_HPP
+#endif // SCROLLLIST_HPP

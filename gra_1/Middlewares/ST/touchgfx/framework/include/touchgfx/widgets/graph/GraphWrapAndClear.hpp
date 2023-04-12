@@ -1,53 +1,47 @@
-/******************************************************************************
-* Copyright (c) 2018(-2023) STMicroelectronics.
-* All rights reserved.
-*
-* This file is part of the TouchGFX 4.21.3 distribution.
-*
-* This software is licensed under terms that can be found in the LICENSE file in
-* the root directory of this software component.
-* If no LICENSE file comes with this software, it is provided AS-IS.
-*
-*******************************************************************************/
+/**
+  ******************************************************************************
+  * This file is part of the TouchGFX 4.16.0 distribution.
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
+  *
+  ******************************************************************************
+  */
 
 /**
  * @file touchgfx/widgets/graph/GraphWrapAndClear.hpp
  *
- * Declares the touchgfx::GraphWrapAndClearData and touchgfx::GraphWrapAndClear classes.
+ * Declares the touchgfx::DataGraphWrapAndClear and touchgfx::GraphWrapAndClear classes.
  */
-#ifndef TOUCHGFX_GRAPHWRAPANDCLEAR_HPP
-#define TOUCHGFX_GRAPHWRAPANDCLEAR_HPP
+#ifndef GRAPHWRAPANDCLEAR_HPP
+#define GRAPHWRAPANDCLEAR_HPP
 
-#include <touchgfx/hal/Types.hpp>
 #include <touchgfx/widgets/graph/AbstractDataGraph.hpp>
 
 namespace touchgfx
 {
 /**
- * The GraphWrapAndClearData will show new points progressing across the graph. Once the graph
- * is filled, the next point added will cause the graph to be cleared and a new graph will
- * slowly be created as new values are added.
+ * The DataGraphWrapAndClear will show new points progressing across the graph. Once the graph is
+ * filled, the next point added will cause the graph to be cleared and a new graph will slowly
+ * be created as new values are added.
  */
-class GraphWrapAndClearData : public DynamicDataGraph
+class DataGraphWrapAndClear : public AbstractDataGraphWithY
 {
 public:
     /**
-     * Initializes a new instance of the GraphWrapAndOverwriteData class.
+     * Initializes a new instance of the DataGraphWrapAndOverwrite class.
      *
      * @param      capacity The capacity.
      * @param [in] values   Pointer to memory with room for capacity elements of type T.
      */
-    GraphWrapAndClearData(int16_t capacity, int* values)
-        : DynamicDataGraph(capacity, values)
-    {
-    }
+    DataGraphWrapAndClear(int16_t capacity, int* values);
 
-    virtual void clear();
-
-    virtual int32_t indexToGlobalIndex(int16_t index) const
-    {
-        return (this->dataCounter - this->usedCapacity) + index;
-    }
+    virtual int32_t indexToGlobalIndex(int16_t index) const;
 
 protected:
     virtual void beforeAddValue();
@@ -56,25 +50,23 @@ protected:
 };
 
 /**
- * The GraphWrapAndClear will show new points progressing across the graph. Once the graph is
- * filled, the next point added will cause the graph to be cleared and a new graph will slowly
- * be created as new values are added.
- *
- * @tparam CAPACITY The maximum number of data points on the graph.
+ * The GraphWrapAndClear will show new points progressing across the graph. Once the graph is filled,
+ * the next point added will cause the graph to be cleared and a new graph will slowly be
+ * created as new values are added.
  */
 template <int16_t CAPACITY>
-class GraphWrapAndClear : public GraphWrapAndClearData
+class GraphWrapAndClear : public DataGraphWrapAndClear
 {
 public:
     GraphWrapAndClear()
-        : GraphWrapAndClearData(CAPACITY, y)
+        : DataGraphWrapAndClear(CAPACITY, yValues)
     {
     }
 
 private:
-    int y[CAPACITY];
+    int yValues[CAPACITY];
 };
 
 } // namespace touchgfx
 
-#endif // TOUCHGFX_GRAPHWRAPANDCLEAR_HPP
+#endif // GRAPHWRAPANDCLEAR_HPP

@@ -1,26 +1,29 @@
-/******************************************************************************
-* Copyright (c) 2018(-2023) STMicroelectronics.
-* All rights reserved.
-*
-* This file is part of the TouchGFX 4.21.3 distribution.
-*
-* This software is licensed under terms that can be found in the LICENSE file in
-* the root directory of this software component.
-* If no LICENSE file comes with this software, it is provided AS-IS.
-*
-*******************************************************************************/
+/**
+  ******************************************************************************
+  * This file is part of the TouchGFX 4.16.0 distribution.
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
+  *
+  ******************************************************************************
+  */
 
 /**
  * @file touchgfx/widgets/canvas/PainterRGB888Bitmap.hpp
  *
  * Declares the touchgfx::PainterRGB888Bitmap class.
  */
-#ifndef TOUCHGFX_PAINTERRGB888BITMAP_HPP
-#define TOUCHGFX_PAINTERRGB888BITMAP_HPP
+#ifndef PAINTERRGB888BITMAP_HPP
+#define PAINTERRGB888BITMAP_HPP
 
+#include <stdint.h>
 #include <touchgfx/Bitmap.hpp>
-#include <touchgfx/hal/Types.hpp>
-#include <touchgfx/widgets/canvas/AbstractPainterBitmap.hpp>
+#include <touchgfx/transforms/DisplayTransformation.hpp>
 #include <touchgfx/widgets/canvas/AbstractPainterRGB888.hpp>
 
 namespace touchgfx
@@ -33,41 +36,43 @@ namespace touchgfx
  *
  * @see AbstractPainter
  */
-class PainterRGB888Bitmap : public AbstractPainterRGB888, public AbstractPainterBitmap
+class PainterRGB888Bitmap : public AbstractPainterRGB888
 {
 public:
     /**
-     * Constructor.
+     * Initializes a new instance of the PainterRGB888Bitmap class.
      *
-     * @param  bmp (Optional) The bitmap to use in the painter.
+     * @param  bmp   (Optional) The bitmap, default is #BITMAP_INVALID.
+     * @param  alpha (Optional) the alpha, default is 255 i.e. solid.
      */
-    PainterRGB888Bitmap(const Bitmap& bmp = Bitmap(BITMAP_INVALID))
-        : AbstractPainterRGB888(), AbstractPainterBitmap(bmp)
+    PainterRGB888Bitmap(const Bitmap& bmp = Bitmap(BITMAP_INVALID), uint8_t alpha = 255)
+        : AbstractPainterRGB888(), bitmapARGB8888Pointer(0), bitmapRGB888Pointer(0)
     {
+        setBitmap(bmp);
+        setAlpha(alpha);
     }
 
-    virtual void setBitmap(const Bitmap& bmp);
+    /**
+     * Sets a bitmap to be used when drawing the CanvasWidget.
+     *
+     * @param  bmp The bitmap.
+     */
+    void setBitmap(const Bitmap& bmp);
 
-    virtual bool setup(const Rect& widgetRect) const
-    {
-        if (!AbstractPainterRGB888::setup(widgetRect))
-        {
-            return false;
-        }
-        updateBitmapOffsets(widgetWidth);
-        return bitmap.getId() != BITMAP_INVALID;
-    }
+    virtual void render(uint8_t* ptr, int x, int xAdjust, int y, unsigned count, const uint8_t* covers);
 
-    virtual void paint(uint8_t* destination, int16_t offset, int16_t widgetX, int16_t widgetY, int16_t count, uint8_t alpha) const;
+protected:
+    virtual bool renderInit();
 
-    virtual void tearDown() const;
+    virtual bool renderNext(uint8_t& red, uint8_t& green, uint8_t& blue, uint8_t& alpha);
 
-    virtual HAL::RenderingMethod getRenderingMethod() const
-    {
-        return HAL::getInstance()->getDMAType() == DMA_TYPE_CHROMART ? HAL::HARDWARE : HAL::SOFTWARE;
-    }
+    const uint32_t* bitmapARGB8888Pointer; ///< Pointer to the bitmap (ARGB8888)
+    const uint8_t* bitmapRGB888Pointer;    ///< Pointer to the bitmap (RGB888)
+
+    Bitmap bitmap;                ///< The bitmap to be used when painting
+    Rect bitmapRectToFrameBuffer; ///< Bitmap rectangle translated to framebuffer coordinates
 };
 
 } // namespace touchgfx
 
-#endif // TOUCHGFX_PAINTERRGB888BITMAP_HPP
+#endif // PAINTERRGB888BITMAP_HPP

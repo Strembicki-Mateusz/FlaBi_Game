@@ -1,30 +1,30 @@
-/******************************************************************************
-* Copyright (c) 2018(-2023) STMicroelectronics.
-* All rights reserved.
-*
-* This file is part of the TouchGFX 4.21.3 distribution.
-*
-* This software is licensed under terms that can be found in the LICENSE file in
-* the root directory of this software component.
-* If no LICENSE file comes with this software, it is provided AS-IS.
-*
-*******************************************************************************/
+/**
+  ******************************************************************************
+  * This file is part of the TouchGFX 4.16.0 distribution.
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
+  *
+  ******************************************************************************
+  */
 
 /**
  * @file touchgfx/containers/scrollers/ScrollBase.hpp
  *
  * Declares the touchgfx::ScrollBase class.
  */
-#ifndef TOUCHGFX_SCROLLBASE_HPP
-#define TOUCHGFX_SCROLLBASE_HPP
+#ifndef SCROLLBASE_HPP
+#define SCROLLBASE_HPP
 
 #include <touchgfx/Callback.hpp>
 #include <touchgfx/EasingEquations.hpp>
 #include <touchgfx/containers/Container.hpp>
 #include <touchgfx/containers/scrollers/DrawableList.hpp>
-#include <touchgfx/events/DragEvent.hpp>
-#include <touchgfx/events/GestureEvent.hpp>
-#include <touchgfx/hal/Types.hpp>
 
 namespace touchgfx
 {
@@ -119,7 +119,7 @@ public:
      *
      * @see setWidth, setHeight, setHorizontal
      */
-    virtual void setDrawableSize(int16_t drawableSize, int16_t drawableMargin);
+    void setDrawableSize(int16_t drawableSize, int16_t drawableMargin);
 
     /**
      * Gets drawable size as set through the first parameter in most recent call to
@@ -261,33 +261,6 @@ public:
     uint16_t getDragAcceleration() const;
 
     /**
-     * Sets overshoot percentage when dragging a non-circular list. This is the size relative to an
-     * item that can be dragged further than the actual list. Setting this to 50, it is possible to
-     * drag the list to show an empty space half the size of an item. Setting this to 0 prevents
-     * dragging further than the actual elements in the list.
-     *
-     * @param   percentage  The overshoot percentage.
-     *
-     * @see getOvershootPercentage
-     */
-    void setOvershootPercentage(uint8_t percentage)
-    {
-        overshootPercentage = percentage;
-    }
-
-    /**
-     * Gets overshoot percentage, as previously set using setOvershootPercentage.
-     *
-     * @return  The overshoot percentage.
-     *
-     * @see setOvershootPercentage
-     */
-    uint8_t getOvershootPercentage() const
-    {
-        return overshootPercentage;
-    }
-
-    /**
      * Enables horizontal scrolling to be passed to the children in the list (in case a child
      * widget is able to handle drag events). By default, scrolling in either direction is
      * disabled. This function can be used to explicitly (dis)allow scrolling in the
@@ -361,9 +334,9 @@ public:
      */
     void stopAnimation();
 
-    virtual void handleDragEvent(const DragEvent& event);
+    virtual void handleDragEvent(const DragEvent& evt);
 
-    virtual void handleGestureEvent(const GestureEvent& event);
+    virtual void handleGestureEvent(const GestureEvent& evt);
 
     virtual void handleTickEvent();
 
@@ -464,7 +437,6 @@ protected:
     uint16_t maxSwipeItems;         ///< The maximum swipe items
     EasingEquation easingEquation;  ///< The easing equation used for animation
     uint16_t defaultAnimationSteps; ///< The animation steps
-    uint8_t overshootPercentage;    ///< The overshoot percentage when dragging
 
     GenericCallback<int16_t>* itemSelectedCallback; ///< The item selected callback
     GenericCallback<>* itemLockedInCallback;        ///< The item locked in callback
@@ -487,4 +459,4 @@ protected:
 
 } // namespace touchgfx
 
-#endif // TOUCHGFX_SCROLLBASE_HPP
+#endif // SCROLLBASE_HPP

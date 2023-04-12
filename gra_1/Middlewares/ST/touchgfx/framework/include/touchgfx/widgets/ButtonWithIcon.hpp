@@ -1,25 +1,26 @@
-/******************************************************************************
-* Copyright (c) 2018(-2023) STMicroelectronics.
-* All rights reserved.
-*
-* This file is part of the TouchGFX 4.21.3 distribution.
-*
-* This software is licensed under terms that can be found in the LICENSE file in
-* the root directory of this software component.
-* If no LICENSE file comes with this software, it is provided AS-IS.
-*
-*******************************************************************************/
+/**
+  ******************************************************************************
+  * This file is part of the TouchGFX 4.16.0 distribution.
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
+  *
+  ******************************************************************************
+  */
 
 /**
  * @file touchgfx/widgets/ButtonWithIcon.hpp
  *
  * Declares the touchgfx::ButtonWithIcon class.
  */
-#ifndef TOUCHGFX_BUTTONWITHICON_HPP
-#define TOUCHGFX_BUTTONWITHICON_HPP
+#ifndef BUTTONWITHICON_HPP
+#define BUTTONWITHICON_HPP
 
-#include <touchgfx/Bitmap.hpp>
-#include <touchgfx/hal/Types.hpp>
 #include <touchgfx/widgets/Button.hpp>
 
 namespace touchgfx
@@ -37,7 +38,7 @@ class ButtonWithIcon : public Button
 public:
     ButtonWithIcon();
 
-#ifdef __IAR_SYSTEMS_ICC__    // Only include in IAR compilation
+#ifdef __IAR_SYSTEMS_ICC__ // Only include in IAR compilation
 #pragma diag_suppress = Pe997 // Suppress warning for intentional virtual function override
 #elif defined(__ARMCC_VERSION) && (__ARMCC_VERSION < 6000000)
 #pragma diag_suppress 997
@@ -153,13 +154,8 @@ protected:
     Bitmap iconPressed;  ///< Icon to display when button is pressed.
     int16_t iconX;       ///< x coordinate offset for icon.
     int16_t iconY;       ///< y coordinate offset for icon.
-
-private:
-    virtual void setBitmaps(const Bitmap& /*bitmapReleased*/, const Bitmap& /*bitmapPressed*/)
-    {
-    }
 };
 
 } // namespace touchgfx
 
-#endif // TOUCHGFX_BUTTONWITHICON_HPP
+#endif // BUTTONWITHICON_HPP

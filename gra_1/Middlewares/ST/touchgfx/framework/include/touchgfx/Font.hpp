@@ -1,22 +1,25 @@
-/******************************************************************************
-* Copyright (c) 2018(-2023) STMicroelectronics.
-* All rights reserved.
-*
-* This file is part of the TouchGFX 4.21.3 distribution.
-*
-* This software is licensed under terms that can be found in the LICENSE file in
-* the root directory of this software component.
-* If no LICENSE file comes with this software, it is provided AS-IS.
-*
-*******************************************************************************/
+/**
+  ******************************************************************************
+  * This file is part of the TouchGFX 4.16.0 distribution.
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
+  *
+  ******************************************************************************
+  */
 
 /**
  * @file touchgfx/Font.hpp
  *
  * Declares the touchgfx::Font class.
  */
-#ifndef TOUCHGFX_FONT_HPP
-#define TOUCHGFX_FONT_HPP
+#ifndef FONT_HPP
+#define FONT_HPP
 
 #include <touchgfx/Unicode.hpp>
 #include <touchgfx/hal/Types.hpp>
@@ -37,7 +40,7 @@ enum GlyphFlags
 #pragma pack(2)
 
 /** struct providing information about a glyph. Used by LCD when rendering. */
-struct GlyphNode
+typedef struct GlyphNode
 {
     uint32_t dataOffset;          ///< The index to the data of this glyph
     Unicode::UnicodeChar unicode; ///< The Unicode of this glyph.
@@ -65,7 +68,7 @@ struct GlyphNode
      *
      * @return the right value of "width".
      */
-    FORCE_INLINE_FUNCTION int16_t width() const
+    FORCE_INLINE_FUNCTION uint16_t width() const
     {
         return ((flags & GLYPH_DATA_WIDTH_BIT8) << 5) | _width;
     }
@@ -75,7 +78,7 @@ struct GlyphNode
      *
      * @return the right value of "height".
      */
-    FORCE_INLINE_FUNCTION int16_t height() const
+    FORCE_INLINE_FUNCTION uint16_t height() const
     {
         return ((flags & GLYPH_DATA_HEIGHT_BIT8) << 4) | _height;
     }
@@ -113,8 +116,7 @@ struct GlyphNode
     {
         return ((flags & GLYPH_DATA_ADVANCE_BIT8) << 1) | _advance;
     }
-};
-
+} GlyphNode;
 #pragma pack()
 
 #pragma pack(2)
@@ -123,40 +125,15 @@ struct GlyphNode
  * Structure providing information about a kerning for a given pair of characters. Used by LCD
  * when rendering, calculating text width etc.
  */
-struct KerningNode
+typedef struct
 {
     Unicode::UnicodeChar unicodePrevChar; ///< The Unicode for the first character in the kerning pair
     int8_t distance;                      ///< The kerning distance
-};
-
+} KerningNode;
 #pragma pack()
 
 /** Defines an alias representing a Font ID. */
 typedef uint16_t FontId;
-
-/**
- * Structure providing information about the contextual forms
- * available in a font.
- */
-struct FontContextualFormsTable
-{
-    /** Defines pointer to array of 5 unicodes type */
-    typedef const Unicode::UnicodeChar (*arrayOf5UnicodesPtr)[5];
-
-    /** Defines pointer to array of 4 unicodes type */
-    typedef const Unicode::UnicodeChar (*arrayOf4UnicodesPtr)[4];
-
-    const Unicode::UnicodeChar (*contextualForms4Long)[5];     ///< Table of contextual forms for sequences of 4 glyphs
-    const Unicode::UnicodeChar (*contextualForms3Long)[5];     ///< Table of contextual forms for sequences of 3 glyphs
-    const Unicode::UnicodeChar (*contextualForms2Long)[5];     ///< Table of contextual forms for sequences of 2 glyphs
-    const Unicode::UnicodeChar (*contextualForms0621_063a)[4]; ///< Table of contextual forms for glyphs 0x0621 to 0x63A
-    const Unicode::UnicodeChar (*contextualForms0641_064a)[4]; ///< Table of contextual forms for glyphs 0x0641 to 0x64A
-    const Unicode::UnicodeChar (*contextualForms06XX)[5];      ///< Table of contextual forms for remaining glyphs 0x06XX
-    uint16_t contextualForms4LongSize;                         ///< Length of the table
-    uint16_t contextualForms3LongSize;                         ///< Length of the table
-    uint16_t contextualForms2LongSize;                         ///< Length of the table
-    uint16_t contextualForms06XXSize;                          ///< Length of the table
-};
 
 /**
  * The font base class. This class is abstract and requires the implementation of getGlyph. It
@@ -295,33 +272,22 @@ public:
      *
      * @return The number of blank pixels above the text.
      */
-    virtual int16_t getSpacingAbove(const Unicode::UnicodeChar* text, ...) const;
+    virtual uint8_t getSpacingAbove(const Unicode::UnicodeChar* text, ...) const;
 
     /**
      * Gets the height of the highest character in a given string. The height includes the
      * spacing above the text which is included in the font.
      *
+     * @param  text A null-terminated Unicode string.
+     * @param  ...  Variable arguments providing additional information inserted at wildcard
+     *              placeholders.
+     *
      * @return The height if the given text.
-     *
-     * @deprecated Please use getHeight instead.
      */
-    TOUCHGFX_DEPRECATED("Please use getHeight() instead.", virtual uint16_t getMaxTextHeight(const Unicode::UnicodeChar* text, ...) const);
+    virtual uint16_t getMaxTextHeight(const Unicode::UnicodeChar* text, ...) const;
 
     /**
-     * Returns the height in pixels of this font. The returned value corresponds to the maximum
-     * height occupied by a character in the font.
-     *
-     * @return The height in pixels of this font.
-     *
-     * @note It is not sufficient to allocate text areas with this height. Use getMinimumTextHeight
-     *       for this.
-     *
-     * @deprecated Please use getBaseline() instead.
-     */
-    TOUCHGFX_DEPRECATED("Please use getBaseline() instead.", virtual uint16_t getFontHeight() const);
-
-    /**
-     * Returns the position of the baseline of this font. The returned value corresponds to the
+     * Returns the height in pixels of this font. The returned value corresponds to the
      * maximum height occupied by a character in the font.
      *
      * @return The height in pixels of this font.
@@ -329,50 +295,21 @@ public:
      * @note It is not sufficient to allocate text areas with this height. Use
      *       getMinimumTextHeight for this.
      */
-    FORCE_INLINE_FUNCTION virtual uint16_t getBaseline() const
-    {
-        return baselineHeight;
-    }
-
-    /**
-     * Returns the height of a font. The font may exceed the top by getPixelsAboveTop().
-     *
-     * @return The font height.
-     *
-     * @deprecated Please use getHeight() instead.
-     */
-    TOUCHGFX_DEPRECATED("Please use getHeight() instead.", virtual uint16_t getMinimumTextHeight() const);
-
-    /**
-     * Returns the height of a font. The font may exceed the top by getPixelsAboveTop() or the
-     * bottom by getPixelsBelowBottom.
-     *
-     * @return The font height.
-     */
-    FORCE_INLINE_FUNCTION virtual uint16_t getHeight() const
+    FORCE_INLINE_FUNCTION virtual uint16_t getFontHeight() const
     {
         return fontHeight;
     }
 
     /**
-     * Gets pixels above top of the normal text height. For most fonts this is 0, for some 'wedding'
-     * fonts the number may be positive.
+     * Returns the minimum height needed for a text field that uses this font. Takes into
+     * account that certain characters (eg 'g') have pixels below the baseline, thus making
+     * the text height larger than the font height.
      *
-     * @return The pixels above top of normal text.
+     * @return The minimum height needed for a text field that uses this font.
      */
-    FORCE_INLINE_FUNCTION uint16_t getPixelsAboveTop() const
+    FORCE_INLINE_FUNCTION virtual uint16_t getMinimumTextHeight() const
     {
-        return pixelsAboveTop;
-    }
-
-    /**
-     * Gets number of pixel rows below the bottom of the font.
-     *
-     * @return The pixels below bottom.
-     */
-    FORCE_INLINE_FUNCTION uint16_t getPixelsBelowBottom() const
-    {
-        return pixelsBelowBottom;
+        return fontHeight + pixelsBelowBaseline;
     }
 
     /**
@@ -429,8 +366,6 @@ public:
      */
     virtual int8_t getKerning(Unicode::UnicodeChar prevChar, const GlyphNode* glyph) const
     {
-        (void)prevChar; // Unused variable
-        (void)glyph;    // Unused variable
         return 0;
     }
 
@@ -450,16 +385,6 @@ public:
      * @return The GSUB table or null if font has GSUB no table.
      */
     virtual const uint16_t* getGSUBTable() const
-    {
-        return 0;
-    }
-
-    /**
-     * Gets the contextual forms table used in arabic fonts.
-     *
-     * @return The FontContextualFormsTable or null if the font has no table.
-     */
-    virtual const FontContextualFormsTable* getContextualFormsTable() const
     {
         return 0;
     }
@@ -515,22 +440,19 @@ protected:
     /**
      * Initializes a new instance of the Font class. The protected constructor of a Font.
      *
-     * @param  height         The font height in pixels.
-     * @param  baseline       The baseline.
-     * @param  pixAboveTop    The maximum number of pixels above the top of the text.
-     * @param  pixBelowBottom The number of pixels below the base line.
-     * @param  bitsPerPixel   The number of bits per pixel.
-     * @param  byteAlignRow   The glyphs are saved with each row byte aligned.
-     * @param  maxLeft        The maximum left extend for a glyph in the font.
-     * @param  maxRight       The maximum right extend for a glyph in the font.
-     * @param  fallbackChar   The fallback character for the typography in case no glyph is available.
+     * @param  height       The font height in pixels.
+     * @param  pixBelowBase The number of pixels below the base line.
+     * @param  bitsPerPixel The number of bits per pixel.
+     * @param  byteAlignRow The glyphs are saved with each row byte aligned.
+     * @param  maxLeft      The maximum left extend for a glyph in the font.
+     * @param  maxRight     The maximum right extend for a glyph in the font.
+     * @param  fallbackChar The fallback character for the typography in case no glyph is
+     *                      available.
      * @param  ellipsisChar The ellipsis character used for truncating long texts.
      */
-    Font(uint16_t height, uint16_t baseline, uint8_t pixAboveTop, uint8_t pixBelowBottom, uint8_t bitsPerPixel, uint8_t byteAlignRow, uint8_t maxLeft, uint8_t maxRight, const Unicode::UnicodeChar fallbackChar, const Unicode::UnicodeChar ellipsisChar)
+    Font(uint16_t height, uint8_t pixBelowBase, uint8_t bitsPerPixel, uint8_t byteAlignRow, uint8_t maxLeft, uint8_t maxRight, const Unicode::UnicodeChar fallbackChar, const Unicode::UnicodeChar ellipsisChar)
         : fontHeight(height),
-          baselineHeight(baseline),
-          pixelsAboveTop(pixAboveTop),
-          pixelsBelowBottom(pixBelowBottom),
+          pixelsBelowBaseline(pixBelowBase),
           bPerPixel(bitsPerPixel),
           bAlignRow(byteAlignRow),
           maxPixelsLeft(maxLeft),
@@ -541,9 +463,7 @@ protected:
     }
 
     uint16_t fontHeight;                    ///< The font height in pixels
-    uint16_t baselineHeight;                ///< The baseline
-    uint8_t pixelsAboveTop;                 ///< The number of pixels above the top
-    uint8_t pixelsBelowBottom;              ///< The number of pixels below the bottom
+    uint8_t pixelsBelowBaseline;            ///< The number of pixels below the base line
     uint8_t bPerPixel : 7;                  ///< The number of bits per pixel
     uint8_t bAlignRow : 1;                  ///< The glyphs are saved with each row byte aligned
     uint8_t maxPixelsLeft;                  ///< The maximum number of pixels a glyph extends to the left
@@ -557,4 +477,4 @@ private:
 
 } // namespace touchgfx
 
-#endif // TOUCHGFX_FONT_HPP
+#endif // FONT_HPP

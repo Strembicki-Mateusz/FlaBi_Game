@@ -1,28 +1,28 @@
-/******************************************************************************
-* Copyright (c) 2018(-2023) STMicroelectronics.
-* All rights reserved.
-*
-* This file is part of the TouchGFX 4.21.3 distribution.
-*
-* This software is licensed under terms that can be found in the LICENSE file in
-* the root directory of this software component.
-* If no LICENSE file comes with this software, it is provided AS-IS.
-*
-*******************************************************************************/
+/**
+  ******************************************************************************
+  * This file is part of the TouchGFX 4.16.0 distribution.
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
+  *
+  ******************************************************************************
+  */
 
 /**
  * @file touchgfx/containers/ZoomAnimationImage.hpp
  *
  * Declares the touchgfx::ZoomAnimationImage class.
  */
-#ifndef TOUCHGFX_ZOOMANIMATIONIMAGE_HPP
-#define TOUCHGFX_ZOOMANIMATIONIMAGE_HPP
+#ifndef ZOOMANIMATIONIMAGE_HPP
+#define ZOOMANIMATIONIMAGE_HPP
 
-#include <touchgfx/Bitmap.hpp>
-#include <touchgfx/Callback.hpp>
 #include <touchgfx/EasingEquations.hpp>
 #include <touchgfx/containers/Container.hpp>
-#include <touchgfx/hal/Types.hpp>
 #include <touchgfx/widgets/Image.hpp>
 #include <touchgfx/widgets/ScalableImage.hpp>
 
@@ -189,6 +189,21 @@ public:
      */
     virtual void setHeight(int16_t height);
 
+    ///@cond
+    /**
+     * Sets the width and height of the image.
+     *
+     * @param  width  The new width.
+     * @param  height The new height.
+     *
+     * @note ZoomAnimationImage diverts from the normal behavior by automatically invalidating
+     *       which causes a redraw.
+     */
+    TOUCHGFX_DEPRECATED(
+        "Use setWidthHeight() instead.",
+        virtual void setDimension(int16_t width, int16_t height));
+    ///@endcond
+
     /**
      * Sets the algorithm to be used. In short, there is currently a value for fast (nearest
      * neighbor) and a value for slow (bilinear interpolation). Default is
@@ -260,14 +275,6 @@ public:
      */
     bool isZoomAnimationRunning() const;
 
-    virtual void invalidateContent() const
-    {
-        if (getAlpha() > 0)
-        {
-            Container::invalidateContent();
-        }
-    }
-
 protected:
     /** Animation states. */
     enum States
@@ -278,7 +285,7 @@ protected:
     };
 
     States currentState;                        ///< The current animation state
-    uint16_t animationCounter;                  ///< The progress counter for the animation
+    uint32_t animationCounter;                  ///< The progress counter for the animation
     uint16_t zoomAnimationDelay;                ///< A delay that is applied before animation start. Expressed in ticks.
     Bitmap smallBmp;                            ///< The bitmap representing the small image
     Bitmap largeBmp;                            ///< The bitmap representing the large image
@@ -342,4 +349,4 @@ protected:
 
 } // namespace touchgfx
 
-#endif // TOUCHGFX_ZOOMANIMATIONIMAGE_HPP
+#endif // ZOOMANIMATIONIMAGE_HPP

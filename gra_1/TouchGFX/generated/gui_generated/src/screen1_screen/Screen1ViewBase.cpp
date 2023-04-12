@@ -3,31 +3,43 @@
 /*********************************************************************************/
 #include <gui_generated/screen1_screen/Screen1ViewBase.hpp>
 #include <touchgfx/Color.hpp>
-#include <images/BitmapDatabase.hpp>
+#include "BitmapDatabase.hpp"
 
-Screen1ViewBase::Screen1ViewBase()
+Screen1ViewBase::Screen1ViewBase() :
+    flexButtonCallback(this, &Screen1ViewBase::flexButtonCallbackHandler)
 {
+
     __background.setPosition(0, 0, 800, 480);
-    __background.setColor(touchgfx::Color::getColorFromRGB(0, 0, 0));
-    add(__background);
+    __background.setColor(touchgfx::Color::getColorFrom24BitRGB(0, 0, 0));
 
-    scalableImage1.setBitmap(touchgfx::Bitmap(BITMAP_PWRASF_ID));
-    scalableImage1.setPosition(0, 0, 800, 480);
+    scalableImage1.setBitmap(touchgfx::Bitmap(BITMAP_DLUUUUGI_OBRAZ_ID));
+    scalableImage1.setPosition(0, 0, 4592, 480);
     scalableImage1.setScalingAlgorithm(touchgfx::ScalableImage::NEAREST_NEIGHBOR);
+
+    flexButton1.setBoxWithBorderPosition(0, 0, 99, 53);
+    flexButton1.setBorderSize(5);
+    flexButton1.setBoxWithBorderColors(touchgfx::Color::getColorFrom24BitRGB(0, 102, 153), touchgfx::Color::getColorFrom24BitRGB(0, 153, 204), touchgfx::Color::getColorFrom24BitRGB(0, 51, 102), touchgfx::Color::getColorFrom24BitRGB(51, 102, 153));
+    flexButton1.setPosition(0, 0, 99, 53);
+    flexButton1.setAction(flexButtonCallback);
+
+    add(__background);
     add(scalableImage1);
-
-    scalableImage2.setBitmap(touchgfx::Bitmap(BITMAP_PWRR_ID));
-    scalableImage2.setPosition(699, 383, 80, 80);
-    scalableImage2.setScalingAlgorithm(touchgfx::ScalableImage::NEAREST_NEIGHBOR);
-    add(scalableImage2);
-}
-
-Screen1ViewBase::~Screen1ViewBase()
-{
-
+    add(flexButton1);
 }
 
 void Screen1ViewBase::setupScreen()
 {
 
+}
+
+void Screen1ViewBase::flexButtonCallbackHandler(const touchgfx::AbstractButtonContainer& src)
+{
+    if (&src == &flexButton1)
+    {
+        //Interaction1
+        //When flexButton1 clicked move scalableImage1
+        //Move scalableImage1 to x:-4000, y:0 with LinearIn easing in 15000 ms (900 Ticks)
+        scalableImage1.clearMoveAnimationEndedAction();
+        scalableImage1.startMoveAnimation(-4000, 0, 900, touchgfx::EasingEquations::linearEaseIn, touchgfx::EasingEquations::linearEaseIn);
+    }
 }

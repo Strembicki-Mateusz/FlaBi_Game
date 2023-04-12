@@ -1,27 +1,26 @@
-/******************************************************************************
-* Copyright (c) 2018(-2023) STMicroelectronics.
-* All rights reserved.
-*
-* This file is part of the TouchGFX 4.21.3 distribution.
-*
-* This software is licensed under terms that can be found in the LICENSE file in
-* the root directory of this software component.
-* If no LICENSE file comes with this software, it is provided AS-IS.
-*
-*******************************************************************************/
+/**
+  ******************************************************************************
+  * This file is part of the TouchGFX 4.16.0 distribution.
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
+  *
+  ******************************************************************************
+  */
 
 /**
  * @file touchgfx/widgets/graph/GraphLabels.hpp
  *
  * Declares classes for adding labels and title to the graph.
  */
-#ifndef TOUCHGFX_GRAPHLABELS_HPP
-#define TOUCHGFX_GRAPHLABELS_HPP
+#ifndef GRAPHLABELS_HPP
+#define GRAPHLABELS_HPP
 
-#include <touchgfx/Font.hpp>
-#include <touchgfx/TypedText.hpp>
-#include <touchgfx/Unicode.hpp>
-#include <touchgfx/hal/Types.hpp>
 #include <touchgfx/widgets/graph/AbstractDataGraph.hpp>
 #include <touchgfx/widgets/graph/GraphElements.hpp>
 
@@ -40,41 +39,7 @@ class AbstractGraphDecoration : public AbstractGraphElementNoCWR
 class GraphLabelsBase : public AbstractGraphDecoration
 {
 public:
-    GraphLabelsBase()
-        : AbstractGraphDecoration(),
-          dataScale(1), labelInterval(0), labelTypedText(TYPED_TEXT_INVALID), labelRotation(TEXT_ROTATE_0), labelDecimals(0), labelDecimalPoint('.'), majorLabel(0)
-    {
-    }
-
-    virtual void draw(const Rect& invalidatedArea) const;
-
-    /**
-     * Sets a scaling factor to be multiplied on the labelInterval. Any already set
-     * labelInterval will be updated to the new correctly scaled value. To avoid this, use
-     * setIntervalScaled after setting scale.
-     *
-     * @param  scale The scaling factor.
-     *
-     * @see getScale
-     */
-    FORCE_INLINE_FUNCTION void setScale(int scale)
-    {
-        assert(scale != 0);
-        labelInterval = AbstractDataGraph::convertToNewScale(labelInterval, dataScale, scale);
-        dataScale = scale;
-    }
-
-    /**
-     * Gets the scaling factor set using setScale.
-     *
-     * @return The scaling factor.
-     *
-     * @see setScale
-     */
-    FORCE_INLINE_FUNCTION int getScale() const
-    {
-        return dataScale;
-    }
+    GraphLabelsBase();
 
     /**
      * Sets the interval between each label.
@@ -85,26 +50,10 @@ public:
      *
      * @note If interval is 0 only the axis is shown.
      */
-    FORCE_INLINE_FUNCTION void setInterval(int interval)
-    {
-        setIntervalScaled(AbstractDataGraph::int2scaled(interval, dataScale));
-    }
+    void setInterval(int interval);
 
     /** @copydoc setInterval(int) */
-    FORCE_INLINE_FUNCTION void setInterval(float interval)
-    {
-        setIntervalScaled(AbstractDataGraph::float2scaled(interval, dataScale));
-    }
-
-    /**
-     * @copydoc setInterval(int)
-     *
-     * @note The interval set here must already be scaled.
-     */
-    FORCE_INLINE_FUNCTION void setIntervalScaled(int interval)
-    {
-        labelInterval = abs(interval);
-    }
+    void setInterval(float interval);
 
     /**
      * Gets the interval between each label.
@@ -113,37 +62,19 @@ public:
      *
      * @see setInterval
      */
-    FORCE_INLINE_FUNCTION int getIntervalAsInt() const
-    {
-        return AbstractDataGraph::scaled2int(getIntervalScaled(), dataScale);
-    }
+    int getIntervalAsInt() const;
 
     /** @copydoc getIntervalAsInt() */
-    FORCE_INLINE_FUNCTION float getIntervalAsFloat() const
-    {
-        return AbstractDataGraph::scaled2float(getIntervalScaled(), dataScale);
-    }
+    float getIntervalAsFloat() const;
 
     /**
-     * @copydoc getIntervalAsInt()
-     *
-     * @note The interval returned here is left unscaled.
-     */
-    FORCE_INLINE_FUNCTION int getIntervalScaled() const
-    {
-        return labelInterval;
-    }
-
-    /**
-     * Sets "major" label that will be responsible for drawing major labels. If a label would be
-     * drawn at the same position as the major label, the label will not be drawn.
+     * Sets "major" label that will be responsible for drawing major labels. If a label
+     * would be drawn at the same position as the major label, the label will not be
+     * drawn.
      *
      * @param  major Reference to a major label object.
      */
-    FORCE_INLINE_FUNCTION void setMajorLabel(const GraphLabelsBase& major)
-    {
-        majorLabel = &major;
-    }
+    void setMajorLabel(const GraphLabelsBase& major);
 
     /**
      * Sets TypedText to use for the label. The TypedText should contain exactly one wildcard.
@@ -152,10 +83,7 @@ public:
      *
      * @see getLabelTypedText
      */
-    FORCE_INLINE_FUNCTION void setLabelTypedText(const TypedText& typedText)
-    {
-        labelTypedText = typedText;
-    }
+    void setLabelTypedText(const TypedText& typedText);
 
     /**
      * Gets TypedText label.
@@ -164,10 +92,7 @@ public:
      *
      * @see setLabelTypedText
      */
-    FORCE_INLINE_FUNCTION const TypedText& getLabelTypedText() const
-    {
-        return labelTypedText;
-    }
+    TypedText getLabelTypedText() const;
 
     /**
      * Sets label rotation.
@@ -176,10 +101,7 @@ public:
      *
      * @see getLabelRotation
      */
-    FORCE_INLINE_FUNCTION void setLabelRotation(TextRotation rotation)
-    {
-        labelRotation = rotation;
-    }
+    void setLabelRotation(TextRotation rotation);
 
     /**
      * Gets label rotation.
@@ -188,10 +110,7 @@ public:
      *
      * @see setLabelRotation
      */
-    FORCE_INLINE_FUNCTION TextRotation getLabelRotation() const
-    {
-        return labelRotation;
-    }
+    TextRotation getLabelRotation() const;
 
     /**
      * Sets number of decimals for labels, default is no decimals and no decimal point.
@@ -200,20 +119,14 @@ public:
      *
      * @see setLabelDecimalPoint
      */
-    FORCE_INLINE_FUNCTION void setLabelDecimals(uint16_t decimals)
-    {
-        labelDecimals = decimals;
-    }
+    void setLabelDecimals(uint16_t decimals);
 
     /**
      * Gets number of decimals for labels.
      *
      * @return The number of label decimals.
      */
-    FORCE_INLINE_FUNCTION uint16_t getLabelDecimals() const
-    {
-        return labelDecimals;
-    }
+    uint16_t getLabelDecimals() const;
 
     /**
      * Sets label decimal point. Default is to use '.' but this can be changed using this
@@ -225,10 +138,7 @@ public:
      *
      * @note The decimal point is only set if the label decimals > 0.
      */
-    FORCE_INLINE_FUNCTION void setLabelDecimalPoint(Unicode::UnicodeChar decimalPoint)
-    {
-        labelDecimalPoint = decimalPoint;
-    }
+    void setLabelDecimalPoint(Unicode::UnicodeChar decimalPoint);
 
     /**
      * Gets label decimal point previously set.
@@ -237,40 +147,11 @@ public:
      *
      * @see setLabelDecimalPoint
      */
-    FORCE_INLINE_FUNCTION Unicode::UnicodeChar getLabelDecimalPoint() const
-    {
-        return labelDecimalPoint;
-    }
+    Unicode::UnicodeChar getLabelDecimalPoint() const;
 
-    virtual void invalidateGraphPointAt(int16_t)
-    {
-    }
-
-    /**
-     * Gets correctly scaled minor interval, as the minor label may have a scale that differs
-     * the scale of the graph and this label.
-     *
-     * @param  graph The graph.
-     *
-     * @return The correctly scaled minor interval.
-     */
-    virtual int getCorrectlyScaledLabelInterval(const AbstractDataGraph* graph) const = 0;
-
-    /**
-     * Gets correctly scaled major interval, as the major label may have a scale that differs
-     * the scale of the graph and this label.
-     *
-     * @param  graph The graph.
-     *
-     * @return The correctly scaled major interval.
-     */
-    virtual int getCorrectlyScaledMajorInterval(const AbstractDataGraph* graph) const
-    {
-        return majorLabel == 0 ? 0 : majorLabel->getCorrectlyScaledLabelInterval(graph);
-    }
+    virtual void invalidateGraphPointAt(int16_t index);
 
 protected:
-    int dataScale;                          ///< The scaling factor
     int labelInterval;                      ///< The interval between each label.
     TypedText labelTypedText;               ///< The TypedText to use for the label.
     TextRotation labelRotation;             ///< The TextRotation to use for the label.
@@ -279,49 +160,28 @@ protected:
     const GraphLabelsBase* majorLabel;      ///< A pointer to a major label, if any
 
     /**
-     * Draw labels for all indexes in the given range. This is used where there is a gap in the
-     * graph and the labels have to be drawn using different x scales.
-     *
-     * @param [in] invalidatedArea The canvas.
-     * @param      fontToDraw      The font to draw.
-     * @param      graph           The graph.
-     * @param      rangeMin        The minimum index.
-     * @param      rangeMax        The maximum index.
-     * @param      minorInterval   The minor interval.
-     * @param      majorInterval   The major interval.
-     * @param      a               The alpha of the strings.
-     */
-    virtual void drawIndexRange(const Rect& invalidatedArea, const Font* fontToDraw, const AbstractDataGraph* graph, const int rangeMin, const int rangeMax, const int minorInterval, const int majorInterval, const uint8_t a) const;
-
-    /**
-     * Draw string.
-     *
-     * @param  invalidatedArea The invalidated area.
-     * @param  fontToDraw      The font to draw.
-     * @param  graph           The graph.
-     * @param  valueScaled     The value scaled.
-     * @param  labelScaled     The label scaled.
-     * @param  a               The alpha of the string.
-     */
-    virtual void drawString(const Rect& invalidatedArea, const Font* fontToDraw, const AbstractDataGraph* graph, const int valueScaled, const int labelScaled, const uint8_t a) const = 0;
-
-    /**
-     * Gets graph range minimum scaled.
+     * Gets correctly scaled major interval, as the major label may have a scale that differs the
+     * scale of the graph and this label.
      *
      * @param  graph The graph.
      *
-     * @return The graph range minimum scaled.
+     * @return The correctly scaled major interval.
      */
-    virtual int getGraphRangeMinScaled(const AbstractDataGraph* graph) const = 0;
+    int getCorrectlyScaledMajorInterval(const AbstractDataGraph* graph) const;
 
     /**
-     * Gets graph range maximum scaled.
+     * @copydoc setInterval(int)
      *
-     * @param  graph The graph.
-     *
-     * @return The graph range maximum scaled.
+     * @note The interval set here must already be scaled. For internal use.
      */
-    virtual int getGraphRangeMaxScaled(const AbstractDataGraph* graph) const = 0;
+    void setIntervalScaled(int interval);
+
+    /**
+     * @copydoc getIntervalAsInt()
+     *
+     * @note The interval returned here is left unscaled. For internal use.
+     */
+    int getIntervalScaled() const;
 
     /**
      * Format label according to the set number of decimals and the decimal point.
@@ -343,27 +203,34 @@ protected:
 class GraphLabelsX : public GraphLabelsBase
 {
 public:
+    virtual void draw(const Rect& invalidatedArea) const;
+
     virtual void invalidateGraphPointAt(int16_t index);
 
-    virtual int getCorrectlyScaledLabelInterval(const AbstractDataGraph* graph) const
-    {
-        return convertToGraphScaleX(graph, labelInterval, dataScale);
-    }
-
 protected:
-    void drawIndexRange(const Rect& invalidatedArea, const Font* fontToDraw, const AbstractDataGraph* graph, const int rangeMin, const int rangeMax, const int minorInterval, const int majorInterval, const uint8_t a) const;
+    /**
+     * Draw labels for all indexes in the given range. This is used where there is a gap in the
+     * graph and the labels have to be drawn using different x scales.
+     *
+     * @param [in] invalidatedArea The canvas.
+     * @param      fontToDraw      The font to draw.
+     * @param      graph           The graph.
+     * @param      indexLow        The minimum index.
+     * @param      indexHigh       The maximum index.
+     * @param      alpha           The alpha.
+     */
+    void drawIndexRange(const Rect& invalidatedArea, const Font* fontToDraw, const AbstractDataGraph* graph, int indexLow, int indexHigh, const uint8_t alpha) const;
 
-    virtual void drawString(const Rect& invalidatedArea, const Font* fontToDraw, const AbstractDataGraph* graph, const int valueScaled, const int labelScaled, const uint8_t a) const;
-
-    virtual int getGraphRangeMinScaled(const AbstractDataGraph* graph) const
-    {
-        return graph->getGraphRangeXMinScaled();
-    }
-
-    virtual int getGraphRangeMaxScaled(const AbstractDataGraph* graph) const
-    {
-        return graph->getGraphRangeXMaxScaled();
-    }
+    /**
+     * Draw string using rotation and clipping to make sure it is written properly.
+     *
+     * @param  invalidatedArea The invalidated area.
+     * @param  fontToDraw      The font to draw.
+     * @param  graph           The graph.
+     * @param  index           index of the data point.
+     * @param  alpha           The alpha.
+     */
+    void drawString(const Rect& invalidatedArea, const Font* fontToDraw, const AbstractDataGraph* graph, int index, const uint8_t alpha) const;
 };
 
 /**
@@ -373,23 +240,20 @@ protected:
 class GraphLabelsY : public GraphLabelsBase
 {
 public:
-    virtual int getCorrectlyScaledLabelInterval(const AbstractDataGraph* graph) const
-    {
-        return convertToGraphScaleY(graph, labelInterval, dataScale);
-    }
+    virtual void draw(const Rect& invalidatedArea) const;
 
 protected:
-    virtual void drawString(const Rect& invalidatedArea, const Font* fontToDraw, const AbstractDataGraph* graph, const int valueScaled, const int labelScaled, const uint8_t a) const;
-
-    virtual int getGraphRangeMinScaled(const AbstractDataGraph* graph) const
-    {
-        return graph->getGraphRangeYMinScaled();
-    }
-
-    virtual int getGraphRangeMaxScaled(const AbstractDataGraph* graph) const
-    {
-        return graph->getGraphRangeYMaxScaled();
-    }
+    /**
+     * Draw string using rotation and clipping to make sure it is written properly.
+     *
+     * @param  invalidatedArea The invalidated area.
+     * @param  fontToDraw      The font to draw.
+     * @param  graph           The graph.
+     * @param  valueScaled     The value (left scaled according to graph scale).
+     * @param  labelScaled     The label value (left scaled according to graph label scale).
+     * @param  alpha           The alpha.
+     */
+    void drawString(const Rect& invalidatedArea, const Font* fontToDraw, const AbstractDataGraph* graph, int valueScaled, int labelScaled, const uint8_t alpha) const;
 };
 
 /**
@@ -400,10 +264,7 @@ protected:
 class GraphTitle : public AbstractGraphDecoration
 {
 public:
-    GraphTitle()
-        : titleTypedText(TYPED_TEXT_INVALID), titleRotation(TEXT_ROTATE_0)
-    {
-    }
+    GraphTitle();
 
     /**
      * Sets TypedText to use as a title. It can be any static text which is just added as a
@@ -413,10 +274,7 @@ public:
      *
      * @see getTitleTypedText
      */
-    FORCE_INLINE_FUNCTION void setTitleTypedText(const TypedText& typedText)
-    {
-        titleTypedText = typedText;
-    }
+    void setTitleTypedText(const TypedText& typedText);
 
     /**
      * Gets title typed text.
@@ -425,10 +283,7 @@ public:
      *
      * @see setTitleTypedText
      */
-    FORCE_INLINE_FUNCTION const TypedText& getTitleTypedText() const
-    {
-        return titleTypedText;
-    }
+    TypedText getTitleTypedText() const;
 
     /**
      * Sets TextRotation of the title.
@@ -437,10 +292,7 @@ public:
      *
      * @see setTitleTypedText, getTitleRotation
      */
-    FORCE_INLINE_FUNCTION void setTitleRotation(TextRotation rotation)
-    {
-        titleRotation = rotation;
-    }
+    void setTitleRotation(TextRotation rotation);
 
     /**
      * Gets title rotation.
@@ -449,21 +301,13 @@ public:
      *
      * @see setTitleRotation
      */
-    FORCE_INLINE_FUNCTION TextRotation getTitleRotation() const
-    {
-        return titleRotation;
-    }
+    TextRotation getTitleRotation() const;
 
     virtual void draw(const Rect& invalidatedArea) const;
 
-    virtual bool drawCanvasWidget(const Rect&) const
-    {
-        return true;
-    }
+    virtual bool drawCanvasWidget(const Rect& invalidatedArea) const;
 
-    virtual void invalidateGraphPointAt(int16_t)
-    {
-    }
+    virtual void invalidateGraphPointAt(int16_t index);
 
 private:
     TypedText titleTypedText;   ///< The title typed text
@@ -472,4 +316,4 @@ private:
 
 } // namespace touchgfx
 
-#endif // TOUCHGFX_GRAPHLABELS_HPP
+#endif // GRAPHLABELS_HPP

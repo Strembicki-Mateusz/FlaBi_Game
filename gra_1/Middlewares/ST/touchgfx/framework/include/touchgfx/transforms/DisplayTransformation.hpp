@@ -1,22 +1,25 @@
-/******************************************************************************
-* Copyright (c) 2018(-2023) STMicroelectronics.
-* All rights reserved.
-*
-* This file is part of the TouchGFX 4.21.3 distribution.
-*
-* This software is licensed under terms that can be found in the LICENSE file in
-* the root directory of this software component.
-* If no LICENSE file comes with this software, it is provided AS-IS.
-*
-*******************************************************************************/
+/**
+  ******************************************************************************
+  * This file is part of the TouchGFX 4.16.0 distribution.
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
+  *
+  ******************************************************************************
+  */
 
 /**
  * @file touchgfx/transforms/DisplayTransformation.hpp
  *
  * Declares the touchgfx::DisplayTransformation class.
  */
-#ifndef TOUCHGFX_DISPLAYTRANSFORMATION_HPP
-#define TOUCHGFX_DISPLAYTRANSFORMATION_HPP
+#ifndef DISPLAYTRANSFORMATION_HPP
+#define DISPLAYTRANSFORMATION_HPP
 
 #include <touchgfx/hal/Types.hpp>
 
@@ -105,4 +108,4 @@ public:
 
 } // namespace touchgfx
 
-#endif // TOUCHGFX_DISPLAYTRANSFORMATION_HPP
+#endif // DISPLAYTRANSFORMATION_HPP

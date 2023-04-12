@@ -1,25 +1,29 @@
-/******************************************************************************
-* Copyright (c) 2018(-2023) STMicroelectronics.
-* All rights reserved.
-*
-* This file is part of the TouchGFX 4.21.3 distribution.
-*
-* This software is licensed under terms that can be found in the LICENSE file in
-* the root directory of this software component.
-* If no LICENSE file comes with this software, it is provided AS-IS.
-*
-*******************************************************************************/
+/**
+  ******************************************************************************
+  * This file is part of the TouchGFX 4.16.0 distribution.
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
+  *
+  ******************************************************************************
+  */
 
 /**
  * @file touchgfx/widgets/canvas/AbstractShape.hpp
  *
  * Declares the touchgfx::AbstractShape class.
  */
-#ifndef TOUCHGFX_ABSTRACTSHAPE_HPP
-#define TOUCHGFX_ABSTRACTSHAPE_HPP
+#ifndef ABSTRACTSHAPE_HPP
+#define ABSTRACTSHAPE_HPP
 
 #include <touchgfx/hal/Types.hpp>
-#include <touchgfx/widgets/canvas/CWRUtil.hpp>
+#include <touchgfx/widgets/Widget.hpp>
+
 #include <touchgfx/widgets/canvas/CanvasWidget.hpp>
 
 namespace touchgfx
@@ -189,45 +193,43 @@ public:
             return;
         }
 
-        Rect rectBefore = getMinimalRect();
-        invalidateRect(rectBefore);
+        Rect rect = getMinimalRect();
 
         dx = xNew;
         dy = yNew;
 
         updateAbstractShapeCache();
 
-        Rect rectAfter = getMinimalRect();
-        invalidateRect(rectAfter);
+        rect.expandToFit(getMinimalRect());
+        invalidateRect(rect);
     }
 
     /**
      * Gets the position of the shapes (0,0).
      *
      * @tparam T Generic type parameter, either int or float.
-     * @param [out] xOrigin The x coordinate rounded down to the precision of T.
-     * @param [out] yOrigin The y coordinate rounded down to the precision of T.
+     * @param [out] dx The x coordinate rounded down to the precision of T.
+     * @param [out] dy The y coordinate rounded down to the precision of T.
      */
     template <typename T>
-    void getOrigin(T& xOrigin, T& yOrigin) const
+    void getOrigin(T& dx, T& dy) const
     {
-        xOrigin = dx.to<T>();
-        yOrigin = dy.to<T>();
+        dx = this->dx.to<T>();
+        dy = this->dy.to<T>();
     }
 
     /**
-     * Sets the absolute angle in degrees to turn the AbstractShape. 0 degrees means no rotation and
-     * 90 degrees is rotate the shape clockwise. Repeated calls to setAngle(10) will therefore not
-     * rotate the shape by an additional 10 degrees. The cached outline of the shape is
+     * Sets the absolute angle to turn the AbstractShape. 0 degrees means no rotation and 90
+     * degrees is rotate the shape clockwise. Repeated calls to setAngle(10) will therefore
+     * not rotate the shape by an additional 10 degrees. The cached outline of the shape is
      * automatically updated.
      *
-     * @tparam  T   Generic type parameter.
-     * @param   angle   The absolute angle to turn the abstractShape to relative to 0 (straight up).
+     * @tparam T Generic type parameter.
+     * @param  angle The absolute angle to turn the abstractShape to relative to 0 (straight up).
      *
      * @see updateAngle
      *
-     * @note    The area containing the AbstractShape is not invalidated.
-     * @note    Angles are given in degrees, so a full circle is 360.
+     * @note The area containing the AbstractShape is not invalidated.
      */
     template <typename T>
     void setAngle(T angle)
@@ -241,13 +243,10 @@ public:
     }
 
     /**
-     * Gets the abstractShape's angle in degrees.
+     * Gets the abstractShape's angle.
      *
-     * @tparam  T   Generic type parameter.
-     * @param [out] angle   The current AbstractShape rotation angle rounded down to the precision of
-     *                      T.
-     *
-     * @note    Angles are given in degrees, so a full circle is 360.
+     * @tparam T Generic type parameter.
+     * @param [out] angle The current AbstractShape rotation angle rounded down to the precision of T.
      */
     template <typename T>
     void getAngle(T& angle)
@@ -256,18 +255,17 @@ public:
     }
 
     /**
-     * Sets the absolute angle in degrees to turn the AbstractShape. 0 degrees means no rotation and
-     * 90 degrees is rotate the shape clockwise. Repeated calls to setAngle(10) will therefore not
-     * rotate the shape by an additional 10 degrees. The cached outline of the shape is
+     * Sets the absolute angle to turn the AbstractShape. 0 degrees means no rotation and 90
+     * degrees is rotate the shape clockwise. Repeated calls to setAngle(10) will therefore
+     * not rotate the shape by an additional 10 degrees. The cached outline of the shape is
      * automatically updated.
      *
-     * @tparam  T   Generic type parameter.
-     * @param   angle   The angle to turn the abstractShape.
+     * @tparam T Generic type parameter.
+     * @param  angle The angle to turn the abstractShape.
      *
      * @see setAngle
      *
-     * @note    The area containing the AbstractShape is invalidated before and after the change.
-     * @note    Angles are given in degrees, so a full circle is 360.
+     * @note The area containing the AbstractShape is invalidated before and after the change.
      */
     template <typename T>
     void updateAngle(T angle)
@@ -276,22 +274,20 @@ public:
         if (shapeAngle != angleQ5)
         {
             Rect rectBefore = getMinimalRect();
-            invalidateRect(rectBefore);
 
             shapeAngle = angleQ5;
             updateAbstractShapeCache();
 
             Rect rectAfter = getMinimalRect();
-            invalidateRect(rectAfter);
+            rectBefore.expandToFit(rectAfter);
+            invalidateRect(rectBefore);
         }
     }
 
     /**
-     * Gets the current angle in degrees of the abstractShape.
+     * Gets the current angle of the abstractShape.
      *
-     * @return  The angle of the AbstractShaperounded down to the precision of int.
-     *
-     * @note    Angles are given in degrees, so a full circle is 360.
+     * @return The angle of the AbstractShaperounded down to the precision of int.
      */
     int getAngle() const
     {
@@ -362,14 +358,14 @@ public:
         if (xScale != xScaleQ10 || yScale != yScaleQ10)
         {
             Rect rectBefore = getMinimalRect();
-            invalidateRect(rectBefore);
 
             xScale = xScaleQ10;
             yScale = yScaleQ10;
             updateAbstractShapeCache();
 
             Rect rectAfter = getMinimalRect();
-            invalidateRect(rectAfter);
+            rectBefore.expandToFit(rectAfter);
+            invalidateRect(rectBefore);
         }
     }
 
@@ -390,30 +386,6 @@ public:
         y = yScale.to<T>();
     }
 
-    /**
-     * Sets the filling rule to be used when rendering the outline.
-     *
-     * @param  rule The filling rule.
-     *
-     * @see getFillingRule
-     */
-    void setFillingRule(Rasterizer::FillingRule rule)
-    {
-        fillingRule = rule;
-    }
-
-    /**
-     * Gets the filling rule being used when rendering the outline.
-     *
-     * @return The filling rule.
-     *
-     * @see setFillingRule
-     */
-    Rasterizer::FillingRule getFillingRule() const
-    {
-        return fillingRule;
-    }
-
     virtual bool drawCanvasWidget(const Rect& invalidatedArea) const;
 
     /**
@@ -424,8 +396,6 @@ public:
     void updateAbstractShapeCache();
 
 protected:
-    Rasterizer::FillingRule fillingRule; ///< The filling rule used by the rasterizer
-
     /**
      * Sets the cached coordinates of a given point/corner. The coordinates in the cache are
      * the coordinates from the corners after rotation and scaling has been applied to the
@@ -466,4 +436,4 @@ private:
 
 } // namespace touchgfx
 
-#endif // TOUCHGFX_ABSTRACTSHAPE_HPP
+#endif // ABSTRACTSHAPE_HPP

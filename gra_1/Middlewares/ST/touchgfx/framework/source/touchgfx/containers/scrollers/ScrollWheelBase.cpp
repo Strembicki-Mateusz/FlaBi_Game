@@ -1,17 +1,18 @@
-/******************************************************************************
-* Copyright (c) 2018(-2023) STMicroelectronics.
-* All rights reserved.
-*
-* This file is part of the TouchGFX 4.21.3 distribution.
-*
-* This software is licensed under terms that can be found in the LICENSE file in
-* the root directory of this software component.
-* If no LICENSE file comes with this software, it is provided AS-IS.
-*
-*******************************************************************************/
+/**
+  ******************************************************************************
+  * This file is part of the TouchGFX 4.16.0 distribution.
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
+  *
+  ******************************************************************************
+  */
 
-#include <touchgfx/Drawable.hpp>
-#include <touchgfx/Utils.hpp>
 #include <touchgfx/containers/scrollers/ScrollWheelBase.hpp>
 
 namespace touchgfx
@@ -92,17 +93,17 @@ int32_t ScrollWheelBase::keepOffsetInsideLimits(int32_t newOffset, int16_t overS
     return newOffset;
 }
 
-void ScrollWheelBase::handleClickEvent(const ClickEvent& event)
+void ScrollWheelBase::handleClickEvent(const ClickEvent& evt)
 {
     if (itemSize == 0)
     {
         return;
     }
     int32_t offset = getOffset();
-    if (event.getType() == ClickEvent::PRESSED)
+    if (evt.getType() == ClickEvent::PRESSED)
     {
-        xClick = event.getX();
-        yClick = event.getY();
+        xClick = evt.getX();
+        yClick = evt.getY();
         initialSwipeOffset = offset;
 
         if (itemPressedCallback && itemPressedCallback->isValid())
@@ -110,7 +111,7 @@ void ScrollWheelBase::handleClickEvent(const ClickEvent& event)
             itemPressedCallback->execute(getSelectedItem());
         }
     }
-    else if (event.getType() == ClickEvent::RELEASED)
+    else if (evt.getType() == ClickEvent::RELEASED)
     {
         if (currentAnimationState == NO_ANIMATION)
         {
@@ -142,10 +143,10 @@ void ScrollWheelBase::handleClickEvent(const ClickEvent& event)
     }
 }
 
-void ScrollWheelBase::handleDragEvent(const DragEvent& event)
+void ScrollWheelBase::handleDragEvent(const DragEvent& evt)
 {
     currentAnimationState = ANIMATING_DRAG;
-    int newOffset = getOffset() + (getHorizontal() ? event.getDeltaX() : event.getDeltaY()) * dragAcceleration / 10;
+    int newOffset = getOffset() + (getHorizontal() ? evt.getDeltaX() : evt.getDeltaY()) * dragAcceleration / 10;
     if (!getCircular())
     {
         newOffset = MIN(newOffset, itemSize * 3 / 4);
@@ -155,11 +156,11 @@ void ScrollWheelBase::handleDragEvent(const DragEvent& event)
     setOffset(newOffset);
 }
 
-void ScrollWheelBase::handleGestureEvent(const GestureEvent& event)
+void ScrollWheelBase::handleGestureEvent(const GestureEvent& evt)
 {
-    if (event.getType() == (getHorizontal() ? GestureEvent::SWIPE_HORIZONTAL : GestureEvent::SWIPE_VERTICAL))
+    if (evt.getType() == (getHorizontal() ? GestureEvent::SWIPE_HORIZONTAL : GestureEvent::SWIPE_VERTICAL))
     {
-        int32_t newOffset = getOffset() + event.getVelocity() * swipeAcceleration / 10;
+        int32_t newOffset = getOffset() + evt.getVelocity() * swipeAcceleration / 10;
         if (maxSwipeItems > 0)
         {
             int32_t maxDistance = maxSwipeItems * itemSize;

@@ -1,28 +1,31 @@
-/******************************************************************************
-* Copyright (c) 2018(-2023) STMicroelectronics.
-* All rights reserved.
-*
-* This file is part of the TouchGFX 4.21.3 distribution.
-*
-* This software is licensed under terms that can be found in the LICENSE file in
-* the root directory of this software component.
-* If no LICENSE file comes with this software, it is provided AS-IS.
-*
-*******************************************************************************/
+/**
+  ******************************************************************************
+  * This file is part of the TouchGFX 4.16.0 distribution.
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
+  *
+  ******************************************************************************
+  */
 
 /**
  * @file touchgfx/widgets/canvas/PainterBWBitmap.hpp
  *
  * Declares the touchgfx::PainterBWBitmap class.
  */
-#ifndef TOUCHGFX_PAINTERBWBITMAP_HPP
-#define TOUCHGFX_PAINTERBWBITMAP_HPP
+#ifndef PAINTERBWBITMAP_HPP
+#define PAINTERBWBITMAP_HPP
 
+#include <stdint.h>
 #include <platform/driver/lcd/LCD1bpp.hpp>
 #include <touchgfx/Bitmap.hpp>
-#include <touchgfx/hal/Types.hpp>
+#include <touchgfx/transforms/DisplayTransformation.hpp>
 #include <touchgfx/widgets/canvas/AbstractPainterBW.hpp>
-#include <touchgfx/widgets/canvas/AbstractPainterBitmap.hpp>
 
 namespace touchgfx
 {
@@ -34,34 +37,41 @@ namespace touchgfx
  *
  * @see AbstractPainter
  */
-class PainterBWBitmap : public AbstractPainterBW, public AbstractPainterBitmap
+class PainterBWBitmap : public AbstractPainterBW
 {
 public:
     /**
-     * Constructor.
+     * Initializes a new instance of the PainterBWBitmap class.
      *
-     * @param  bmp (Optional) The bitmap to use in the painter.
+     * @param  bmp (Optional) The bitmap, default is #BITMAP_INVALID.
      */
     PainterBWBitmap(const Bitmap& bmp = Bitmap(BITMAP_INVALID))
-        : AbstractPainterBW(), AbstractPainterBitmap(bmp)
+        : AbstractPainterBW(), bitmapBWPointer(0)
     {
+        setBitmap(bmp);
     }
 
-    virtual void setBitmap(const Bitmap& bmp);
+    /**
+     * Sets a bitmap to be used when drawing the CanvasWidget.
+     *
+     * @param  bmp The bitmap.
+     */
+    void setBitmap(const Bitmap& bmp);
 
-    virtual bool setup(const Rect& widgetRect) const
-    {
-        if (!AbstractPainterBW::setup(widgetRect))
-        {
-            return false;
-        }
-        updateBitmapOffsets(widgetWidth);
-        return bitmap.getId() != BITMAP_INVALID;
-    }
+    virtual void render(uint8_t* ptr, int x, int xAdjust, int y, unsigned count, const uint8_t* covers);
 
-    virtual void paint(uint8_t* destination, int16_t offset, int16_t widgetX, int16_t widgetY, int16_t count, uint8_t alpha) const;
+protected:
+    virtual bool renderInit();
+
+    virtual bool renderNext(uint8_t& color);
+
+    const uint8_t* bitmapBWPointer; ///< Pointer to the bitmap (BW)
+    LCD1bpp::bwRLEdata bw_rle;      ///< Pointer to class for walking through bw_rle image
+
+    Bitmap bitmap;                ///< The bitmap to be used when painting
+    Rect bitmapRectToFrameBuffer; ///< Bitmap rectangle translated to framebuffer coordinates
 };
 
 } // namespace touchgfx
 
-#endif // TOUCHGFX_PAINTERBWBITMAP_HPP
+#endif // PAINTERBWBITMAP_HPP

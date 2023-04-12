@@ -1,22 +1,25 @@
-/******************************************************************************
-* Copyright (c) 2018(-2023) STMicroelectronics.
-* All rights reserved.
-*
-* This file is part of the TouchGFX 4.21.3 distribution.
-*
-* This software is licensed under terms that can be found in the LICENSE file in
-* the root directory of this software component.
-* If no LICENSE file comes with this software, it is provided AS-IS.
-*
-*******************************************************************************/
+/**
+  ******************************************************************************
+  * This file is part of the TouchGFX 4.16.0 distribution.
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
+  *
+  ******************************************************************************
+  */
 
 /**
  * @file touchgfx/widgets/PixelDataWidget.hpp
  *
  * Declares the touchgfx::PixelDataWidget class.
  */
-#ifndef TOUCHGFX_PIXELDATAWIDGET_HPP
-#define TOUCHGFX_PIXELDATAWIDGET_HPP
+#ifndef PIXELDATAWIDGET_HPP
+#define PIXELDATAWIDGET_HPP
 
 #include <touchgfx/Bitmap.hpp>
 #include <touchgfx/hal/Types.hpp>
@@ -35,13 +38,7 @@ namespace touchgfx
 class PixelDataWidget : public Widget
 {
 public:
-    PixelDataWidget()
-        : Widget(),
-          buffer(0),
-          format(Bitmap::RGB888),
-          alpha(255)
-    {
-    }
+    PixelDataWidget();
 
     virtual void draw(const Rect& invalidatedArea) const;
 
@@ -53,73 +50,27 @@ public:
      *
      * @param [in] data Image data.
      *
-     * @see getPixelData, setBitmapFormat
-     */
-    void setPixelData(uint8_t* const data)
-    {
-        buffer = data;
-    }
-
-    /**
-     * Get the pixel data memory pointer, previously set with setPixelData().
-     *
-     * @return  The pixel data.
-     *
-     * @see setPixelData, setBitmapFormat
-     */
-    uint8_t* getPixelData() const
-    {
-        return buffer;
-    }
-
-    /**
-     * Set the format of the pixel data. The supported formats depend on the display type. For
-     * example grayscale displays do not support color images.
-     *
-     * @param   bitmapFormat    Describes the format to use when reading the pixel data.
-     *
-     * @see getBitmapFormat
-     */
-    void setBitmapFormat(Bitmap::BitmapFormat bitmapFormat)
-    {
-        format = bitmapFormat;
-    }
-
-    /**
-     * Get the format of the pixel data previously set using setBitmapFormat().
-     *
-     * @return  The bitmap format.
-     *
      * @see setBitmapFormat
      */
-    Bitmap::BitmapFormat getBitmapFormat() const
-    {
-        return format;
-    }
+    void setPixelData(uint8_t* const data);
+
+    /**
+     * Set the format of the pixel data. The supported formats depend on the display type.
+     * For example grayscale displays do not support color images.
+     *
+     * @param  format Describes the format to use when reading the pixel data.
+     */
+    void setBitmapFormat(Bitmap::BitmapFormat format);
 
     /**
      * @copydoc Image::setAlpha
      */
-    void setAlpha(uint8_t newAlpha)
-    {
-        alpha = newAlpha;
-    }
+    void setAlpha(uint8_t newAlpha);
 
     /**
      * @copydoc Image::getAlpha
      */
-    uint8_t getAlpha() const
-    {
-        return alpha;
-    }
-
-    virtual void invalidateContent() const
-    {
-        if (alpha > 0)
-        {
-            Widget::invalidateContent();
-        }
-    }
+    uint8_t getAlpha() const;
 
 protected:
     uint8_t* buffer;             ///< The buffer where the pixels are copied from
@@ -129,4 +80,4 @@ protected:
 
 } // namespace touchgfx
 
-#endif // TOUCHGFX_PIXELDATAWIDGET_HPP
+#endif // PIXELDATAWIDGET_HPP

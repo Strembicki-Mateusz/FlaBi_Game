@@ -15,11 +15,6 @@ public:
     FrontendApplicationBase(Model& m, FrontendHeap& heap);
     virtual ~FrontendApplicationBase() { }
 
-    virtual void changeToStartScreen()
-    {
-        gotoScreen1ScreenNoTransition();
-    }
-
     // Screen1
     void gotoScreen1ScreenNoTransition();
 

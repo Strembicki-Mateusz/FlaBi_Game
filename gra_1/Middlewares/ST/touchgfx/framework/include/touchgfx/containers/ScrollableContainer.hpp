@@ -1,28 +1,28 @@
-/******************************************************************************
-* Copyright (c) 2018(-2023) STMicroelectronics.
-* All rights reserved.
-*
-* This file is part of the TouchGFX 4.21.3 distribution.
-*
-* This software is licensed under terms that can be found in the LICENSE file in
-* the root directory of this software component.
-* If no LICENSE file comes with this software, it is provided AS-IS.
-*
-*******************************************************************************/
+/**
+  ******************************************************************************
+  * This file is part of the TouchGFX 4.16.0 distribution.
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
+  *
+  ******************************************************************************
+  */
 
 /**
  * @file touchgfx/containers/ScrollableContainer.hpp
  *
  * Declares the touchgfx::ScrollableContainer class.
  */
-#ifndef TOUCHGFX_SCROLLABLECONTAINER_HPP
-#define TOUCHGFX_SCROLLABLECONTAINER_HPP
+#ifndef SCROLLABLECONTAINER_HPP
+#define SCROLLABLECONTAINER_HPP
 
+#include <touchgfx/Application.hpp>
 #include <touchgfx/containers/Container.hpp>
-#include <touchgfx/events/ClickEvent.hpp>
-#include <touchgfx/events/DragEvent.hpp>
-#include <touchgfx/events/GestureEvent.hpp>
-#include <touchgfx/hal/Types.hpp>
 #include <touchgfx/widgets/Box.hpp>
 
 namespace touchgfx
@@ -101,7 +101,7 @@ public:
      * Sets the visibility of the scrollbars, when the scrollable area is pressed. By
      * default the scrollbars are hidden, but shown when the contents of the
      * ScrollableContainer is being dragged around. Using setScrollbarsVisible, it is
-     * possible to hide the scrollbars when dragging the contents.
+     * possble to hide the scrollbars when dragging the contents.
      *
      * @param  newVisible If true (default), the scrollbars are visible when scrollable area is
      *                    pressed. If false, scrollbars are always hidden.
@@ -139,34 +139,21 @@ public:
         }
     }
 
-    virtual void handleClickEvent(const ClickEvent& event);
+    virtual void handleClickEvent(const ClickEvent& evt);
 
-    virtual void handleDragEvent(const DragEvent& event);
+    virtual void handleDragEvent(const DragEvent& evt);
 
-    virtual void handleGestureEvent(const GestureEvent& event);
+    virtual void handleGestureEvent(const GestureEvent& evt);
 
     virtual void handleTickEvent();
 
     /**
      * Gets the area that contains all children added to the ScrollableContainer. The
-     * scrollbars are not considered in this operation. The area also includes the
-     * scrollableContainer itself.
+     * scrollbars are not considered in this operation.
      *
      * @return The contained area.
-     *
-     * @see getChildrenContainedArea
      */
     virtual Rect getContainedArea() const;
-
-    /**
-     * Gets the area that contains all children added to the ScrollableContainer. The
-     * container itself and scrollbars are not considered in this operation.
-     *
-     * @return The area containing only the children.
-     *
-     * @see getContainedArea
-     */
-    virtual Rect getChildrenContainedArea() const;
 
     /**
      * Used to signal that the size or position of one or more children have changed. This
@@ -186,7 +173,6 @@ public:
      * @copydoc Container::moveChildrenRelative
      *
      * @note Takes care not to move the scrollbars, which are also children.
-     * @note This function is scheduled to be deprecated. Use doScroll() instead.
      */
     virtual void moveChildrenRelative(int16_t deltaX, int16_t deltaY);
 
@@ -296,22 +282,6 @@ public:
      */
     uint16_t getScrollDurationSlowdown() const;
 
-    /**
-     * Method to actually scroll the container. Passing negative values will scroll the
-     * items in the ScrollableContainer up / left, whereas positive values will scroll items
-     * down / right.
-     *
-     * If the distance is larger than allowed, the deltas are adjusted down to make sure the
-     * contained items stay inside view.
-     *
-     * @param  deltaX The horizontal amount to scroll.
-     * @param  deltaY The vertical amount to scroll.
-     *
-     * @return did the container actually scroll. The call doScroll(0,0) will always return
-     *         false.
-     */
-    virtual bool doScroll(int16_t deltaX, int16_t deltaY);
-
 protected:
     uint8_t scrollbarPadding;                          ///< The amount of padding. The scrollbar will have a bit of space to the borders of the container.
     uint8_t scrollbarWidth;                            ///< The width of the scrollbar.
@@ -359,6 +329,22 @@ protected:
     /** Invalidate the scrollbars. */
     void invalidateScrollbars();
 
+    /**
+     * Method to actually scroll the container. Passing negative values will scroll the
+     * items in the ScrollableContainer up / left, whereas positive values will scroll items
+     * down / right.
+     *
+     * If the distance is larger than allowed, the deltas are adjusted down to make sure the
+     * contained items stay inside view.
+     *
+     * @param  deltaX The horizontal amount to scroll.
+     * @param  deltaY The vertical amount to scroll.
+     *
+     * @return did the container actually scroll. The call doScroll(0,0) will always return
+     *         false.
+     */
+    virtual bool doScroll(int16_t deltaX, int16_t deltaY);
+
     GestureEvent::GestureEventType accelDirection; ///< The current direction (horizontal or vertical) of scroll
 
     Box xSlider; ///< The horizontal scrollbar drawable
@@ -402,4 +388,4 @@ protected:
 
 } // namespace touchgfx
 
-#endif // TOUCHGFX_SCROLLABLECONTAINER_HPP
+#endif // SCROLLABLECONTAINER_HPP
