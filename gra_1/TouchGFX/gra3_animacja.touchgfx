@@ -5,13 +5,13 @@
         "Components": [
           {
             "Type": "ScalableImage",
-            "Filename": "dluuuugi_obraz.png",
+            "Filename": "trasa.png",
             "Alpha": 255,
             "ScalingAlgorithm": "Nearest-neighbor",
             "Name": "tlo_animacja",
             "X": 0,
             "Y": 0,
-            "Width": 4592,
+            "Width": 3549,
             "Height": 480,
             "Visible": true,
             "LockPosition": false,
@@ -107,7 +107,7 @@
             },
             "Action": {
               "Type": "ActionMove",
-              "X": -4000,
+              "X": -2500,
               "Y": 0,
               "Easing": "Linear",
               "EasingOption": "In",
@@ -128,7 +128,7 @@
               "Y": 10,
               "Easing": "Linear",
               "EasingOption": "In",
-              "Duration": 400,
+              "Duration": 600,
               "ActionComponent": "circle1"
             }
           },
@@ -145,7 +145,7 @@
               "Y": 400,
               "Easing": "Linear",
               "EasingOption": "In",
-              "Duration": 400,
+              "Duration": 600,
               "ActionComponent": "circle1"
             }
           }

@@ -15,8 +15,8 @@ Screen2ViewBase::Screen2ViewBase() :
     __background.setPosition(0, 0, 800, 480);
     __background.setColor(touchgfx::Color::getColorFrom24BitRGB(0, 0, 0));
 
-    tlo_animacja.setBitmap(touchgfx::Bitmap(BITMAP_DLUUUUGI_OBRAZ_ID));
-    tlo_animacja.setPosition(0, 0, 4592, 480);
+    tlo_animacja.setBitmap(touchgfx::Bitmap(BITMAP_TRASA_ID));
+    tlo_animacja.setPosition(0, 0, 3549, 480);
     tlo_animacja.setScalingAlgorithm(touchgfx::ScalableImage::NEAREST_NEIGHBOR);
 
     circle1.setPosition(100, 322, 80, 80);
@@ -45,9 +45,9 @@ void Screen2ViewBase::setupScreen()
 
     //interakcja_przesuwania
     //When screen transition begins move tlo_animacja
-    //Move tlo_animacja to x:-4000, y:0 with LinearIn easing in 15000 ms (900 Ticks)
+    //Move tlo_animacja to x:-2500, y:0 with LinearIn easing in 15000 ms (900 Ticks)
     tlo_animacja.clearMoveAnimationEndedAction();
-    tlo_animacja.startMoveAnimation(-4000, 0, 900, touchgfx::EasingEquations::linearEaseIn, touchgfx::EasingEquations::linearEaseIn);
+    tlo_animacja.startMoveAnimation(-2500, 0, 900, touchgfx::EasingEquations::linearEaseIn, touchgfx::EasingEquations::linearEaseIn);
 
 }
 
@@ -55,9 +55,9 @@ void Screen2ViewBase::interakcja_skokEndedCallbackHandler(const touchgfx::MoveAn
 {
     //interakcja_opadanie
     //When interakcja_skok completed move circle1
-    //Move circle1 to x:100, y:400 with LinearIn easing in 400 ms (24 Ticks)
+    //Move circle1 to x:100, y:400 with LinearIn easing in 600 ms (36 Ticks)
     circle1.clearMoveAnimationEndedAction();
-    circle1.startMoveAnimation(100, 400, 24, touchgfx::EasingEquations::linearEaseIn, touchgfx::EasingEquations::linearEaseIn);
+    circle1.startMoveAnimation(100, 400, 36, touchgfx::EasingEquations::linearEaseIn, touchgfx::EasingEquations::linearEaseIn);
 }
 
 void Screen2ViewBase::flexButtonCallbackHandler(const touchgfx::AbstractButtonContainer& src)
@@ -66,9 +66,9 @@ void Screen2ViewBase::flexButtonCallbackHandler(const touchgfx::AbstractButtonCo
     {
         //interakcja_skok
         //When button_skoku clicked move circle1
-        //Move circle1 to x:100, y:10 with LinearIn easing in 400 ms (24 Ticks)
+        //Move circle1 to x:100, y:10 with LinearIn easing in 600 ms (36 Ticks)
         circle1.clearMoveAnimationEndedAction();
-        circle1.startMoveAnimation(100, 10, 24, touchgfx::EasingEquations::linearEaseIn, touchgfx::EasingEquations::linearEaseIn);
+        circle1.startMoveAnimation(100, 10, 36, touchgfx::EasingEquations::linearEaseIn, touchgfx::EasingEquations::linearEaseIn);
         circle1.setMoveAnimationEndedAction(interakcja_skokEndedCallback);
     }
 }
