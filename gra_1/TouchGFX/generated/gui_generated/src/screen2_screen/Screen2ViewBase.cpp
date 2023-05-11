@@ -5,8 +5,12 @@
 #include <touchgfx/Color.hpp>
 #include "BitmapDatabase.hpp"
 
-Screen2ViewBase::Screen2ViewBase()
+Screen2ViewBase::Screen2ViewBase() :
+    flexButtonCallback(this, &Screen2ViewBase::flexButtonCallbackHandler),
+    interakcja_skokEndedCallback(this, &Screen2ViewBase::interakcja_skokEndedCallbackHandler)
 {
+
+    touchgfx::CanvasWidgetRenderer::setupBuffer(canvasBuffer, CANVAS_BUFFER_SIZE);
 
     __background.setPosition(0, 0, 800, 480);
     __background.setColor(touchgfx::Color::getColorFrom24BitRGB(0, 0, 0));
@@ -15,8 +19,25 @@ Screen2ViewBase::Screen2ViewBase()
     tlo_animacja.setPosition(0, 0, 4592, 480);
     tlo_animacja.setScalingAlgorithm(touchgfx::ScalableImage::NEAREST_NEIGHBOR);
 
+    circle1.setPosition(100, 322, 80, 80);
+    circle1.setCenter(40, 40);
+    circle1.setRadius(40);
+    circle1.setLineWidth(0);
+    circle1.setArc(0, 360);
+    circle1Painter.setColor(touchgfx::Color::getColorFrom24BitRGB(255, 255, 255));
+    circle1.setPainter(circle1Painter);
+
+    button_skoku.setBoxWithBorderPosition(0, 0, 800, 480);
+    button_skoku.setBorderSize(5);
+    button_skoku.setBoxWithBorderColors(touchgfx::Color::getColorFrom24BitRGB(0, 102, 153), touchgfx::Color::getColorFrom24BitRGB(0, 153, 204), touchgfx::Color::getColorFrom24BitRGB(0, 51, 102), touchgfx::Color::getColorFrom24BitRGB(51, 102, 153));
+    button_skoku.setPosition(0, 0, 800, 480);
+    button_skoku.setAlpha(0);
+    button_skoku.setAction(flexButtonCallback);
+
     add(__background);
     add(tlo_animacja);
+    add(circle1);
+    add(button_skoku);
 }
 
 void Screen2ViewBase::setupScreen()
@@ -28,4 +49,26 @@ void Screen2ViewBase::setupScreen()
     tlo_animacja.clearMoveAnimationEndedAction();
     tlo_animacja.startMoveAnimation(-4000, 0, 900, touchgfx::EasingEquations::linearEaseIn, touchgfx::EasingEquations::linearEaseIn);
 
+}
+
+void Screen2ViewBase::interakcja_skokEndedCallbackHandler(const touchgfx::MoveAnimator<touchgfx::Circle>& comp)
+{
+    //interakcja_opadanie
+    //When interakcja_skok completed move circle1
+    //Move circle1 to x:100, y:400 with LinearIn easing in 400 ms (24 Ticks)
+    circle1.clearMoveAnimationEndedAction();
+    circle1.startMoveAnimation(100, 400, 24, touchgfx::EasingEquations::linearEaseIn, touchgfx::EasingEquations::linearEaseIn);
+}
+
+void Screen2ViewBase::flexButtonCallbackHandler(const touchgfx::AbstractButtonContainer& src)
+{
+    if (&src == &button_skoku)
+    {
+        //interakcja_skok
+        //When button_skoku clicked move circle1
+        //Move circle1 to x:100, y:10 with LinearIn easing in 400 ms (24 Ticks)
+        circle1.clearMoveAnimationEndedAction();
+        circle1.startMoveAnimation(100, 10, 24, touchgfx::EasingEquations::linearEaseIn, touchgfx::EasingEquations::linearEaseIn);
+        circle1.setMoveAnimationEndedAction(interakcja_skokEndedCallback);
+    }
 }

@@ -9,6 +9,9 @@
 #include <gui/screen2_screen/Screen2Presenter.hpp>
 #include <touchgfx/widgets/Box.hpp>
 #include <touchgfx/widgets/ScalableImage.hpp>
+#include <touchgfx/widgets/canvas/Circle.hpp>
+#include <touchgfx/widgets/canvas/PainterRGB565.hpp>
+#include <touchgfx/containers/buttons/Buttons.hpp>
 #include <touchgfx/EasingEquations.hpp>
 #include <touchgfx/mixins/MoveAnimator.hpp>
 
@@ -29,9 +32,37 @@ protected:
      */
     touchgfx::Box __background;
     touchgfx::MoveAnimator< touchgfx::ScalableImage > tlo_animacja;
+    touchgfx::MoveAnimator< touchgfx::Circle > circle1;
+    touchgfx::PainterRGB565 circle1Painter;
+    touchgfx::BoxWithBorderButtonStyle< touchgfx::ClickButtonTrigger > button_skoku;
 
 private:
 
+    /*
+     * Callback Declarations
+     */
+    touchgfx::Callback<Screen2ViewBase, const touchgfx::AbstractButtonContainer&> flexButtonCallback;
+
+    /*
+     * Callback Handler Declarations
+     */
+    void flexButtonCallbackHandler(const touchgfx::AbstractButtonContainer& src);
+    /*
+     * Interaction Callback Declarations
+     */
+    touchgfx::Callback < Screen2ViewBase, const touchgfx::MoveAnimator<touchgfx::Circle>& > interakcja_skokEndedCallback;
+
+
+    /*
+     * Interaction Handlers
+     */
+    void interakcja_skokEndedCallbackHandler(const touchgfx::MoveAnimator<touchgfx::Circle>& comp);
+
+    /*
+     * Canvas Buffer Size
+     */
+    static const uint16_t CANVAS_BUFFER_SIZE = 12000;
+    uint8_t canvasBuffer[CANVAS_BUFFER_SIZE];
 };
 
 #endif // SCREEN2VIEWBASE_HPP
