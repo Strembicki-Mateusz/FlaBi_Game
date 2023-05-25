@@ -47,16 +47,6 @@ private:
      * Callback Handler Declarations
      */
     void flexButtonCallbackHandler(const touchgfx::AbstractButtonContainer& src);
-    /*
-     * Interaction Callback Declarations
-     */
-    touchgfx::Callback < Screen2ViewBase, const touchgfx::MoveAnimator<touchgfx::Circle>& > interakcja_skokEndedCallback;
-
-
-    /*
-     * Interaction Handlers
-     */
-    void interakcja_skokEndedCallbackHandler(const touchgfx::MoveAnimator<touchgfx::Circle>& comp);
 
     /*
      * Canvas Buffer Size

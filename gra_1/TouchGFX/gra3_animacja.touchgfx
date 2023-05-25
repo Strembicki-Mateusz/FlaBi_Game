@@ -123,13 +123,8 @@
               "TriggerComponent": "button_skoku"
             },
             "Action": {
-              "Type": "ActionMove",
-              "X": 100,
-              "Y": 10,
-              "Easing": "Linear",
-              "EasingOption": "In",
-              "Duration": 600,
-              "ActionComponent": "circle1"
+              "Type": "ActionExecuteCode",
+              "Code": "uint16_t currentX = circle1.getX();\r\nuint16_t currentY = circle1.getY();\r\n//circle1.moveTo(currentX, currentY - 100);\r\n\r\ncircle1.moveTo(currentX, currentY - 100);\r\n\r\nHAL::getInstance()->taskDelay(1000);  // Delay for 1000 milliseconds (1 second)\r\n\r\ncircle1.moveTo(currentX, currentY - 100);"
             }
           },
           {
@@ -145,7 +140,7 @@
               "Y": 400,
               "Easing": "Linear",
               "EasingOption": "In",
-              "Duration": 600,
+              "Duration": 1000,
               "ActionComponent": "circle1"
             }
           }

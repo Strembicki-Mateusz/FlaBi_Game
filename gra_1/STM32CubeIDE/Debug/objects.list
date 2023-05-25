@@ -45,6 +45,7 @@
 "./Application/User/generated/image_Blue_Buttons_Round_small_pressed.o"
 "./Application/User/generated/image_Tlo_2.o"
 "./Application/User/generated/image_dluuuugi_obraz.o"
+"./Application/User/generated/image_trasa.o"
 "./Application/User/gui/FrontendApplication.o"
 "./Application/User/gui/Model.o"
 "./Application/User/gui/Screen1Presenter.o"

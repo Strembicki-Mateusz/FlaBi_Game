@@ -6,8 +6,7 @@
 #include "BitmapDatabase.hpp"
 
 Screen2ViewBase::Screen2ViewBase() :
-    flexButtonCallback(this, &Screen2ViewBase::flexButtonCallbackHandler),
-    interakcja_skokEndedCallback(this, &Screen2ViewBase::interakcja_skokEndedCallbackHandler)
+    flexButtonCallback(this, &Screen2ViewBase::flexButtonCallbackHandler)
 {
 
     touchgfx::CanvasWidgetRenderer::setupBuffer(canvasBuffer, CANVAS_BUFFER_SIZE);
@@ -51,24 +50,27 @@ void Screen2ViewBase::setupScreen()
 
 }
 
-void Screen2ViewBase::interakcja_skokEndedCallbackHandler(const touchgfx::MoveAnimator<touchgfx::Circle>& comp)
-{
-    //interakcja_opadanie
-    //When interakcja_skok completed move circle1
-    //Move circle1 to x:100, y:400 with LinearIn easing in 600 ms (36 Ticks)
-    circle1.clearMoveAnimationEndedAction();
-    circle1.startMoveAnimation(100, 400, 36, touchgfx::EasingEquations::linearEaseIn, touchgfx::EasingEquations::linearEaseIn);
-}
-
 void Screen2ViewBase::flexButtonCallbackHandler(const touchgfx::AbstractButtonContainer& src)
 {
     if (&src == &button_skoku)
     {
         //interakcja_skok
-        //When button_skoku clicked move circle1
-        //Move circle1 to x:100, y:10 with LinearIn easing in 600 ms (36 Ticks)
+        //When button_skoku clicked execute C++ code
+        //Execute C++ code
+        uint16_t currentX = circle1.getX();
+        uint16_t currentY = circle1.getY();
+        //circle1.moveTo(currentX, currentY - 100);
+        
+        circle1.moveTo(currentX, currentY - 100);
+        
+        HAL::getInstance()->taskDelay(1000);  // Delay for 1000 milliseconds (1 second)
+        
+        circle1.moveTo(currentX, currentY - 100);
+
+        //interakcja_opadanie
+        //When interakcja_skok completed move circle1
+        //Move circle1 to x:100, y:400 with LinearIn easing in 1000 ms (60 Ticks)
         circle1.clearMoveAnimationEndedAction();
-        circle1.startMoveAnimation(100, 10, 36, touchgfx::EasingEquations::linearEaseIn, touchgfx::EasingEquations::linearEaseIn);
-        circle1.setMoveAnimationEndedAction(interakcja_skokEndedCallback);
+        circle1.startMoveAnimation(100, 400, 60, touchgfx::EasingEquations::linearEaseIn, touchgfx::EasingEquations::linearEaseIn);
     }
 }
