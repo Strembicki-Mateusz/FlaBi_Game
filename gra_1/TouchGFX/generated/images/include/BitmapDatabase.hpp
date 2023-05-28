@@ -9,8 +9,10 @@
 const uint16_t BITMAP_BLUE_BUTTONS_ROUND_SMALL_ID = 0;
 const uint16_t BITMAP_BLUE_BUTTONS_ROUND_SMALL_PRESSED_ID = 1;
 const uint16_t BITMAP_DLUUUUGI_OBRAZ_ID = 2;
-const uint16_t BITMAP_TLO_2_ID = 3;
-const uint16_t BITMAP_TRASA_ID = 4;
+const uint16_t BITMAP_GAME_OVER_ID = 3;
+const uint16_t BITMAP_PTASZEK_ID = 4;
+const uint16_t BITMAP_TLO_2_ID = 5;
+const uint16_t BITMAP_TRASA_ID = 6;
 
 namespace BitmapDatabase
 {

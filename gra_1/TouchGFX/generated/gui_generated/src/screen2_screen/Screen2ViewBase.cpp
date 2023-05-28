@@ -6,7 +6,8 @@
 #include "BitmapDatabase.hpp"
 
 Screen2ViewBase::Screen2ViewBase() :
-    flexButtonCallback(this, &Screen2ViewBase::flexButtonCallbackHandler)
+    flexButtonCallback(this, &Screen2ViewBase::flexButtonCallbackHandler),
+    interakcja_przesuwaniaEndedCallback(this, &Screen2ViewBase::interakcja_przesuwaniaEndedCallbackHandler)
 {
 
     touchgfx::CanvasWidgetRenderer::setupBuffer(canvasBuffer, CANVAS_BUFFER_SIZE);
@@ -23,7 +24,7 @@ Screen2ViewBase::Screen2ViewBase() :
     circle1.setRadius(40);
     circle1.setLineWidth(0);
     circle1.setArc(0, 360);
-    circle1Painter.setColor(touchgfx::Color::getColorFrom24BitRGB(255, 255, 255));
+    circle1Painter.setBitmap(touchgfx::Bitmap(BITMAP_PTASZEK_ID));
     circle1.setPainter(circle1Painter);
 
     button_skoku.setBoxWithBorderPosition(0, 0, 800, 480);
@@ -33,21 +34,31 @@ Screen2ViewBase::Screen2ViewBase() :
     button_skoku.setAlpha(0);
     button_skoku.setAction(flexButtonCallback);
 
+    flexButton1.setBoxWithBorderPosition(0, 0, 800, 480);
+    flexButton1.setBorderSize(5);
+    flexButton1.setBoxWithBorderColors(touchgfx::Color::getColorFrom24BitRGB(0, 102, 153), touchgfx::Color::getColorFrom24BitRGB(0, 153, 204), touchgfx::Color::getColorFrom24BitRGB(0, 51, 102), touchgfx::Color::getColorFrom24BitRGB(51, 102, 153));
+    flexButton1.setPosition(0, 0, 800, 480);
+    flexButton1.setAlpha(0);
+    flexButton1.setAction(flexButtonCallback);
+
     add(__background);
     add(tlo_animacja);
     add(circle1);
     add(button_skoku);
+    add(flexButton1);
 }
 
 void Screen2ViewBase::setupScreen()
 {
 
-    //interakcja_przesuwania
-    //When screen transition begins move tlo_animacja
-    //Move tlo_animacja to x:-2500, y:0 with LinearIn easing in 15000 ms (900 Ticks)
-    tlo_animacja.clearMoveAnimationEndedAction();
-    tlo_animacja.startMoveAnimation(-2500, 0, 900, touchgfx::EasingEquations::linearEaseIn, touchgfx::EasingEquations::linearEaseIn);
+}
 
+void Screen2ViewBase::interakcja_przesuwaniaEndedCallbackHandler(const touchgfx::MoveAnimator<touchgfx::ScalableImage>& comp)
+{
+    //Interaction1
+    //When interakcja_przesuwania completed change screen to Screen3
+    //Go to Screen3 with screen transition towards East
+    application().gotoScreen3ScreenWipeTransitionEast();
 }
 
 void Screen2ViewBase::flexButtonCallbackHandler(const touchgfx::AbstractButtonContainer& src)
@@ -59,18 +70,244 @@ void Screen2ViewBase::flexButtonCallbackHandler(const touchgfx::AbstractButtonCo
         //Execute C++ code
         uint16_t currentX = circle1.getX();
         uint16_t currentY = circle1.getY();
-        //circle1.moveTo(currentX, currentY - 100);
+        int16_t tloX = tlo_animacja.getX();
         
-        circle1.moveTo(currentX, currentY - 100);
         
-        HAL::getInstance()->taskDelay(1000);  // Delay for 1000 milliseconds (1 second)
+        if(tloX > -280 && tloX < -140){
+        	if(currentY > 340 || currentY < 170){
+        		tlo_animacja.moveTo(-2500,0);
+        		tlo_animacja.cancelMoveAnimation();
+        		application().gotoScreen3ScreenWipeTransitionEast();
+        	}
+        	else{
+        		if(currentY < 100){
+        			circle1.moveTo(currentX,0);
+        		}
+        		else{
+        			circle1.moveTo(currentX, currentY - 100);
+        		}
+        	}
+        }
         
-        circle1.moveTo(currentX, currentY - 100);
+        
+        else if(tloX > -580 && tloX < -440){
+        	if(currentY > 240 || currentY < 130){
+        		tlo_animacja.moveTo(-2500,0);
+        		tlo_animacja.cancelMoveAnimation();
+        		application().gotoScreen3ScreenWipeTransitionEast();
+        	}
+        	else{
+        		if(currentY < 100){
+        			circle1.moveTo(currentX,0);
+        		}
+        		else{
+        			circle1.moveTo(currentX, currentY - 100);
+        		}
+        	}
+        }
+        
+        else if(tloX > -900 && tloX < -750){
+        	if(currentY > 290 || currentY < 150){
+        		tlo_animacja.moveTo(-2500,0);
+        		tlo_animacja.cancelMoveAnimation();
+        		application().gotoScreen3ScreenWipeTransitionEast();
+        	}
+        	else{
+        		if(currentY < 100){
+        			circle1.moveTo(currentX,0);
+        		}
+        		else{
+        			circle1.moveTo(currentX, currentY - 100);
+        		}
+        	}
+        }
+        
+        else if(tloX > -1210 && tloX < -1075){
+        	if(currentY > 375 || currentY < 285){
+        		tlo_animacja.moveTo(-2500,0);
+        		tlo_animacja.cancelMoveAnimation();
+        		application().gotoScreen3ScreenWipeTransitionEast();
+        	}
+        	else{
+        		if(currentY < 100){
+        			circle1.moveTo(currentX,0);
+        		}
+        		else{
+        			circle1.moveTo(currentX, currentY - 100);
+        		}
+        	}
+        }
+        
+        else if(tloX > -1520 && tloX < -1380){
+        	if(currentY > 220 || currentY < 135){
+        		tlo_animacja.moveTo(-2500,0);
+        		tlo_animacja.cancelMoveAnimation();
+        		application().gotoScreen3ScreenWipeTransitionEast();
+        	}
+        	else{
+        		if(currentY < 100){
+        			circle1.moveTo(currentX,0);
+        		}
+        		else{
+        			circle1.moveTo(currentX, currentY - 100);
+        		}
+        	}
+        }
+        
+        else if(tloX > -1835 && tloX < -1690){
+        	if(currentY > 200 || currentY < 90){
+        		tlo_animacja.moveTo(-2500,0);
+        		tlo_animacja.cancelMoveAnimation();
+        		application().gotoScreen3ScreenWipeTransitionEast();
+        	}
+        	else{
+        		if(currentY < 100){
+        			circle1.moveTo(currentX,0);
+        		}
+        		else{
+        			circle1.moveTo(currentX, currentY - 100);
+        		}
+        	}
+        }
+        
+        else if(tloX > -2150 && tloX < -2020){
+        	if(currentY > 300 || currentY < 190){
+        		tlo_animacja.moveTo(-2500,0);
+        		tlo_animacja.cancelMoveAnimation();
+        		application().gotoScreen3ScreenWipeTransitionEast();
+        	}
+        	else{
+        		if(currentY < 100){
+        			circle1.moveTo(currentX,0);
+        		}
+        		else{
+        			circle1.moveTo(currentX, currentY - 100);
+        		}
+        	}
+        }
+        
+        else if(tloX > -2420 && tloX < -2270){
+        	if(currentY > 240 || currentY < 145){
+        		tlo_animacja.moveTo(-2500,0);
+        		tlo_animacja.cancelMoveAnimation();
+        		application().gotoScreen3ScreenWipeTransitionEast();
+        	}
+        	else{
+        		if(currentY < 100){
+        			circle1.moveTo(currentX,0);
+        		}
+        		else{
+        			circle1.moveTo(currentX, currentY - 100);
+        		}
+        	}
+        }
+        
+        
+        else{
+        	if(currentY < 100){
+        		circle1.moveTo(currentX,0);
+        	}
+        	else{
+        		circle1.moveTo(currentX, currentY - 100);
+        	}
+        }
+        
+        
+        if(tloX > -280 && tloX < -140){
+        	if(currentY > 300 || currentY < 160){
+        		tlo_animacja.moveTo(-2500,0);
+        		tlo_animacja.cancelMoveAnimation();
+        		application().gotoScreen3ScreenWipeTransitionEast();
+        	}
+        }
+        if(tloX > -580 && tloX < -440){
+        	if(currentY > 240 || currentY < 130){
+        		tlo_animacja.moveTo(-2500,0);
+        		tlo_animacja.cancelMoveAnimation();
+        		application().gotoScreen3ScreenWipeTransitionEast();
+        	}
+        }
+        if(tloX > -900 && tloX < -750){
+        	if(currentY > 290 || currentY < 150){
+        		tlo_animacja.moveTo(-2500,0);
+        		tlo_animacja.cancelMoveAnimation();
+        		application().gotoScreen3ScreenWipeTransitionEast();
+        	}
+        }
+        if(tloX > -1210 && tloX < -1075){
+        	if(currentY > 375 || currentY < 285){
+        		tlo_animacja.moveTo(-2500,0);
+        		tlo_animacja.cancelMoveAnimation();
+        		application().gotoScreen3ScreenWipeTransitionEast();
+        	}
+        }
+        if(tloX > -1520 && tloX < -1380){
+        	if(currentY > 220 || currentY < 135){
+        		tlo_animacja.moveTo(-2500,0);
+        		tlo_animacja.cancelMoveAnimation();
+        		application().gotoScreen3ScreenWipeTransitionEast();
+        	}
+        }
+        if(tloX > -1835 && tloX < -1690){
+        	if(currentY > 200 || currentY < 90){
+        		tlo_animacja.moveTo(-2500,0);
+        		tlo_animacja.cancelMoveAnimation();
+        		application().gotoScreen3ScreenWipeTransitionEast();
+        	}
+        }
+        if(tloX > -2150 && tloX < -2020){
+        	if(currentY > 300 || currentY < 190){
+        		tlo_animacja.moveTo(-2500,0);
+        		tlo_animacja.cancelMoveAnimation();
+        		application().gotoScreen3ScreenWipeTransitionEast();
+        	}
+        }
+        if(tloX > -2420 && tloX < -2270){
+        	if(currentY > 240 || currentY < 145){
+        		tlo_animacja.moveTo(-2500,0);
+        		tlo_animacja.cancelMoveAnimation();
+        		application().gotoScreen3ScreenWipeTransitionEast();
+        	}
+        }
+        
 
         //interakcja_opadanie
         //When interakcja_skok completed move circle1
-        //Move circle1 to x:100, y:400 with LinearIn easing in 1000 ms (60 Ticks)
+        //Move circle1 to x:100, y:400 with QuadIn easing in 250 ms (15 Ticks)
         circle1.clearMoveAnimationEndedAction();
-        circle1.startMoveAnimation(100, 400, 60, touchgfx::EasingEquations::linearEaseIn, touchgfx::EasingEquations::linearEaseIn);
+        circle1.startMoveAnimation(100, 400, 15, touchgfx::EasingEquations::quadEaseIn, touchgfx::EasingEquations::quadEaseIn);
+    }
+    else if (&src == &flexButton1)
+    {
+        //interakcja_przesuwania
+        //When flexButton1 clicked move tlo_animacja
+        //Move tlo_animacja to x:-2500, y:0 with LinearIn easing in 5000 ms (300 Ticks)
+        tlo_animacja.clearMoveAnimationEndedAction();
+        tlo_animacja.startMoveAnimation(-2500, 0, 300, touchgfx::EasingEquations::linearEaseIn, touchgfx::EasingEquations::linearEaseIn);
+        tlo_animacja.setMoveAnimationEndedAction(interakcja_przesuwaniaEndedCallback);
+
+        //interakcja_start
+        //When flexButton1 clicked hide flexButton1
+        //Hide flexButton1
+        flexButton1.setVisible(false);
+        flexButton1.invalidate();
+
+        //interakcja_skok2
+        //When flexButton1 clicked execute C++ code
+        //Execute C++ code
+        uint16_t currentX = circle1.getX();
+        uint16_t currentY = circle1.getY();
+                
+        if(currentY < 100){
+        	circle1.moveTo(currentX,0);
+        }
+        else
+        	circle1.moveTo(currentX, currentY - 100);
+
+        //Interakcja_opadanie2
+        //When interakcja_skok2 completed move circle1
+        //Move circle1 to x:100, y:400 with QuadIn easing in 250 ms (15 Ticks)
+        circle1.clearMoveAnimationEndedAction();
+        circle1.startMoveAnimation(100, 400, 15, touchgfx::EasingEquations::quadEaseIn, touchgfx::EasingEquations::quadEaseIn);
     }
 }

@@ -22,7 +22,7 @@
           },
           {
             "Type": "Circle",
-            "FileNameImage": "",
+            "FileNameImage": "ptaszek.png",
             "Color": {
               "Red": 255,
               "Green": 255,
@@ -96,14 +96,64 @@
             "Clickable": false,
             "Fadeable": false,
             "Moveable": false
+          },
+          {
+            "Type": "FlexButton",
+            "Alpha": 0,
+            "ButtonTrigger": {
+              "Type": "ClickButtonTrigger"
+            },
+            "ButtonStyles": [
+              {
+                "Type": "BoxWithBorderButtonStyle",
+                "X": 0,
+                "Y": 0,
+                "Width": 800,
+                "Height": 480,
+                "LockToFlexButtonSize": true,
+                "BorderSize": 5,
+                "ColorReleased": {
+                  "Red": 0,
+                  "Green": 102,
+                  "Blue": 153
+                },
+                "ColorPressed": {
+                  "Red": 0,
+                  "Green": 153,
+                  "Blue": 204
+                },
+                "ColorBorderReleased": {
+                  "Red": 0,
+                  "Green": 51,
+                  "Blue": 102
+                },
+                "ColorBorderPressed": {
+                  "Red": 51,
+                  "Green": 102,
+                  "Blue": 153
+                }
+              }
+            ],
+            "Name": "flexButton1",
+            "X": 0,
+            "Y": 0,
+            "Width": 800,
+            "Height": 480,
+            "Visible": true,
+            "LockPosition": false,
+            "Draggable": false,
+            "Clickable": false,
+            "Fadeable": false,
+            "Moveable": false
           }
         ],
         "Interactions": [
           {
             "InteractionName": "interakcja_przesuwania",
-            "HasCompletedTrigger": false,
+            "HasCompletedTrigger": true,
             "Trigger": {
-              "Type": "TriggerScreenTransitionBegins"
+              "Type": "TriggerClicked",
+              "TriggerComponent": "flexButton1"
             },
             "Action": {
               "Type": "ActionMove",
@@ -111,7 +161,7 @@
               "Y": 0,
               "Easing": "Linear",
               "EasingOption": "In",
-              "Duration": 15000,
+              "Duration": 5000,
               "ActionComponent": "tlo_animacja"
             }
           },
@@ -124,7 +174,7 @@
             },
             "Action": {
               "Type": "ActionExecuteCode",
-              "Code": "uint16_t currentX = circle1.getX();\r\nuint16_t currentY = circle1.getY();\r\n//circle1.moveTo(currentX, currentY - 100);\r\n\r\ncircle1.moveTo(currentX, currentY - 100);\r\n\r\nHAL::getInstance()->taskDelay(1000);  // Delay for 1000 milliseconds (1 second)\r\n\r\ncircle1.moveTo(currentX, currentY - 100);"
+              "Code": "uint16_t currentX = circle1.getX();\r\nuint16_t currentY = circle1.getY();\r\nint16_t tloX = tlo_animacja.getX();\r\n\r\n\r\nif(tloX > -280 && tloX < -140){\r\n\tif(currentY > 340 || currentY < 170){\r\n\t\ttlo_animacja.moveTo(-2500,0);\r\n\t\ttlo_animacja.cancelMoveAnimation();\r\n\t\tapplication().gotoScreen3ScreenWipeTransitionEast();\r\n\t}\r\n\telse{\r\n\t\tif(currentY < 100){\r\n\t\t\tcircle1.moveTo(currentX,0);\r\n\t\t}\r\n\t\telse{\r\n\t\t\tcircle1.moveTo(currentX, currentY - 100);\r\n\t\t}\r\n\t}\r\n}\r\n\r\n\r\nelse if(tloX > -580 && tloX < -440){\r\n\tif(currentY > 240 || currentY < 130){\r\n\t\ttlo_animacja.moveTo(-2500,0);\r\n\t\ttlo_animacja.cancelMoveAnimation();\r\n\t\tapplication().gotoScreen3ScreenWipeTransitionEast();\r\n\t}\r\n\telse{\r\n\t\tif(currentY < 100){\r\n\t\t\tcircle1.moveTo(currentX,0);\r\n\t\t}\r\n\t\telse{\r\n\t\t\tcircle1.moveTo(currentX, currentY - 100);\r\n\t\t}\r\n\t}\r\n}\r\n\r\nelse if(tloX > -900 && tloX < -750){\r\n\tif(currentY > 290 || currentY < 150){\r\n\t\ttlo_animacja.moveTo(-2500,0);\r\n\t\ttlo_animacja.cancelMoveAnimation();\r\n\t\tapplication().gotoScreen3ScreenWipeTransitionEast();\r\n\t}\r\n\telse{\r\n\t\tif(currentY < 100){\r\n\t\t\tcircle1.moveTo(currentX,0);\r\n\t\t}\r\n\t\telse{\r\n\t\t\tcircle1.moveTo(currentX, currentY - 100);\r\n\t\t}\r\n\t}\r\n}\r\n\r\nelse if(tloX > -1210 && tloX < -1075){\r\n\tif(currentY > 375 || currentY < 285){\r\n\t\ttlo_animacja.moveTo(-2500,0);\r\n\t\ttlo_animacja.cancelMoveAnimation();\r\n\t\tapplication().gotoScreen3ScreenWipeTransitionEast();\r\n\t}\r\n\telse{\r\n\t\tif(currentY < 100){\r\n\t\t\tcircle1.moveTo(currentX,0);\r\n\t\t}\r\n\t\telse{\r\n\t\t\tcircle1.moveTo(currentX, currentY - 100);\r\n\t\t}\r\n\t}\r\n}\r\n\r\nelse if(tloX > -1520 && tloX < -1380){\r\n\tif(currentY > 220 || currentY < 135){\r\n\t\ttlo_animacja.moveTo(-2500,0);\r\n\t\ttlo_animacja.cancelMoveAnimation();\r\n\t\tapplication().gotoScreen3ScreenWipeTransitionEast();\r\n\t}\r\n\telse{\r\n\t\tif(currentY < 100){\r\n\t\t\tcircle1.moveTo(currentX,0);\r\n\t\t}\r\n\t\telse{\r\n\t\t\tcircle1.moveTo(currentX, currentY - 100);\r\n\t\t}\r\n\t}\r\n}\r\n\r\nelse if(tloX > -1835 && tloX < -1690){\r\n\tif(currentY > 200 || currentY < 90){\r\n\t\ttlo_animacja.moveTo(-2500,0);\r\n\t\ttlo_animacja.cancelMoveAnimation();\r\n\t\tapplication().gotoScreen3ScreenWipeTransitionEast();\r\n\t}\r\n\telse{\r\n\t\tif(currentY < 100){\r\n\t\t\tcircle1.moveTo(currentX,0);\r\n\t\t}\r\n\t\telse{\r\n\t\t\tcircle1.moveTo(currentX, currentY - 100);\r\n\t\t}\r\n\t}\r\n}\r\n\r\nelse if(tloX > -2150 && tloX < -2020){\r\n\tif(currentY > 300 || currentY < 190){\r\n\t\ttlo_animacja.moveTo(-2500,0);\r\n\t\ttlo_animacja.cancelMoveAnimation();\r\n\t\tapplication().gotoScreen3ScreenWipeTransitionEast();\r\n\t}\r\n\telse{\r\n\t\tif(currentY < 100){\r\n\t\t\tcircle1.moveTo(currentX,0);\r\n\t\t}\r\n\t\telse{\r\n\t\t\tcircle1.moveTo(currentX, currentY - 100);\r\n\t\t}\r\n\t}\r\n}\r\n\r\nelse if(tloX > -2420 && tloX < -2270){\r\n\tif(currentY > 240 || currentY < 145){\r\n\t\ttlo_animacja.moveTo(-2500,0);\r\n\t\ttlo_animacja.cancelMoveAnimation();\r\n\t\tapplication().gotoScreen3ScreenWipeTransitionEast();\r\n\t}\r\n\telse{\r\n\t\tif(currentY < 100){\r\n\t\t\tcircle1.moveTo(currentX,0);\r\n\t\t}\r\n\t\telse{\r\n\t\t\tcircle1.moveTo(currentX, currentY - 100);\r\n\t\t}\r\n\t}\r\n}\r\n\r\n\r\nelse{\r\n\tif(currentY < 100){\r\n\t\tcircle1.moveTo(currentX,0);\r\n\t}\r\n\telse{\r\n\t\tcircle1.moveTo(currentX, currentY - 100);\r\n\t}\r\n}\r\n\r\n\r\nif(tloX > -280 && tloX < -140){\r\n\tif(currentY > 300 || currentY < 160){\r\n\t\ttlo_animacja.moveTo(-2500,0);\r\n\t\ttlo_animacja.cancelMoveAnimation();\r\n\t\tapplication().gotoScreen3ScreenWipeTransitionEast();\r\n\t}\r\n}\r\nif(tloX > -580 && tloX < -440){\r\n\tif(currentY > 240 || currentY < 130){\r\n\t\ttlo_animacja.moveTo(-2500,0);\r\n\t\ttlo_animacja.cancelMoveAnimation();\r\n\t\tapplication().gotoScreen3ScreenWipeTransitionEast();\r\n\t}\r\n}\r\nif(tloX > -900 && tloX < -750){\r\n\tif(currentY > 290 || currentY < 150){\r\n\t\ttlo_animacja.moveTo(-2500,0);\r\n\t\ttlo_animacja.cancelMoveAnimation();\r\n\t\tapplication().gotoScreen3ScreenWipeTransitionEast();\r\n\t}\r\n}\r\nif(tloX > -1210 && tloX < -1075){\r\n\tif(currentY > 375 || currentY < 285){\r\n\t\ttlo_animacja.moveTo(-2500,0);\r\n\t\ttlo_animacja.cancelMoveAnimation();\r\n\t\tapplication().gotoScreen3ScreenWipeTransitionEast();\r\n\t}\r\n}\r\nif(tloX > -1520 && tloX < -1380){\r\n\tif(currentY > 220 || currentY < 135){\r\n\t\ttlo_animacja.moveTo(-2500,0);\r\n\t\ttlo_animacja.cancelMoveAnimation();\r\n\t\tapplication().gotoScreen3ScreenWipeTransitionEast();\r\n\t}\r\n}\r\nif(tloX > -1835 && tloX < -1690){\r\n\tif(currentY > 200 || currentY < 90){\r\n\t\ttlo_animacja.moveTo(-2500,0);\r\n\t\ttlo_animacja.cancelMoveAnimation();\r\n\t\tapplication().gotoScreen3ScreenWipeTransitionEast();\r\n\t}\r\n}\r\nif(tloX > -2150 && tloX < -2020){\r\n\tif(currentY > 300 || currentY < 190){\r\n\t\ttlo_animacja.moveTo(-2500,0);\r\n\t\ttlo_animacja.cancelMoveAnimation();\r\n\t\tapplication().gotoScreen3ScreenWipeTransitionEast();\r\n\t}\r\n}\r\nif(tloX > -2420 && tloX < -2270){\r\n\tif(currentY > 240 || currentY < 145){\r\n\t\ttlo_animacja.moveTo(-2500,0);\r\n\t\ttlo_animacja.cancelMoveAnimation();\r\n\t\tapplication().gotoScreen3ScreenWipeTransitionEast();\r\n\t}\r\n}\r\n"
             }
           },
           {
@@ -138,10 +188,65 @@
               "Type": "ActionMove",
               "X": 100,
               "Y": 400,
-              "Easing": "Linear",
+              "Easing": "Quad",
               "EasingOption": "In",
-              "Duration": 1000,
+              "Duration": 250,
               "ActionComponent": "circle1"
+            }
+          },
+          {
+            "InteractionName": "interakcja_start",
+            "HasCompletedTrigger": false,
+            "Trigger": {
+              "Type": "TriggerClicked",
+              "TriggerComponent": "flexButton1"
+            },
+            "Action": {
+              "Type": "ActionHide",
+              "ActionComponent": "flexButton1"
+            }
+          },
+          {
+            "InteractionName": "interakcja_skok2",
+            "HasCompletedTrigger": true,
+            "Trigger": {
+              "Type": "TriggerClicked",
+              "TriggerComponent": "flexButton1"
+            },
+            "Action": {
+              "Type": "ActionExecuteCode",
+              "Code": "uint16_t currentX = circle1.getX();\r\nuint16_t currentY = circle1.getY();\r\n        \r\nif(currentY < 100){\r\n\tcircle1.moveTo(currentX,0);\r\n}\r\nelse\r\n\tcircle1.moveTo(currentX, currentY - 100);"
+            }
+          },
+          {
+            "InteractionName": "Interakcja_opadanie2",
+            "HasCompletedTrigger": false,
+            "Trigger": {
+              "Type": "TriggerInteractionCompleted",
+              "InteractionToTriggerOn": "interakcja_skok2"
+            },
+            "Action": {
+              "Type": "ActionMove",
+              "X": 100,
+              "Y": 400,
+              "Easing": "Quad",
+              "EasingOption": "In",
+              "Duration": 250,
+              "ActionComponent": "circle1"
+            }
+          },
+          {
+            "InteractionName": "Interaction1",
+            "HasCompletedTrigger": false,
+            "Trigger": {
+              "Type": "TriggerInteractionCompleted",
+              "InteractionToTriggerOn": "interakcja_przesuwania"
+            },
+            "Action": {
+              "Type": "ActionGotoScreen",
+              "ScreenTransitionType": "ScreenTransitionWipe",
+              "ScreenTransitionDirection": "East",
+              "ActionComponent": "Screen3"
             }
           }
         ],
@@ -222,7 +327,7 @@
             "Width": 170,
             "Height": 60,
             "Visible": true,
-            "LockPosition": true,
+            "LockPosition": false,
             "Draggable": false,
             "Clickable": false,
             "Fadeable": false,
@@ -272,6 +377,120 @@
         "Name": "Screen1",
         "OverrideDefaultBufferSize": false,
         "CanvasBufferSize": 0
+      },
+      {
+        "Components": [
+          {
+            "Type": "ScalableImage",
+            "Filename": "Game_over.png",
+            "Alpha": 255,
+            "ScalingAlgorithm": "Nearest-neighbor",
+            "Name": "scalableImage1",
+            "X": 0,
+            "Y": 0,
+            "Width": 800,
+            "Height": 480,
+            "Visible": true,
+            "LockPosition": false,
+            "Draggable": false,
+            "Clickable": false,
+            "Fadeable": false,
+            "Moveable": false
+          },
+          {
+            "Type": "ButtonWithLabel",
+            "Pressed": "__designer\\Blue_Buttons_Round_small_pressed.png",
+            "Released": "__designer\\Blue_Buttons_Round_small.png",
+            "Alpha": 255,
+            "TextId": "SingleUseId4",
+            "ReleasedColor": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "PressedColor": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "TextRotation": "0",
+            "Style": "Style8",
+            "Name": "button_powrot_do_menu",
+            "X": 302,
+            "Y": 269,
+            "Width": 170,
+            "Height": 60,
+            "Visible": true,
+            "LockPosition": false,
+            "Draggable": false,
+            "Clickable": false,
+            "Fadeable": false,
+            "Moveable": false
+          },
+          {
+            "Type": "ButtonWithLabel",
+            "Pressed": "__designer\\Blue_Buttons_Round_small_pressed.png",
+            "Released": "__designer\\Blue_Buttons_Round_small.png",
+            "Alpha": 255,
+            "TextId": "SingleUseId5",
+            "ReleasedColor": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "PressedColor": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "TextRotation": "0",
+            "Style": "Style8",
+            "Name": "button_jeszcze_raz",
+            "X": 302,
+            "Y": 143,
+            "Width": 170,
+            "Height": 60,
+            "Visible": true,
+            "LockPosition": false,
+            "Draggable": false,
+            "Clickable": false,
+            "Fadeable": false,
+            "Moveable": false
+          }
+        ],
+        "Interactions": [
+          {
+            "InteractionName": "Powrot_menu",
+            "HasCompletedTrigger": false,
+            "Trigger": {
+              "Type": "TriggerClicked",
+              "TriggerComponent": "button_powrot_do_menu"
+            },
+            "Action": {
+              "Type": "ActionGotoScreen",
+              "ScreenTransitionType": "ScreenTransitionWipe",
+              "ScreenTransitionDirection": "East",
+              "ActionComponent": "Screen1"
+            }
+          },
+          {
+            "InteractionName": "jeszcze_raz",
+            "HasCompletedTrigger": false,
+            "Trigger": {
+              "Type": "TriggerClicked",
+              "TriggerComponent": "button_jeszcze_raz"
+            },
+            "Action": {
+              "Type": "ActionGotoScreen",
+              "ScreenTransitionType": "ScreenTransitionSlide",
+              "ScreenTransitionDirection": "East",
+              "ActionComponent": "Screen2"
+            }
+          }
+        ],
+        "Name": "Screen3",
+        "OverrideDefaultBufferSize": false,
+        "CanvasBufferSize": 0
       }
     ],
     "CustomContainerDefinitions": [],
@@ -286,6 +505,14 @@
       },
       {
         "TextEntryId": "SingleUseId3",
+        "IsResource": false
+      },
+      {
+        "TextEntryId": "SingleUseId4",
+        "IsResource": false
+      },
+      {
+        "TextEntryId": "SingleUseId5",
         "IsResource": false
       }
     ],

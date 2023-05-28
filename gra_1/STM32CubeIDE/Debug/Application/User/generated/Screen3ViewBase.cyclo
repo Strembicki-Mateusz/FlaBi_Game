@@ -1,0 +1,33 @@
+Drawable.hpp:134:23:virtual touchgfx::Drawable* touchgfx::Drawable::getFirstChild()	1
+Drawable.hpp:271:18:virtual void touchgfx::Drawable::setX(int16_t)	1
+Drawable.hpp:283:18:virtual void touchgfx::Drawable::setY(int16_t)	1
+Drawable.hpp:312:18:virtual void touchgfx::Drawable::setWidth(int16_t)	1
+Drawable.hpp:324:18:virtual void touchgfx::Drawable::setHeight(int16_t)	1
+Drawable.hpp:334:18:virtual void touchgfx::Drawable::childGeometryChanged()	1
+Drawable.hpp:345:18:virtual void touchgfx::Drawable::handleClickEvent(const touchgfx::ClickEvent&)	1
+Drawable.hpp:356:18:virtual void touchgfx::Drawable::handleGestureEvent(const touchgfx::GestureEvent&)	1
+Drawable.hpp:444:18:virtual void touchgfx::Drawable::handleDragEvent(const touchgfx::DragEvent&)	1
+Drawable.hpp:454:18:virtual void touchgfx::Drawable::handleTickEvent()	1
+Drawable.hpp:541:18:virtual void touchgfx::Drawable::moveTo(int16_t, int16_t)	1
+Drawable.hpp:656:18:virtual void touchgfx::Drawable::setupDrawChain(const touchgfx::Rect&, touchgfx::Drawable**)	1
+Screen.hpp:96:18:virtual void touchgfx::Screen::setupScreen()	1
+Screen.hpp:107:18:virtual void touchgfx::Screen::afterTransition()	1
+Screen.hpp:118:18:virtual void touchgfx::Screen::tearDownScreen()	1
+Screen.hpp:147:18:virtual void touchgfx::Screen::handleTickEvent()	1
+Screen.hpp:157:18:virtual void touchgfx::Screen::handleKeyEvent(uint8_t)	1
+Widget.hpp:50:18:virtual void touchgfx::Widget::getLastChild(int16_t, int16_t, touchgfx::Drawable**)	3
+View.hpp:40:7:touchgfx::View<Screen3Presenter>::~View()	1
+Screen3ViewBase.hpp:18:13:Screen3ViewBase::~Screen3ViewBase()	1
+Screen3ViewBase.cpp:40:6:virtual void Screen3ViewBase::setupScreen()	1
+Callback.hpp:362:8:touchgfx::Callback<Screen3ViewBase, const touchgfx::AbstractButton&>::~Callback()	1
+Callback.hpp:392:18:void touchgfx::Callback<dest_type, T1, void, void>::execute(T1) [with dest_type = Screen3ViewBase; T1 = const touchgfx::AbstractButton&]	2
+Callback.hpp:402:18:bool touchgfx::Callback<dest_type, T1, void, void>::isValid() const [with dest_type = Screen3ViewBase; T1 = const touchgfx::AbstractButton&]	3
+Callback.hpp:362:8:virtual touchgfx::Callback<Screen3ViewBase, const touchgfx::AbstractButton&>::~Callback()	1
+View.hpp:40:7:virtual touchgfx::View<Screen3Presenter>::~View()	1
+Screen3ViewBase.hpp:18:13:virtual Screen3ViewBase::~Screen3ViewBase()	1
+Screen3ViewBase.cpp:45:6:void Screen3ViewBase::buttonCallbackHandler(const touchgfx::AbstractButton&)	3
+Drawable.hpp:299:10:void touchgfx::Drawable::setXY(int16_t, int16_t)	1
+Drawable.hpp:218:10:void touchgfx::Drawable::setPosition(int16_t, int16_t, int16_t, int16_t)	1
+ButtonWithLabel.hpp:134:10:void touchgfx::ButtonWithLabel::updateTextPosition()	2
+Color.hpp:51:22:static touchgfx::colortype touchgfx::Color::getColorFrom24BitRGB(uint8_t, uint8_t, uint8_t)	3
+Screen3ViewBase.cpp:9:1:Screen3ViewBase::Screen3ViewBase()	1

@@ -139,6 +139,8 @@ public:
         moveAnimationXEquation = xProgressionEquation;
         moveAnimationYEquation = yProgressionEquation;
 
+
+
         moveAnimationRunning = true;
 
         if (moveAnimationDelay == 0 && moveAnimationDuration == 0)

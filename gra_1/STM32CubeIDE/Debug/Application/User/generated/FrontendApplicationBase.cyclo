@@ -20,9 +20,22 @@ FrontendApplicationBase.hpp:16:13:FrontendApplicationBase::~FrontendApplicationB
 NoTransition.hpp:38:18:virtual void touchgfx::NoTransition::handleTickEvent()	1
 Widget.hpp:50:18:virtual void touchgfx::Widget::getLastChild(int16_t, int16_t, touchgfx::Drawable**)	3
 WipeTransition.hpp:49:11:touchgfx::WipeTransition<touchgfx::NORTH>::FullSolidRect::~FullSolidRect()	1
+Callback.hpp:362:8:touchgfx::Callback<touchgfx::SlideTransition<touchgfx::EAST>, touchgfx::Drawable&, void, void>::~Callback()	1
+WipeTransition.hpp:49:11:touchgfx::WipeTransition<touchgfx::EAST>::FullSolidRect::~FullSolidRect()	1
+SlideTransition.hpp:202:18:void touchgfx::SlideTransition<templateDirection>::tickMoveDrawable(touchgfx::Drawable&) [with touchgfx::Direction templateDirection = touchgfx::EAST]	2
+WipeTransition.hpp:43:7:touchgfx::WipeTransition<touchgfx::EAST>::~WipeTransition()	1
+SlideTransition.hpp:41:7:touchgfx::SlideTransition<touchgfx::EAST>::~SlideTransition()	1
 WipeTransition.hpp:43:7:touchgfx::WipeTransition<touchgfx::NORTH>::~WipeTransition()	1
 NoTransition.hpp:34:7:touchgfx::NoTransition::~NoTransition()	1
 Callback.hpp:430:8:touchgfx::Callback<FrontendApplicationBase>::~Callback()	1
+WipeTransition.hpp:211:18:void touchgfx::WipeTransition<templateDirection>::tearDown() [with touchgfx::Direction templateDirection = touchgfx::EAST]	1
+WipeTransition.hpp:216:18:void touchgfx::WipeTransition<templateDirection>::init() [with touchgfx::Direction templateDirection = touchgfx::EAST]	1
+WipeTransition.hpp:227:18:void touchgfx::WipeTransition<templateDirection>::invalidate() [with touchgfx::Direction templateDirection = touchgfx::EAST]	1
+WipeTransition.hpp:57:22:void touchgfx::WipeTransition<templateDirection>::FullSolidRect::draw(const touchgfx::Rect&) const [with touchgfx::Direction templateDirection = touchgfx::EAST]	1
+WipeTransition.hpp:52:22:touchgfx::Rect touchgfx::WipeTransition<templateDirection>::FullSolidRect::getSolidRect() const [with touchgfx::Direction templateDirection = touchgfx::EAST]	1
+SlideTransition.hpp:175:18:void touchgfx::SlideTransition<templateDirection>::initMoveDrawable(touchgfx::Drawable&) [with touchgfx::Direction templateDirection = touchgfx::EAST]	1
+Callback.hpp:392:18:void touchgfx::Callback<dest_type, T1, void, void>::execute(T1) [with dest_type = touchgfx::SlideTransition<touchgfx::EAST>; T1 = touchgfx::Drawable&]	2
+Callback.hpp:402:18:bool touchgfx::Callback<dest_type, T1, void, void>::isValid() const [with dest_type = touchgfx::SlideTransition<touchgfx::EAST>; T1 = touchgfx::Drawable&]	3
 WipeTransition.hpp:211:18:void touchgfx::WipeTransition<templateDirection>::tearDown() [with touchgfx::Direction templateDirection = touchgfx::NORTH]	1
 WipeTransition.hpp:216:18:void touchgfx::WipeTransition<templateDirection>::init() [with touchgfx::Direction templateDirection = touchgfx::NORTH]	1
 WipeTransition.hpp:227:18:void touchgfx::WipeTransition<templateDirection>::invalidate() [with touchgfx::Direction templateDirection = touchgfx::NORTH]	1
@@ -34,14 +47,30 @@ NoTransition.hpp:34:7:virtual touchgfx::NoTransition::~NoTransition()	1
 Callback.hpp:430:8:virtual touchgfx::Callback<FrontendApplicationBase>::~Callback()	1
 MVPApplication.hpp:47:7:virtual touchgfx::MVPApplication::~MVPApplication()	1
 FrontendApplicationBase.hpp:16:13:virtual FrontendApplicationBase::~FrontendApplicationBase()	1
+WipeTransition.hpp:43:7:virtual touchgfx::WipeTransition<touchgfx::EAST>::~WipeTransition()	1
+WipeTransition.hpp:49:11:virtual touchgfx::WipeTransition<touchgfx::EAST>::FullSolidRect::~FullSolidRect()	1
 WipeTransition.hpp:43:7:virtual touchgfx::WipeTransition<touchgfx::NORTH>::~WipeTransition()	1
 WipeTransition.hpp:49:11:virtual touchgfx::WipeTransition<touchgfx::NORTH>::FullSolidRect::~FullSolidRect()	1
+SlideTransition.hpp:41:7:virtual touchgfx::SlideTransition<touchgfx::EAST>::~SlideTransition()	1
+Callback.hpp:362:8:virtual touchgfx::Callback<touchgfx::SlideTransition<touchgfx::EAST>, touchgfx::Drawable&, void, void>::~Callback()	1
 Transition.hpp:92:18:virtual void touchgfx::Transition::invalidate()	1
+SlideTransition.hpp:148:18:void touchgfx::SlideTransition<templateDirection>::tearDown() [with touchgfx::Direction templateDirection = touchgfx::EAST]	3
+SlideTransition.hpp:91:18:void touchgfx::SlideTransition<templateDirection>::handleTickEvent() [with touchgfx::Direction templateDirection = touchgfx::EAST]	4
 MVPApplication.hpp:63:18:virtual void touchgfx::MVPApplication::handlePendingScreenTransition()	3
-FrontendApplicationBase.cpp:55:6:void FrontendApplicationBase::gotoScreen1ScreenNoTransitionImpl()	8
-FrontendApplicationBase.cpp:42:6:void FrontendApplicationBase::gotoScreen2ScreenWipeTransitionNorthImpl()	8
+SlideTransition.hpp:156:18:void touchgfx::SlideTransition<templateDirection>::init() [with touchgfx::Direction templateDirection = touchgfx::EAST]	2
+FrontendApplicationBase.cpp:68:6:void FrontendApplicationBase::gotoScreen1ScreenNoTransitionImpl()	8
+Drawable.hpp:218:10:void touchgfx::Drawable::setPosition(int16_t, int16_t, int16_t, int16_t)	1
+FrontendApplicationBase.cpp:44:6:void FrontendApplicationBase::gotoScreen2ScreenWipeTransitionNorthImpl()	8
+FrontendApplicationBase.cpp:55:6:void FrontendApplicationBase::gotoScreen2ScreenSlideTransitionEastImpl()	9
 HAL.hpp:226:17:static touchgfx::LCD& touchgfx::HAL::lcd()	3
+WipeTransition.hpp:98:18:void touchgfx::WipeTransition<templateDirection>::handleTickEvent() [with touchgfx::Direction templateDirection = touchgfx::EAST]	5
 WipeTransition.hpp:98:18:void touchgfx::WipeTransition<templateDirection>::handleTickEvent() [with touchgfx::Direction templateDirection = touchgfx::NORTH]	5
-FrontendApplicationBase.cpp:19:1:FrontendApplicationBase::FrontendApplicationBase(Model&, FrontendHeap&)	1
-FrontendApplicationBase.cpp:36:6:void FrontendApplicationBase::gotoScreen2ScreenWipeTransitionNorth()	1
-FrontendApplicationBase.cpp:49:6:void FrontendApplicationBase::gotoScreen1ScreenNoTransition()	1
+FrontendApplicationBase.cpp:21:1:FrontendApplicationBase::FrontendApplicationBase(Model&, FrontendHeap&)	1
+FrontendApplicationBase.cpp:38:6:void FrontendApplicationBase::gotoScreen2ScreenWipeTransitionNorth()	1
+FrontendApplicationBase.cpp:49:6:void FrontendApplicationBase::gotoScreen2ScreenSlideTransitionEast()	1
+FrontendApplicationBase.cpp:62:6:void FrontendApplicationBase::gotoScreen1ScreenNoTransition()	1
+FrontendApplicationBase.cpp:73:6:void FrontendApplicationBase::gotoScreen1ScreenWipeTransitionEast()	1
+FrontendApplicationBase.cpp:86:6:void FrontendApplicationBase::gotoScreen3ScreenWipeTransitionEast()	1
+WipeTransition.hpp:67:5:touchgfx::WipeTransition<templateDirection>::WipeTransition(uint8_t) [with touchgfx::Direction templateDirection = touchgfx::EAST]	1
+FrontendApplicationBase.cpp:92:6:void FrontendApplicationBase::gotoScreen3ScreenWipeTransitionEastImpl()	8
+FrontendApplicationBase.cpp:79:6:void FrontendApplicationBase::gotoScreen1ScreenWipeTransitionEastImpl()	8

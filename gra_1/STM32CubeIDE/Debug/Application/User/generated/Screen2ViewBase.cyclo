@@ -26,12 +26,16 @@ AbstractButtonContainer.hpp:120:18:virtual void touchgfx::AbstractButtonContaine
 AbstractButtonContainer.hpp:35:7:touchgfx::AbstractButtonContainer::~AbstractButtonContainer()	1
 View.hpp:40:7:touchgfx::View<Screen2Presenter>::~View()	1
 Screen2ViewBase.hpp:22:13:Screen2ViewBase::~Screen2ViewBase()	1
+Screen2ViewBase.cpp:51:6:virtual void Screen2ViewBase::setupScreen()	1
 ClickButtonTrigger.hpp:36:7:touchgfx::ClickButtonTrigger::~ClickButtonTrigger()	1
 BoxWithBorderButtonStyle.hpp:125:18:void touchgfx::BoxWithBorderButtonStyle<T>::handlePressedUpdated() [with T = touchgfx::ClickButtonTrigger]	3
+Callback.hpp:362:8:touchgfx::Callback<Screen2ViewBase, const touchgfx::MoveAnimator<touchgfx::ScalableImage>&>::~Callback()	1
 Callback.hpp:362:8:touchgfx::Callback<Screen2ViewBase, const touchgfx::AbstractButtonContainer&>::~Callback()	1
 BoxWithBorderButtonStyle.hpp:43:7:touchgfx::BoxWithBorderButtonStyle<touchgfx::ClickButtonTrigger>::~BoxWithBorderButtonStyle()	1
 MoveAnimator.hpp:39:7:touchgfx::MoveAnimator<touchgfx::Circle>::~MoveAnimator()	1
 MoveAnimator.hpp:39:7:touchgfx::MoveAnimator<touchgfx::ScalableImage>::~MoveAnimator()	1
+Callback.hpp:392:18:void touchgfx::Callback<dest_type, T1, void, void>::execute(T1) [with dest_type = Screen2ViewBase; T1 = const touchgfx::MoveAnimator<touchgfx::ScalableImage>&]	2
+Callback.hpp:402:18:bool touchgfx::Callback<dest_type, T1, void, void>::isValid() const [with dest_type = Screen2ViewBase; T1 = const touchgfx::MoveAnimator<touchgfx::ScalableImage>&]	3
 Callback.hpp:392:18:void touchgfx::Callback<dest_type, T1, void, void>::execute(T1) [with dest_type = Screen2ViewBase; T1 = const touchgfx::AbstractButtonContainer&]	2
 Callback.hpp:402:18:bool touchgfx::Callback<dest_type, T1, void, void>::isValid() const [with dest_type = Screen2ViewBase; T1 = const touchgfx::AbstractButtonContainer&]	3
 BoxWithBorderButtonStyle.hpp:133:18:void touchgfx::BoxWithBorderButtonStyle<T>::handleAlphaUpdated() [with T = touchgfx::ClickButtonTrigger]	1
@@ -46,19 +50,22 @@ MoveAnimator.hpp:39:7:virtual touchgfx::MoveAnimator<touchgfx::ScalableImage>::~
 MoveAnimator.hpp:39:7:virtual touchgfx::MoveAnimator<touchgfx::Circle>::~MoveAnimator()	1
 BoxWithBorderButtonStyle.hpp:43:7:virtual touchgfx::BoxWithBorderButtonStyle<touchgfx::ClickButtonTrigger>::~BoxWithBorderButtonStyle()	1
 Callback.hpp:362:8:virtual touchgfx::Callback<Screen2ViewBase, const touchgfx::AbstractButtonContainer&>::~Callback()	1
+Callback.hpp:362:8:virtual touchgfx::Callback<Screen2ViewBase, const touchgfx::MoveAnimator<touchgfx::ScalableImage>&>::~Callback()	1
 Screen2ViewBase.hpp:22:13:virtual Screen2ViewBase::~Screen2ViewBase()	1
+Screen2ViewBase.cpp:56:6:void Screen2ViewBase::interakcja_przesuwaniaEndedCallbackHandler(const touchgfx::MoveAnimator<touchgfx::ScalableImage>&)	1
 AbstractButtonContainer.hpp:100:18:virtual void touchgfx::AbstractButtonContainer::executeAction()	3
 ClickButtonTrigger.hpp:48:18:virtual void touchgfx::ClickButtonTrigger::handleClickEvent(const touchgfx::ClickEvent&)	6
-Screen2ViewBase.cpp:42:6:virtual void Screen2ViewBase::setupScreen()	2
-Screen2ViewBase.cpp:53:6:void Screen2ViewBase::flexButtonCallbackHandler(const touchgfx::AbstractButtonContainer&)	3
 Drawable.hpp:299:10:void touchgfx::Drawable::setXY(int16_t, int16_t)	1
 Drawable.hpp:218:10:void touchgfx::Drawable::setPosition(int16_t, int16_t, int16_t, int16_t)	1
 HAL.hpp:226:17:static touchgfx::LCD& touchgfx::HAL::lcd()	3
 Box.hpp:40:5:touchgfx::Box::Box()	1
 AbstractPainterRGB565.hpp:44:5:touchgfx::AbstractPainterRGB565::AbstractPainterRGB565()	2
 Color.hpp:51:22:static touchgfx::colortype touchgfx::Color::getColorFrom24BitRGB(uint8_t, uint8_t, uint8_t)	1
+BoxWithBorderButtonStyle.hpp:46:5:touchgfx::BoxWithBorderButtonStyle<T>::BoxWithBorderButtonStyle() [with T = touchgfx::ClickButtonTrigger]	1
 Screen2ViewBase.cpp:8:1:Screen2ViewBase::Screen2ViewBase()	1
-MoveAnimator.hpp:173:10:void touchgfx::MoveAnimator<T>::nextMoveAnimationStep() [with T = touchgfx::ScalableImage]	6
-MoveAnimator.hpp:164:18:void touchgfx::MoveAnimator<T>::handleTickEvent() [with T = touchgfx::ScalableImage]	1
-MoveAnimator.hpp:173:10:void touchgfx::MoveAnimator<T>::nextMoveAnimationStep() [with T = touchgfx::Circle]	6
-MoveAnimator.hpp:164:18:void touchgfx::MoveAnimator<T>::handleTickEvent() [with T = touchgfx::Circle]	1
+MoveAnimator.hpp:156:10:void touchgfx::MoveAnimator<T>::cancelMoveAnimation() [with T = touchgfx::ScalableImage]	2
+Screen2ViewBase.cpp:64:6:void Screen2ViewBase::flexButtonCallbackHandler(const touchgfx::AbstractButtonContainer&)	38
+MoveAnimator.hpp:175:10:void touchgfx::MoveAnimator<T>::nextMoveAnimationStep() [with T = touchgfx::Circle]	6
+MoveAnimator.hpp:166:18:void touchgfx::MoveAnimator<T>::handleTickEvent() [with T = touchgfx::Circle]	1
+MoveAnimator.hpp:175:10:void touchgfx::MoveAnimator<T>::nextMoveAnimationStep() [with T = touchgfx::ScalableImage]	6
+MoveAnimator.hpp:166:18:void touchgfx::MoveAnimator<T>::handleTickEvent() [with T = touchgfx::ScalableImage]	1
